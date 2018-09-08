@@ -18,7 +18,7 @@ namespace SpellDefense.Android
 		MainLauncher = true, 
 		Icon = "@drawable/icon", 
 		AlwaysRetainTaskState = true,
-		ScreenOrientation = ScreenOrientation.Portrait,
+		ScreenOrientation = ScreenOrientation.Landscape,
 		LaunchMode = LaunchMode.SingleInstance,
 		ConfigurationChanges = ConfigChanges.Orientation | ConfigChanges.ScreenSize | ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden)]
 	public class MainActivity : Activity

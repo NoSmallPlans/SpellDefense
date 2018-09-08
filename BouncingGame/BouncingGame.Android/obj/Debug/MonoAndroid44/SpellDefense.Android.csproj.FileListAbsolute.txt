@@ -69,3 +69,8 @@ C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Andr
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\android\assets\System.Runtime.Serialization.pdb
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\android\assets\System.ServiceModel.Internals.pdb
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\android\assets\System.Xml.pdb
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\bin\Debug\SpellDefense.Android.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\bin\Debug\SpellDefense.Common.dll.mdb
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\linksrc\SpellDefense.Android.dll.mdb
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\linksrc\SpellDefense.Common.dll.mdb
