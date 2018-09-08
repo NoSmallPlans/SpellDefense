@@ -1,0 +1,9 @@
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\BouncingGame.Common.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\BouncingGame.Common.pdb
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\box2d.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\CocosSharp.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\bin\Debug\MonoGame.Framework.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CoreCompileInputs.cache
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\BouncingGame.Common.dll
+C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\BouncingGame.Common.pdb
