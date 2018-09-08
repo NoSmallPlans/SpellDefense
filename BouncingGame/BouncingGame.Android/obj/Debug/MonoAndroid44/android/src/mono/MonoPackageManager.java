@@ -107,10 +107,10 @@ class MonoPackageManager_Resources {
 	public static final String[] Assemblies = new String[]{
 		/* We need to ensure that "SpellDefense.Android.dll" comes first in this list. */
 		"SpellDefense.Android.dll",
-		"BouncingGame.Common.dll",
 		"CocosSharp.dll",
 		"Lidgren.Network.dll",
 		"MonoGame.Framework.dll",
+		"SpellDefense.Common.dll",
 	};
 	public static final String[] Dependencies = new String[]{
 	};
