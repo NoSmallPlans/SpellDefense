@@ -70,13 +70,21 @@ namespace SpellDefense.Common.Scenes
             {
                 //paddle.Activity(frameTimeInSeconds);
 
-                foreach (var combatant in redTeam)
+                for(int i = redTeam.Count-1; i > 0; i--)
                 {
-                   combatant.Activity(frameTimeInSeconds);
+                    if (redTeam[i].state == Combatant.State.dead)
+                    {
+                        Destroy(redTeam[i], redTeam);
+                    }
+                    redTeam[i].Activity(frameTimeInSeconds);
                 }
-                foreach (var combatant in blueTeam)
+                for (int i = blueTeam.Count-1; i > 0; i--)
                 {
-                    combatant.Activity(frameTimeInSeconds);
+                    if (blueTeam[i].state == Combatant.State.dead)
+                    {
+                        Destroy(blueTeam[i], blueTeam);
+                    }
+                    blueTeam[i].Activity(frameTimeInSeconds);
                 }
 
                 combatantSpawner.Activity(frameTimeInSeconds);
@@ -85,6 +93,12 @@ namespace SpellDefense.Common.Scenes
 
                 //PerformCollision();
             }
+        }
+
+        private void Destroy(Combatant combatant, List<Combatant> list)
+        {
+            combatant.RemoveFromParent();
+            list.Remove(combatant);
         }
 
         private void HandleCombatantSpawned(Combatant combatant)
