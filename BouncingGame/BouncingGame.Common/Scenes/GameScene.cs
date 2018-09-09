@@ -17,6 +17,8 @@ namespace SpellDefense.Common.Scenes
 
         List<Combatant> redTeam;
         List<Combatant> blueTeam;
+        Base redBase;
+        Base blueBase;
 
         private bool hasGameEnded;
 
@@ -28,6 +30,7 @@ namespace SpellDefense.Common.Scenes
             this.CreateCombatantSpawner();
             this.redTeam = new List<Combatant>();
             this.blueTeam = new List<Combatant>();
+            this.CreateTeamBases();
 
         Schedule(Activity);
         }
@@ -64,13 +67,20 @@ namespace SpellDefense.Common.Scenes
             hudLayer.AddChild(label);
         }
 
+        private void CreateTeamBases()
+        {
+            redBase = new Base(GameCoefficients.TeamColor.RED, gameplayLayer);
+            blueBase = new Base(GameCoefficients.TeamColor.BLUE, gameplayLayer);
+
+            gameplayLayer.AddChild(redBase);
+            gameplayLayer.AddChild(blueBase);
+        }
+
         private void Activity(float frameTimeInSeconds)
         {
             if (hasGameEnded == false)
             {
-                //paddle.Activity(frameTimeInSeconds);
-
-                for(int i = redTeam.Count-1; i > 0; i--)
+                for(int i = redTeam.Count-1; i >= 0; i--)
                 {
                     if (redTeam[i].state == Combatant.State.dead)
                     {
@@ -78,7 +88,7 @@ namespace SpellDefense.Common.Scenes
                     }
                     redTeam[i].Activity(frameTimeInSeconds);
                 }
-                for (int i = blueTeam.Count-1; i > 0; i--)
+                for (int i = blueTeam.Count-1; i >= 0; i--)
                 {
                     if (blueTeam[i].state == Combatant.State.dead)
                     {
@@ -91,7 +101,30 @@ namespace SpellDefense.Common.Scenes
 
                 //DebugActivity();
 
-                //PerformCollision();
+                CheckCollisions();
+            }
+        }
+
+        private bool CombatantCollided(Combatant one, Combatant two)
+        {
+            CCRect rect1 = new CCRect(one.PositionX, one.PositionY, one.collisionWidth, one.collisionHeight);
+            CCRect rect2 = new CCRect(two.PositionX, two.PositionY, two.collisionWidth, two.collisionHeight);
+
+            return rect1.IntersectsRect(rect2);
+        }
+
+        private void CheckCollisions()
+        {
+            foreach(Combatant cbRed in redTeam)
+            {
+                foreach(Combatant cbBlue in blueTeam)
+                {
+                    if(CombatantCollided(cbRed,cbBlue))
+                    {
+                        cbRed.Collided(cbBlue);
+                        cbBlue.Collided(cbRed);
+                    }
+                }
             }
         }
 

@@ -13,19 +13,22 @@ namespace SpellDefense.Common.Entities
         public BasicMelee(GameCoefficients.TeamColor teamColor) : base(teamColor)
         {
             this.drawSize = 20;
-            this.Speed = new CCPoint(10,0);
+            this.Speed = new CCPoint(40,0);
             this.currentHealth = 100;
             this.maxHealth = 100;
-            this.meleeAttackPwr = 5;
-            this.attackSpeed = 10;
+            this.meleeAttackPwr = 20;
+            this.attackSpeed = 2;
 
+            CreateCollision();
             //this last... ALWAYS!
+            drawNode = new CCDrawNode();
             this.CreateCombatantGraphic();
         }
 
         public override void CreateCollision()
         {
-            throw new NotImplementedException();
+            this.collisionHeight = this.drawSize;
+            this.collisionWidth = this.drawSize;
         }
 
         public override void CreateCombatantGraphic()
@@ -40,8 +43,7 @@ namespace SpellDefense.Common.Entities
             {
                 team = CCColor4B.Blue;
             }
-
-            drawNode = new CCDrawNode();
+            
             this.AddChild(drawNode);
 
             drawNode.DrawRect(

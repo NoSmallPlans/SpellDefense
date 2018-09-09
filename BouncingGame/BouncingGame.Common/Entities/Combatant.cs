@@ -24,6 +24,9 @@ namespace SpellDefense.Common.Entities
         protected float maxHealth;
         protected int meleeAttackPwr;
         Combatant attackTarget = null;
+        public int collisionWidth;
+        public int collisionHeight;
+
         public State state
         {
             get;
@@ -51,10 +54,17 @@ namespace SpellDefense.Common.Entities
             //CreateCollision();
         }
 
+        private void UpdateHealthBar()
+        {
+            drawNode.Clear();
+            CreateCombatantGraphic();
+        }
+
         public void TakeDmg(int dmg)
         {
-            this.currentHealth -= dmg;
-            if (this.currentHealth < 0)
+            this.currentHealth -= dmg;        
+            UpdateHealthBar();
+            if (this.currentHealth <= 0)
             {
                 this.state = State.dead;
             }
@@ -63,13 +73,27 @@ namespace SpellDefense.Common.Entities
         private void AttackEnemy(Combatant enemy)
         {
             if (enemy != null)
+            {
                 enemy.TakeDmg(this.meleeAttackPwr);
+                if(enemy.currentHealth <= 0)
+                {
+                    this.state = State.walking;
+                    this.attackTarget = null;
+                }
+            }
+            else
+            {
+                this.state = State.walking;
+            }
         }
 
         public void Collided(Combatant enemy)
         {
-            if (this.attackTarget != null) this.attackTarget = enemy;
-            this.state = State.attacking;
+            if (this.attackTarget == null && enemy != null)
+            {
+                this.attackTarget = enemy;
+                this.state = State.attacking;
+            }
         }
 
        

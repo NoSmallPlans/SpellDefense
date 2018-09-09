@@ -8,3 +8,13 @@ C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Comm
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb
 C:\Users\cushingk\Documents\Projects\BouncingGame\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.dll
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.pdb
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\box2d.dll
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\CocosSharp.dll
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\MonoGame.Framework.dll
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CoreCompileInputs.cache
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb
+C:\Development\CocosSharp\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache

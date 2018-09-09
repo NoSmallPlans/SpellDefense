@@ -9,7 +9,7 @@ namespace SpellDefense.Common
     public static class GameCoefficients
     {
 
-        public const float StartingCombatantPerSecond = .1f;
+        public const float StartingCombatantPerSecond = .005f;
 
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 

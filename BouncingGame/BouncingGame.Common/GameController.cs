@@ -20,19 +20,19 @@ namespace SpellDefense.Common
         {
             GameView = gameView;
 
-            //var contentSearchPaths = new List<string>() { "Fonts", "Sounds" };
+            var contentSearchPaths = new List<string>() { "Fonts", "Sounds" };
 
 #if __IOS__
             //contentSearchPaths.Add("Sounds/iOS/");
 
 #else // android
-            //contentSearchPaths.Add("Sounds/Android/");
+            contentSearchPaths.Add("Sounds/Android/");
 
 
 #endif
 
-            //contentSearchPaths.Add("Images");
-            //GameView.ContentManager.SearchPaths = contentSearchPaths;
+            contentSearchPaths.Add("Images");
+            GameView.ContentManager.SearchPaths = contentSearchPaths;
 
             // We use a lower-resolution display to get a pixellated appearance
             int width = 800;
