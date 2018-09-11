@@ -32,8 +32,10 @@
   <ItemGroup>
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
+    <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />
     <Compile Include="Entities\CombatantSpawner.cs" />
+    <Compile Include="Entities\PlayHUD.cs" />
     <Compile Include="GameCoefficients.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Scenes\GameScene.cs" />

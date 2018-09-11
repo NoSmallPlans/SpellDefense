@@ -23,14 +23,24 @@ namespace SpellDefense.Common.Entities
             timeSinceLastSpawn = TimeInbetweenSpawns;
         }
 
+        //TODO: Combatant spawner doesn't really work without a layer
+        //discuss making layer a required parameter on the constructor
         public void CreateSpawnPts()
         {
 
+            /*
             float redX = 10;
             float blueX = Layer.ContentSize.Width-10;
             float yBottom = Layer.ContentSize.Height / 4;
             float yMid = Layer.ContentSize.Height / 2;
             float yTop = Layer.ContentSize.Height * .75f;
+            */
+            //TOOD remove +-10 magic numbers
+            float redX = GameCoefficients.Battlefield.GetMinX() + 10;
+            float blueX = GameCoefficients.Battlefield.GetWidth() - 10;
+            float yBottom = GameCoefficients.Battlefield.GetHeight() / 4;
+            float yMid = GameCoefficients.Battlefield.GetHeight() / 2;
+            float yTop = GameCoefficients.Battlefield.GetHeight() * .75f;
 
 
             RedSpawns.Add(new CCPoint(redX, yBottom));

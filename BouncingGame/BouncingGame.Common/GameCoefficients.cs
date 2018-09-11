@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpellDefense.Common.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,66 @@ namespace SpellDefense.Common
         public const float TimeForExtraCombatantPerSecond = 6 * 60;
 
         public enum TeamColor { RED, BLUE };
+
+        public const int desiredWidth = 1024;
+        public const int desiredHeight = 768;
+
+        //Eventually PlayHUD dimensions will be more adaptive
+        //we're future proofing with this class
+        public static class PlayHUD
+        {
+
+            public static float GetMinX()
+            {
+                return 0;
+            }
+
+            public static float GetWidth()
+            {
+                return desiredWidth;
+            }
+
+            public static float GetMinY()
+            {
+                return 0;
+            }
+
+            public static float GetHeight()
+            {
+                const float MENU_RATIO = 0.15f;
+                return MENU_RATIO * desiredHeight;
+            }
+
+
+        }
+
+        //Eventually Battlefield dimensions will be more adaptive
+        //we're future proofing with this class
+        public static class Battlefield
+        {
+
+            public static float GetMinX()
+            {
+                return 0;
+            }
+
+            public static float GetWidth()
+            {
+                return desiredWidth;
+            }
+
+            public static float GetMinY()
+            {
+                return PlayHUD.GetHeight();
+            }
+
+
+            public static float GetHeight()
+            {
+                return desiredHeight - PlayHUD.GetHeight();
+            }
+        }
+
     }
 
 }

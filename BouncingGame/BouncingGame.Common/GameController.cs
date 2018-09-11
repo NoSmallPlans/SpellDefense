@@ -35,14 +35,15 @@ namespace SpellDefense.Common
             GameView.ContentManager.SearchPaths = contentSearchPaths;
 
             // We use a lower-resolution display to get a pixellated appearance
-            int width = 800;
-            int height = 480;
-            GameView.DesignResolution = new CCSizeI(width, height);
-
+            //int width = 800;
+            //int height = 480;
+            GameView.DesignResolution = new CCSizeI(GameCoefficients.desiredWidth, GameCoefficients.desiredHeight);
+            GameView.ResolutionPolicy = CCViewResolutionPolicy.ShowAll;
             //InitializeAudio();
 
             var scene = new TitleScene(GameView);
             GameView.RunWithScene(scene);
+            
         }
 
         private static void InitializeAudio()

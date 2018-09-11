@@ -19,6 +19,8 @@ namespace SpellDefense.Common.Scenes
         List<Combatant> blueTeam;
         Base redBase;
         Base blueBase;
+        UIcontainer battlefield;
+        UIcontainer menuBar;
 
         private bool hasGameEnded;
 
@@ -26,6 +28,8 @@ namespace SpellDefense.Common.Scenes
         {
             this.gameView = gameView;
             this.InitLayers();
+            this.menuBar = new PlayHUD(0, 0, (int)GameCoefficients.PlayHUD.GetHeight(), 
+                (int)GameCoefficients.PlayHUD.GetWidth(), this.gameplayLayer);
             this.CreateText();
             this.CreateCombatantSpawner();
             this.redTeam = new List<Combatant>();
@@ -60,8 +64,8 @@ namespace SpellDefense.Common.Scenes
         {
             System.Diagnostics.Debug.WriteLine("Battle Screen");
             CCLabel label = new CCLabel("Battle Screen", "Arial", 30, CCLabelFormat.SystemFont);
-            label.PositionX = hudLayer.ContentSize.Width / 2.0f;
-            label.PositionY = hudLayer.ContentSize.Height / 2.0f;
+            label.PositionX = GameCoefficients.Battlefield.GetWidth() / 2.0f;
+            label.PositionY = GameCoefficients.Battlefield.GetHeight() / 2.0f;
             label.Color = CCColor3B.White;
 
             hudLayer.AddChild(label);

@@ -30,11 +30,11 @@ namespace SpellDefense.Common.Entities
             if (teamColor == GameCoefficients.TeamColor.RED)
             {
                 sprite.RotationY = 180;
-                this.Position = new CCPoint(-spriteWidth, layer.ContentSize.Height / 2);                
+                this.Position = new CCPoint(-spriteWidth, GameCoefficients.Battlefield.GetHeight() / 2);                
             }
             else
             {
-                this.Position = new CCPoint(layer.ContentSize.Width + spriteWidth, layer.ContentSize.Height / 2);
+                this.Position = new CCPoint(layer.ContentSize.Width + spriteWidth, GameCoefficients.Battlefield.GetHeight() / 2);
             }
 
 
