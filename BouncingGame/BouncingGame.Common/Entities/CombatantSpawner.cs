@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SpellDefense.Common.Entities
 {
 
-    public class CombatantSpawner
+    public class CombatantSpawner : CCNode
     {
         List<CCPoint> RedSpawns;
         List<CCPoint> BlueSpawns;
@@ -23,24 +23,17 @@ namespace SpellDefense.Common.Entities
             timeSinceLastSpawn = TimeInbetweenSpawns;
         }
 
-        //TODO: Combatant spawner doesn't really work without a layer
-        //discuss making layer a required parameter on the constructor
+
         public void CreateSpawnPts()
         {
-
-            /*
-            float redX = 10;
-            float blueX = Layer.ContentSize.Width-10;
-            float yBottom = Layer.ContentSize.Height / 4;
-            float yMid = Layer.ContentSize.Height / 2;
-            float yTop = Layer.ContentSize.Height * .75f;
-            */
             //TOOD remove +-10 magic numbers
-            float redX = GameCoefficients.Battlefield.GetMinX() + 10;
-            float blueX = GameCoefficients.Battlefield.GetWidth() - 10;
-            float yBottom = GameCoefficients.Battlefield.GetHeight() / 4;
-            float yMid = GameCoefficients.Battlefield.GetHeight() / 2;
-            float yTop = GameCoefficients.Battlefield.GetHeight() * .75f;
+            //TODO rename parent to something besides daddy... Thats weird
+            UIcontainer daddy = (UIcontainer)this.Parent;
+            float redX = daddy.minX + 10;
+            float blueX = daddy.width - 10;
+            float yBottom = daddy.height / 4;
+            float yMid = daddy.height / 2;
+            float yTop = daddy.height * .75f;
 
 
             RedSpawns.Add(new CCPoint(redX, yBottom));
@@ -71,11 +64,14 @@ namespace SpellDefense.Common.Entities
             }
         }
 
+        /*
         public CCLayer Layer
         {
             get;
             set;
         }
+        */
+        
 
         public Action<Combatant> CombatantSpawned;
 
@@ -129,11 +125,6 @@ namespace SpellDefense.Common.Entities
         private void Spawn(List<CCPoint> spawns, GameCoefficients.TeamColor team)
         {
             BasicMelee Combatant;
-
-            if (Layer == null)
-            {
-                throw new InvalidOperationException("Need to set Layer before spawning");
-            }
 
             for (int i = 0; i < spawns.Count; i++)
             {

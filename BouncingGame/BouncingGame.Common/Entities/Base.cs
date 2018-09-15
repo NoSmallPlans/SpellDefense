@@ -7,20 +7,13 @@ using System.Threading.Tasks;
 
 namespace SpellDefense.Common.Entities
 {
-    public class Base : CCNode
+    public class Base : GamePiece
     {
         CCSprite sprite;
-        int maxHealth;
-        int currentHealth;
         CCDrawNode healthBar;
-        GameCoefficients.TeamColor team;
-        int collisionHeight;
-        int collisionWidth;
 
-
-        public Base(GameCoefficients.TeamColor teamColor, CCLayer layer)
+        public Base(GameCoefficients.TeamColor teamColor, CCLayer layer) : base(teamColor)
         {
-            team = teamColor;
             maxHealth = 1000;
             currentHealth = maxHealth;
 
@@ -30,16 +23,36 @@ namespace SpellDefense.Common.Entities
             if (teamColor == GameCoefficients.TeamColor.RED)
             {
                 sprite.RotationY = 180;
-                this.Position = new CCPoint(-spriteWidth, GameCoefficients.Battlefield.GetHeight() / 2);                
+                this.Position = new CCPoint(-spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);                
             }
             else
             {
-                this.Position = new CCPoint(layer.ContentSize.Width + spriteWidth, GameCoefficients.Battlefield.GetHeight() / 2);
+                this.Position = new CCPoint(layer.ContentSize.Width + spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);
             }
-
 
             this.AddChild(sprite);
             layer.AddChild(this);
         }
+
+        public override void Activity(float frameTimeInSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Collided(Combatant enemy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CreateCollision()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void CreateGraphic()
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }

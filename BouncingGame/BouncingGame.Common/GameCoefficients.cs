@@ -28,7 +28,7 @@ namespace SpellDefense.Common
 
         //Eventually PlayHUD dimensions will be more adaptive
         //we're future proofing with this class
-        public static class PlayHUD
+        public static class CardHUDdimensions
         {
 
             public static float GetMinX()
@@ -57,7 +57,7 @@ namespace SpellDefense.Common
 
         //Eventually Battlefield dimensions will be more adaptive
         //we're future proofing with this class
-        public static class Battlefield
+        public static class BattlefieldDimensions
         {
 
             public static float GetMinX()
@@ -72,13 +72,13 @@ namespace SpellDefense.Common
 
             public static float GetMinY()
             {
-                return PlayHUD.GetHeight();
+                return CardHUDdimensions.GetHeight();
             }
 
 
             public static float GetHeight()
             {
-                return desiredHeight - PlayHUD.GetHeight();
+                return desiredHeight - CardHUDdimensions.GetHeight();
             }
         }
 

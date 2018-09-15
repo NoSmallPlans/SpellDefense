@@ -22,7 +22,7 @@ namespace SpellDefense.Common.Entities
             CreateCollision();
             //this last... ALWAYS!
             drawNode = new CCDrawNode();
-            this.CreateCombatantGraphic();
+            this.CreateGraphic();
         }
 
         public override void CreateCollision()
@@ -31,7 +31,7 @@ namespace SpellDefense.Common.Entities
             this.collisionWidth = this.drawSize;
         }
 
-        public override void CreateCombatantGraphic()
+        public override void CreateGraphic()
         {
             CCColor4B team;
 

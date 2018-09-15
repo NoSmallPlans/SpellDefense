@@ -7,74 +7,30 @@ using CocosSharp;
 
 namespace SpellDefense.Common.Entities
 {
-    public abstract class Combatant : CCNode
+    public abstract class Combatant : GamePiece
     {
-        public enum State
-        {
-            walking,
-            attacking,
-            dead
-        }
 
-        protected CCDrawNode drawNode;
-        CCDrawNode debugGrahic;
-        CCLabel extraPointsLabel;
         float timeUntilAttack;
-        protected float currentHealth;
-        protected float maxHealth;
         protected int meleeAttackPwr;
         Combatant attackTarget = null;
-        public int collisionWidth;
-        public int collisionHeight;
-
-        public State state
-        {
-            get;
-            protected set;
-        }
-
         public CCPoint Speed;
         protected float attackSpeed;
 
 
         //How long are this combatant's arms? Glad you asked...
-        private float AttackRadius;
-
-        public GameCoefficients.TeamColor teamColor
+        private float AttackRange;
+        private float AggroRange;
+        
+        public Combatant(GameCoefficients.TeamColor teamColor) : base(teamColor)
         {
-            get;
-            private set;
-        }
-
-
-        public Combatant(GameCoefficients.TeamColor teamColor)
-        {
-            this.teamColor = teamColor;
             state = State.walking;
-            //CreateCollision();
-        }
-
-        private void UpdateHealthBar()
-        {
-            drawNode.Clear();
-            CreateCombatantGraphic();
-        }
-
-        public void TakeDmg(int dmg)
-        {
-            this.currentHealth -= dmg;        
-            UpdateHealthBar();
-            if (this.currentHealth <= 0)
-            {
-                this.state = State.dead;
-            }
         }
 
         private void AttackEnemy(Combatant enemy)
         {
             if (enemy != null)
             {
-                enemy.TakeDmg(this.meleeAttackPwr);
+                enemy.UpdateHealth(-this.meleeAttackPwr);
                 if(enemy.currentHealth <= 0)
                 {
                     this.state = State.walking;
@@ -87,7 +43,7 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        public void Collided(Combatant enemy)
+        public override void Collided(Combatant enemy)
         {
             if (this.attackTarget == null && enemy != null)
             {
@@ -96,12 +52,7 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-       
-        public abstract void CreateCombatantGraphic();
-
-        public abstract void CreateCollision();
-
-        public void Activity(float frameTimeInSeconds)
+        public override void Activity(float frameTimeInSeconds)
         {
             this.timeUntilAttack -= frameTimeInSeconds;
 

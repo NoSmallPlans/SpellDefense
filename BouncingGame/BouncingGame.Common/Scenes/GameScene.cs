@@ -20,7 +20,7 @@ namespace SpellDefense.Common.Scenes
         Base redBase;
         Base blueBase;
         UIcontainer battlefield;
-        UIcontainer menuBar;
+        UIcontainer cardHUD;
 
         private bool hasGameEnded;
 
@@ -28,8 +28,11 @@ namespace SpellDefense.Common.Scenes
         {
             this.gameView = gameView;
             this.InitLayers();
-            this.menuBar = new PlayHUD(0, 0, (int)GameCoefficients.PlayHUD.GetHeight(), 
-                (int)GameCoefficients.PlayHUD.GetWidth(), this.gameplayLayer);
+            this.cardHUD = new CardHUD(0, 0, (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
+                (int)GameCoefficients.CardHUDdimensions.GetWidth(), this.gameplayLayer);
+            this.battlefield = new UIcontainer(0, (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
+                (int)GameCoefficients.BattlefieldDimensions.GetHeight(), (int)GameCoefficients.BattlefieldDimensions.GetWidth(),
+                this.gameplayLayer);
             this.CreateText();
             this.CreateCombatantSpawner();
             this.redTeam = new List<Combatant>();
@@ -56,7 +59,7 @@ namespace SpellDefense.Common.Scenes
         {
             combatantSpawner = new CombatantSpawner();
             combatantSpawner.CombatantSpawned += HandleCombatantSpawned;
-            combatantSpawner.Layer = gameplayLayer;
+            this.battlefield.AddChild(combatantSpawner);
             combatantSpawner.CreateSpawnPts();
         }
 
@@ -64,8 +67,8 @@ namespace SpellDefense.Common.Scenes
         {
             System.Diagnostics.Debug.WriteLine("Battle Screen");
             CCLabel label = new CCLabel("Battle Screen", "Arial", 30, CCLabelFormat.SystemFont);
-            label.PositionX = GameCoefficients.Battlefield.GetWidth() / 2.0f;
-            label.PositionY = GameCoefficients.Battlefield.GetHeight() / 2.0f;
+            label.PositionX = GameCoefficients.BattlefieldDimensions.GetWidth() / 2.0f;
+            label.PositionY = GameCoefficients.BattlefieldDimensions.GetHeight() / 2.0f;
             label.Color = CCColor3B.White;
 
             hudLayer.AddChild(label);

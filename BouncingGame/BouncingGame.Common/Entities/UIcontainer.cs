@@ -11,15 +11,15 @@ namespace SpellDefense.Common.Entities
     {
         protected CCDrawNode drawNode;
         public CCBoundingBoxI container;
-        protected CCLayer Layer;
-        protected float minY;
-        protected float minX;
-        protected float maxY;
-        protected float maxX;
-        protected float width;
-        protected float height;
+        protected CCLayer targetLayer;
+        public float minY;
+        public float minX;
+        public float maxY;
+        public float maxX;
+        public float width;
+        public float height;
         
-        public UIcontainer(int xAnchorPt, int yAnchorPt, int height, int width, CCLayer Layer)
+        public UIcontainer(int xAnchorPt, int yAnchorPt, int height, int width, CCLayer targetLayer)
         {  
             this.width = width;
             this.height = height;
@@ -27,7 +27,7 @@ namespace SpellDefense.Common.Entities
             this.minY = yAnchorPt;
             this.maxX = xAnchorPt + width;
             this.maxY = yAnchorPt + height;
-            this.Layer = Layer;
+            this.targetLayer = targetLayer;
             this.container = new CCBoundingBoxI(xAnchorPt, yAnchorPt, (int)this.maxX, (int)this.maxY);
         }
 
