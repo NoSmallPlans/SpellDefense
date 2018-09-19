@@ -20,8 +20,16 @@ namespace SpellDefense.Common.Entities
 
         protected CCDrawNode drawNode;
         CCDrawNode debugGrahic;
-        protected float currentHealth;
-        protected float maxHealth;
+        public float currentHealth
+        {
+            get;
+            protected set;
+        }
+        public float maxHealth
+        {
+            get;
+            protected set;
+        }
         public int collisionWidth;
         public int collisionHeight;
 
@@ -31,13 +39,13 @@ namespace SpellDefense.Common.Entities
             protected set;
         }
 
-        public GameCoefficients.TeamColor teamColor
+        public Team.ColorChoice teamColor
         {
             get;
             private set;
         }
 
-        public GamePiece(GameCoefficients.TeamColor teamColor)
+        public GamePiece(Team.ColorChoice teamColor)
         {
             this.teamColor = teamColor;
             state = State.waiting;
@@ -53,6 +61,10 @@ namespace SpellDefense.Common.Entities
         {
             this.currentHealth += amt;
             UpdateHealthBar();
+        }
+
+        public void Cleanup()
+        {
             if (this.currentHealth <= 0)
             {
                 this.state = State.dead;
@@ -66,6 +78,6 @@ namespace SpellDefense.Common.Entities
 
         public abstract void CreateCollision();
 
-        public abstract void Activity(float frameTimeInSeconds);
+        //public abstract void Activity(float frameTimeInSeconds);
     }
 }

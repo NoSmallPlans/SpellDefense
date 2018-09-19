@@ -67,7 +67,5 @@ C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\Boun
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\android\assets\System.ServiceModel.Internals.pdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\android\assets\System.Xml.pdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\bin\Debug\SpellDefense.Android.dll
-C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.dll
-C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\bin\Debug\SpellDefense.Common.dll.mdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\linksrc\SpellDefense.Android.dll.mdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Android\obj\Debug\MonoAndroid44\linksrc\SpellDefense.Common.dll.mdb

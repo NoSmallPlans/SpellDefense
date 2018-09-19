@@ -15,10 +15,8 @@ namespace SpellDefense.Common.Scenes
         private CCGameView gameView;
         private CombatantSpawner combatantSpawner;
 
-        List<Combatant> redTeam;
-        List<Combatant> blueTeam;
-        Base redBase;
-        Base blueBase;
+        Team redTeam;
+        Team blueTeam;
         UIcontainer battlefield;
         UIcontainer cardHUD;
 
@@ -29,14 +27,17 @@ namespace SpellDefense.Common.Scenes
             this.gameView = gameView;
             this.InitLayers();
             this.cardHUD = new CardHUD(0, 0, (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
-                (int)GameCoefficients.CardHUDdimensions.GetWidth(), this.gameplayLayer);
-            this.battlefield = new UIcontainer(0, (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
-                (int)GameCoefficients.BattlefieldDimensions.GetHeight(), (int)GameCoefficients.BattlefieldDimensions.GetWidth(),
-                this.gameplayLayer);
+                                             (int)GameCoefficients.CardHUDdimensions.GetWidth(), 
+                                             this.gameplayLayer);
+            this.battlefield = new UIcontainer(0, 
+                                            (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
+                                            (int)GameCoefficients.BattlefieldDimensions.GetHeight(), 
+                                            (int)GameCoefficients.BattlefieldDimensions.GetWidth(),
+                                            this.gameplayLayer);
             this.CreateText();
             this.CreateCombatantSpawner();
-            this.redTeam = new List<Combatant>();
-            this.blueTeam = new List<Combatant>();
+            this.redTeam = new Team(Team.ColorChoice.RED);
+            this.blueTeam = new Team(Team.ColorChoice.BLUE);
             this.CreateTeamBases();
 
         Schedule(Activity);
@@ -76,64 +77,34 @@ namespace SpellDefense.Common.Scenes
 
         private void CreateTeamBases()
         {
-            redBase = new Base(GameCoefficients.TeamColor.RED, gameplayLayer);
-            blueBase = new Base(GameCoefficients.TeamColor.BLUE, gameplayLayer);
-
-            gameplayLayer.AddChild(redBase);
-            gameplayLayer.AddChild(blueBase);
+            gameplayLayer.AddChild(redTeam.makeBase());
+            gameplayLayer.AddChild(blueTeam.makeBase());
         }
 
         private void Activity(float frameTimeInSeconds)
         {
+
             if (hasGameEnded == false)
             {
-                for(int i = redTeam.Count-1; i >= 0; i--)
-                {
-                    if (redTeam[i].state == Combatant.State.dead)
-                    {
-                        Destroy(redTeam[i], redTeam);
-                    }
-                    redTeam[i].Activity(frameTimeInSeconds);
-                }
-                for (int i = blueTeam.Count-1; i >= 0; i--)
-                {
-                    if (blueTeam[i].state == Combatant.State.dead)
-                    {
-                        Destroy(blueTeam[i], blueTeam);
-                    }
-                    blueTeam[i].Activity(frameTimeInSeconds);
-                }
+
+                redTeam.Cleanup();
+                blueTeam.Cleanup();
+
+                redTeam.MovePhase(frameTimeInSeconds);
+                blueTeam.MovePhase(frameTimeInSeconds);
+
+                redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
+                blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
                 combatantSpawner.Activity(frameTimeInSeconds);
 
                 //DebugActivity();
 
-                CheckCollisions();
+                //CheckCollisions();
             }
         }
 
-        private bool CombatantCollided(Combatant one, Combatant two)
-        {
-            CCRect rect1 = new CCRect(one.PositionX, one.PositionY, one.collisionWidth, one.collisionHeight);
-            CCRect rect2 = new CCRect(two.PositionX, two.PositionY, two.collisionWidth, two.collisionHeight);
 
-            return rect1.IntersectsRect(rect2);
-        }
-
-        private void CheckCollisions()
-        {
-            foreach(Combatant cbRed in redTeam)
-            {
-                foreach(Combatant cbBlue in blueTeam)
-                {
-                    if(CombatantCollided(cbRed,cbBlue))
-                    {
-                        cbRed.Collided(cbBlue);
-                        cbBlue.Collided(cbRed);
-                    }
-                }
-            }
-        }
 
         private void Destroy(Combatant combatant, List<Combatant> list)
         {
@@ -143,10 +114,10 @@ namespace SpellDefense.Common.Scenes
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
-            if (combatant.teamColor == GameCoefficients.TeamColor.RED)
-                redTeam.Add(combatant);
+            if (combatant.teamColor == Team.ColorChoice.RED)
+                redTeam.AddCombatant(combatant);
             else
-                blueTeam.Add(combatant);
+                blueTeam.AddCombatant(combatant);
             gameplayLayer.AddChild(combatant);
         }
     }

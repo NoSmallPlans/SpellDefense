@@ -101,8 +101,8 @@ namespace SpellDefense.Common.Entities
             {
                 timeSinceLastSpawn -= TimeInbetweenSpawns;
 
-                Spawn(RedSpawns, GameCoefficients.TeamColor.RED);
-                Spawn(BlueSpawns, GameCoefficients.TeamColor.BLUE);
+                Spawn(RedSpawns, Team.ColorChoice.RED);
+                Spawn(BlueSpawns, Team.ColorChoice.BLUE);
             }
         }
 
@@ -122,7 +122,7 @@ namespace SpellDefense.Common.Entities
         }
 
         // made public for debugging, may make it private later:
-        private void Spawn(List<CCPoint> spawns, GameCoefficients.TeamColor team)
+        private void Spawn(List<CCPoint> spawns, Team.ColorChoice team)
         {
             BasicMelee Combatant;
 

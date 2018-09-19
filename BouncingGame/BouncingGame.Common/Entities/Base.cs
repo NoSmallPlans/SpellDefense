@@ -12,7 +12,7 @@ namespace SpellDefense.Common.Entities
         CCSprite sprite;
         CCDrawNode healthBar;
 
-        public Base(GameCoefficients.TeamColor teamColor, CCLayer layer) : base(teamColor)
+        public Base(Team.ColorChoice teamColor) : base(teamColor)
         {
             maxHealth = 1000;
             currentHealth = maxHealth;
@@ -20,23 +20,17 @@ namespace SpellDefense.Common.Entities
             sprite = new CCSprite("CastleGreen");
             sprite.Scale = 0.3f;
             float spriteWidth = sprite.ContentSize.Width * sprite.ScaleX / 4;
-            if (teamColor == GameCoefficients.TeamColor.RED)
+            if (teamColor == Team.ColorChoice.RED)
             {
                 sprite.RotationY = 180;
                 this.Position = new CCPoint(-spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);                
             }
             else
             {
-                this.Position = new CCPoint(layer.ContentSize.Width + spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);
+                this.Position = new CCPoint(GameCoefficients.BattlefieldDimensions.GetWidth() + spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);
             }
 
             this.AddChild(sprite);
-            layer.AddChild(this);
-        }
-
-        public override void Activity(float frameTimeInSeconds)
-        {
-            throw new NotImplementedException();
         }
 
         public override void Collided(Combatant enemy)

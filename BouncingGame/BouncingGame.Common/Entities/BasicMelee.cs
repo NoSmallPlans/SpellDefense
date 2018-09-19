@@ -10,7 +10,7 @@ namespace SpellDefense.Common.Entities
     class BasicMelee : Combatant
     {
         public int drawSize;
-        public BasicMelee(GameCoefficients.TeamColor teamColor) : base(teamColor)
+        public BasicMelee(Team.ColorChoice teamColor) : base(teamColor)
         {
             this.drawSize = 20;
             this.Speed = new CCPoint(40,0);
@@ -35,7 +35,7 @@ namespace SpellDefense.Common.Entities
         {
             CCColor4B team;
 
-            if (this.teamColor == GameCoefficients.TeamColor.RED)
+            if (this.teamColor == Team.ColorChoice.RED)
             {
                 team = CCColor4B.Red;
             }
