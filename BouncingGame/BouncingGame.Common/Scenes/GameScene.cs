@@ -19,6 +19,7 @@ namespace SpellDefense.Common.Scenes
         Team blueTeam;
         UIcontainer battlefield;
         UIcontainer cardHUD;
+        List<CCDrawNode> targetLines;
 
         private bool hasGameEnded;
 
@@ -39,6 +40,8 @@ namespace SpellDefense.Common.Scenes
             this.redTeam = new Team(Team.ColorChoice.RED);
             this.blueTeam = new Team(Team.ColorChoice.BLUE);
             this.CreateTeamBases();
+
+            targetLines = new List<CCDrawNode>();
 
         Schedule(Activity);
         }
@@ -114,6 +117,7 @@ namespace SpellDefense.Common.Scenes
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
+            gameplayLayer.AddChild(combatant.targetLine);
             if (combatant.teamColor == Team.ColorChoice.RED)
                 redTeam.AddCombatant(combatant);
             else

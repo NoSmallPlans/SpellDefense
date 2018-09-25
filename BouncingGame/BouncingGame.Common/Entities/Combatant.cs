@@ -15,17 +15,25 @@ namespace SpellDefense.Common.Entities
         GamePiece attackTarget = null;
         public CCPoint Speed;
         protected float attackSpeed;
+        public CCDrawNode targetLine;
 
 
         //How long are this combatant's arms? Glad you asked...
-        private float attackRange;
-        private float aggroRange;
+        protected float attackRange;
+        protected float aggroRange;
         
         public Combatant(Team.ColorChoice teamColor) : base(teamColor)
         {
             state = State.walking;
-            aggroRange = 32;
+            aggroRange = 64;
             attackRange = 16;
+            targetLine = new CCDrawNode();
+        }
+
+        private void DrawTargetLine()
+        {
+            targetLine.Clear();
+            targetLine.DrawLine(this.Position, this.attackTarget.Position, CCColor4B.Green, CCLineCap.Square);
         }
 
         private void AttackEnemy(GamePiece enemy)
@@ -54,16 +62,16 @@ namespace SpellDefense.Common.Entities
         
         public GamePiece FindTarget(List<Combatant> enemyList, GamePiece defaultEnemy)
         {
-            float distanceToEnemy;
+            float distToEnemy;
             GamePiece currentTarget = defaultEnemy;
-            float distanceToTarget = distanceTo(this, enemyList[0]);
+            float distToTarget = distanceTo(this, currentTarget);
             foreach(Combatant enemy in enemyList)
             {
-                distanceToEnemy = distanceTo(this, enemy);
+                distToEnemy = distanceTo(this, enemy);
 
-                if (distanceToEnemy <= this.aggroRange && distanceToEnemy < distanceToTarget)
+                if (distToEnemy <= this.aggroRange && distToEnemy < distToTarget)
                 {
-                    distanceToTarget = distanceToEnemy;
+                    distToTarget = distToEnemy;
                     currentTarget = enemy;
                 }
             }
@@ -75,7 +83,7 @@ namespace SpellDefense.Common.Entities
             float diffX;
             float diffY;
             diffX = c1.PositionX - c2.PositionX;
-            diffY = c2.PositionY - c2.PositionY;
+            diffY = c1.PositionY - c2.PositionY;
             return (float)Math.Sqrt(diffX * diffX + diffY * diffY);
         }
 
@@ -95,6 +103,12 @@ namespace SpellDefense.Common.Entities
                 attackTarget = FindTarget(enemies, defaultEnemy);
             }
             EngageTarget();
+
+            //Debugging line to help with targeting
+            if (GameCoefficients.debug)
+            {
+                DrawTargetLine();
+            }
         }
 
         private void EngageTarget()

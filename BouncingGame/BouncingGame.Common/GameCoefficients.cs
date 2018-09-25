@@ -12,6 +12,8 @@ namespace SpellDefense.Common
 
         public const float StartingCombatantPerSecond = .005f;
 
+        public static bool debug = false;
+
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 
         // if the game initially spawns one combatant per 5 seconds, then 

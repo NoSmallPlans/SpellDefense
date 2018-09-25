@@ -57,6 +57,12 @@ namespace SpellDefense.Common.Entities
             var greenHealth = new CCRect(-this.drawSize / 2, this.drawSize*0.5f + barHeight, currentBarWidth, barHeight);
             drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
 
+            if (GameCoefficients.debug)
+            {
+                drawNode.DrawCircle(this.Position, (int)aggroRange, CCColor4B.Blue);
+                drawNode.DrawCircle(this.Position, (int)attackRange, CCColor4B.Orange);
+            }
+
         }
 
 
