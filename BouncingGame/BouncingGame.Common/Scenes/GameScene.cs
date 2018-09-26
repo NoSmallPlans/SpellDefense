@@ -119,9 +119,9 @@ namespace SpellDefense.Common.Scenes
         {
             gameplayLayer.AddChild(combatant.targetLine);
             if (combatant.teamColor == Team.ColorChoice.RED)
-                redTeam.AddCombatant(combatant);
+                redTeam.AddCombatant(combatant, blueTeam.TeamBase());
             else
-                blueTeam.AddCombatant(combatant);
+                blueTeam.AddCombatant(combatant, redTeam.TeamBase());
             gameplayLayer.AddChild(combatant);
         }
     }

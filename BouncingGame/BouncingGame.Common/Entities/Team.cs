@@ -19,6 +19,11 @@ namespace SpellDefense.Common.Entities
         private List<Combatant> combatants;
         private Base teamBase;
 
+        public Base TeamBase()
+        {
+            return teamBase;
+        }
+
         public Team(ColorChoice teamColor)
         {
             this.teamColor = teamColor;
@@ -40,8 +45,10 @@ namespace SpellDefense.Common.Entities
             return this.teamBase;
         }
 
-        public void AddCombatant(Combatant addition)
+        public void AddCombatant(Combatant addition, GamePiece defaultEnemy)
         {
+            addition.defaultEnemy = defaultEnemy;
+            addition.AttackTarget = defaultEnemy;
             this.combatants.Add(addition);
         }
 

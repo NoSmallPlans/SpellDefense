@@ -12,8 +12,9 @@ namespace SpellDefense.Common.Entities
 
         float timeUntilAttack;
         protected int meleeAttackPwr;
-        GamePiece attackTarget = null;
-        public CCPoint Speed;
+        public GamePiece defaultEnemy;
+        GamePiece attackTarget;
+        public float speed;
         protected float attackSpeed;
         public CCDrawNode targetLine;
 
@@ -59,6 +60,17 @@ namespace SpellDefense.Common.Entities
             }
         }
 
+        public GamePiece AttackTarget
+        {
+            get
+            {
+                return this.attackTarget;
+            }
+            set
+            {
+                attackTarget = value;
+            }
+        }
         
         public GamePiece FindTarget(List<Combatant> enemyList, GamePiece defaultEnemy)
         {
@@ -128,10 +140,14 @@ namespace SpellDefense.Common.Entities
         {
             if (this.state == State.walking)
             {
-                if (teamColor == Team.ColorChoice.RED)
-                    this.Position += Speed * frameTimeInSeconds;
-                else if (teamColor == Team.ColorChoice.BLUE)
-                    this.Position -= Speed * frameTimeInSeconds;
+                double diffX = attackTarget.Position.X - Position.X;
+                double diffY = attackTarget.Position.Y - Position.Y;
+                double length = Math.Sqrt(diffX * diffX + diffY * diffY); //Pythagorean law
+                float dx = (float)(diffX / length * speed * frameTimeInSeconds); //higher speed is faster
+                float dy = (float)(diffY / length * speed * frameTimeInSeconds);
+
+                this.Position += new CCPoint(dx, dy);
+
             }
         }
     }

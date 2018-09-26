@@ -30,6 +30,8 @@ namespace SpellDefense.Common.Entities
                 this.Position = new CCPoint(GameCoefficients.BattlefieldDimensions.GetWidth() + spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);
             }
 
+            drawNode = new CCDrawNode();
+
             this.AddChild(sprite);
         }
 
@@ -45,7 +47,7 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateGraphic()
         {
-            throw new NotImplementedException();
+            
         }
     }
 

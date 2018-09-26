@@ -12,6 +12,7 @@ namespace SpellDefense.Common.Entities
     {
         List<CCPoint> RedSpawns;
         List<CCPoint> BlueSpawns;
+        Random rnd = new Random();
 
         public CombatantSpawner()
         {
@@ -125,17 +126,16 @@ namespace SpellDefense.Common.Entities
         private void Spawn(List<CCPoint> spawns, Team.ColorChoice team)
         {
             BasicMelee Combatant;
-
-            for (int i = 0; i < spawns.Count; i++)
+            
+            int i = rnd.Next(0,3);
+            Combatant = new BasicMelee(team);
+            Combatant.PositionX = spawns[i].X;
+            Combatant.PositionY = spawns[i].Y;
+            if (CombatantSpawned != null)
             {
-                Combatant = new BasicMelee(team);
-                Combatant.PositionX = spawns[i].X;
-                Combatant.PositionY = spawns[i].Y;
-                if (CombatantSpawned != null)
-                {
-                    CombatantSpawned(Combatant);
-                }
+                CombatantSpawned(Combatant);
             }
+            
         }
 
 

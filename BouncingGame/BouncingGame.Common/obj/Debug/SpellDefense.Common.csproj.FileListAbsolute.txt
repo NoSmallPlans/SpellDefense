@@ -27,3 +27,4 @@ C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\Boun
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb
+C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache
