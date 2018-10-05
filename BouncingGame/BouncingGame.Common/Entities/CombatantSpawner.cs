@@ -125,10 +125,12 @@ namespace SpellDefense.Common.Entities
         // made public for debugging, may make it private later:
         private void Spawn(List<CCPoint> spawns, Team.ColorChoice team)
         {
-            BasicMelee Combatant;
+            //TODO - Fix me
+            //Spawn both ranged and melee
+            BasicRanged Combatant;
             
             int i = rnd.Next(0,3);
-            Combatant = new BasicMelee(team);
+            Combatant = new BasicRanged(team);
             Combatant.PositionX = spawns[i].X;
             Combatant.PositionY = spawns[i].Y;
             if (CombatantSpawned != null)

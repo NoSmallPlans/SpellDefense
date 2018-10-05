@@ -9,9 +9,9 @@ namespace SpellDefense.Common.Entities
 {
     public abstract class Combatant : GamePiece
     {
-
+        protected Boolean meleeUnit;
         float timeUntilAttack;
-        protected int meleeAttackPwr;
+        protected int attackPwr;
         public GamePiece defaultEnemy;
         GamePiece attackTarget;
         public float speed;
@@ -41,7 +41,14 @@ namespace SpellDefense.Common.Entities
         {
             if (enemy != null && this.timeUntilAttack <= 0)
             {
-                enemy.UpdateHealth(-this.meleeAttackPwr);
+                if (meleeUnit)
+                {
+                    enemy.UpdateHealth(-this.attackPwr);
+                } else {
+                    CreateProjectile();
+                }
+
+                
                 if(enemy.currentHealth <= 0)
                 {
                     this.state = State.walking;
@@ -50,6 +57,8 @@ namespace SpellDefense.Common.Entities
                 this.timeUntilAttack = this.attackSpeed;
             }
         }
+
+        public abstract void CreateProjectile();
 
         public override void Collided(Combatant enemy)
         {
@@ -121,6 +130,8 @@ namespace SpellDefense.Common.Entities
             {
                 DrawTargetLine();
             }
+
+            if (!meleeUnit) UpdateProjectiles(frameTimeInSeconds);
         }
 
         private void EngageTarget()
@@ -150,5 +161,9 @@ namespace SpellDefense.Common.Entities
 
             }
         }
+
+        protected abstract void UpdateProjectiles(float frameTimeInSeconds);
+
+
     }
 }

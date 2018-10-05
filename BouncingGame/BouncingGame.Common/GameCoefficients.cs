@@ -1,4 +1,5 @@
-﻿using SpellDefense.Common.Entities;
+﻿using CocosSharp;
+using SpellDefense.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace SpellDefense.Common
 
         public static bool debug = false;
 
+        public static CCLayer gameplayLayer;
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 
         // if the game initially spawns one combatant per 5 seconds, then 

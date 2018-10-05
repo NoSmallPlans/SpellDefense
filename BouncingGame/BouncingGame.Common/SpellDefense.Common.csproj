@@ -32,7 +32,9 @@
   <ItemGroup>
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
+    <Compile Include="Entities\BasicRanged.cs" />
     <Compile Include="Entities\GamePiece.cs" />
+    <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\Team.cs" />
     <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />

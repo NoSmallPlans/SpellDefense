@@ -16,8 +16,9 @@ namespace SpellDefense.Common.Entities
             this.speed = 40;
             this.currentHealth = 100;
             this.maxHealth = 100;
-            this.meleeAttackPwr = 20;
+            this.attackPwr = 20;
             this.attackSpeed = 2;
+            this.meleeUnit = true;
 
             CreateCollision();
             //this last... ALWAYS!
@@ -63,6 +64,16 @@ namespace SpellDefense.Common.Entities
                 drawNode.DrawCircle(this.Position, (int)attackRange, CCColor4B.Orange);
             }
 
+        }
+
+        public override void CreateProjectile()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void UpdateProjectiles(float frameTimeInSeconds)
+        {
+            throw new NotImplementedException();
         }
 
 

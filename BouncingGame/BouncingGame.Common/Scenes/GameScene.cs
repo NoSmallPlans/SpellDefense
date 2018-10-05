@@ -43,6 +43,8 @@ namespace SpellDefense.Common.Scenes
 
             targetLines = new List<CCDrawNode>();
 
+            GameCoefficients.gameplayLayer = gameplayLayer;
+
         Schedule(Activity);
         }
 
@@ -117,12 +119,14 @@ namespace SpellDefense.Common.Scenes
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
-            gameplayLayer.AddChild(combatant.targetLine);
+            
+            //gameplayLayer.AddChild(combatant.targetLine);
             if (combatant.teamColor == Team.ColorChoice.RED)
                 redTeam.AddCombatant(combatant, blueTeam.TeamBase());
             else
                 blueTeam.AddCombatant(combatant, redTeam.TeamBase());
-            gameplayLayer.AddChild(combatant);
+            GameCoefficients.gameplayLayer.AddChild(combatant);
+            //gameplayLayer.AddChild(combatant);
         }
     }
 }
