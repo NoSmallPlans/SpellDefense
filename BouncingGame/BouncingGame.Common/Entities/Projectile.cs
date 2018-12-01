@@ -8,41 +8,43 @@ using static SpellDefense.Common.Entities.Team;
 
 namespace SpellDefense.Common.Entities
 {
-    class Projectile : CCNode
+    public class Projectile : CCNode
     {
         public Projectile(GamePiece target, int dmg, ColorChoice teamColor)
         {
             this.dmg = dmg;
             this.target = target;
-            this.collisionRect = new CCRect(0, 0, drawSize, drawSize);
-            this.teamColor = teamColor;
-            this.drawSize = 100;
+            this.drawSize = 10;
+            this.teamColor = teamColor;            
+            this.moveSpeed = 60;
             CreateGraphic();
         }
 
-        protected CCRect collisionRect;
         protected CCDrawNode drawNode;
         protected GamePiece target;
         protected float moveSpeed;
-        protected int dmg;
+        public int dmg;
         protected int drawSize;
         ColorChoice teamColor;
 
         public void update(float frameTimePerSecond)
         {
             move(frameTimePerSecond);
-            //TODO - Fixme
-            //Collision checking doesn't work, because not part of layer
             if(checkCollision(this.target))
             {
                 this.dealDmg(this.target, this.dmg);
-                this.RemoveFromParent();
+                this.dmg = 0;
             }
+        }
+
+        public CCRect GetBoundingBox()
+        {
+            return new CCRect(this.Position.X, this.Position.Y, this.drawNode.BoundingBox.Size.Width, this.drawNode.BoundingBox.Size.Height);
         }
 
         public Boolean checkCollision(GamePiece target)
         {
-            return collisionRect.IntersectsRect(target.BoundingBox);
+            return this.GetBoundingBox().IntersectsRect(target.GetBoundingBox());
         }
 
         public void dealDmg(GamePiece target, int dmg)
@@ -79,23 +81,11 @@ namespace SpellDefense.Common.Entities
 
             this.AddChild(drawNode);
 
-            drawNode.DrawCircle(
-                center: CCPoint.Zero,
+            
+            drawNode.DrawSolidCircle(
+                pos: CCPoint.Zero,
                 radius: this.drawSize/2,
                 color: team);
-            /*
-            float barHeight = this.drawSize * .2f;
-            float currentBarWidth = this.drawSize * (this.currentHealth / this.maxHealth);
-
-            var greenHealth = new CCRect(-this.drawSize / 2, this.drawSize * 0.5f + barHeight, currentBarWidth, barHeight);
-            drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
-
-            if (GameCoefficients.debug)
-            {
-                drawNode.DrawCircle(this.Position, (int)aggroRange, CCColor4B.Blue);
-                drawNode.DrawCircle(this.Position, (int)attackRange, CCColor4B.Orange);
-            }
-            */
         }
 
     }

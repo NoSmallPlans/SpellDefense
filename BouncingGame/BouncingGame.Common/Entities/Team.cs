@@ -17,6 +17,7 @@ namespace SpellDefense.Common.Entities
             protected set;
         }
         private List<Combatant> combatants;
+        private List<Projectile> projectiles;
         private Base teamBase;
 
         public Base TeamBase()
@@ -28,6 +29,7 @@ namespace SpellDefense.Common.Entities
         {
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
+            projectiles = new List<Projectile>();
         }
 
         public Base makeBase()
@@ -49,6 +51,7 @@ namespace SpellDefense.Common.Entities
         {
             addition.defaultEnemy = defaultEnemy;
             addition.AttackTarget = defaultEnemy;
+            addition.AddProjectile += this.AddProjectile;
             this.combatants.Add(addition);
         }
 
@@ -64,9 +67,22 @@ namespace SpellDefense.Common.Entities
                 combatants[i].Cleanup();
                 if (combatants[i].state == Combatant.State.dead)
                 {
-                    Destroy(combatants[i], combatants);
+                    DestroyCombatant(combatants[i], combatants);
                 }
             }
+
+            for (int i = projectiles.Count - 1; i >= 0; i--)
+            {
+                if (projectiles[i].dmg == 0)
+                {
+                    DestroyProjectile(projectiles[i], projectiles);
+                }
+            }
+        }
+
+        public void AddProjectile(Projectile projectile)
+        {
+            this.projectiles.Add(projectile);
         }
 
         public void AttackPhase(float frameTimeInSeconds, List<Combatant> enemies, GamePiece enemyBase)
@@ -74,6 +90,11 @@ namespace SpellDefense.Common.Entities
             foreach(Combatant combatant in combatants)
             {
                 combatant.AttackPhase(frameTimeInSeconds, enemies, enemyBase);
+            }
+
+            foreach (Projectile projectile in projectiles)
+            {
+                projectile.update(frameTimeInSeconds);
             }
         }
 
@@ -85,10 +106,16 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        private void Destroy(Combatant combatant, List<Combatant> list)
+        private void DestroyCombatant(Combatant combatant, List<Combatant> list)
         {
             combatant.RemoveFromParent();
             list.Remove(combatant);
+        }
+
+        private void DestroyProjectile(Projectile projectile, List<Projectile> list)
+        {
+            projectile.RemoveFromParent();
+            list.Remove(projectile);
         }
     }
 }

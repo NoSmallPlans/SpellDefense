@@ -63,6 +63,11 @@ namespace SpellDefense.Common.Entities
             UpdateHealthBar();
         }
 
+        public CCRect GetBoundingBox()
+        {
+            return new CCRect(this.Position.X, this.Position.Y, this.drawNode.BoundingBox.Size.Width, this.drawNode.BoundingBox.Size.Height);
+        }
+
         public void Cleanup()
         {
             if (this.currentHealth <= 0)
@@ -77,6 +82,7 @@ namespace SpellDefense.Common.Entities
         public abstract void CreateGraphic();
 
         public abstract void CreateCollision();
+
 
         //public abstract void Activity(float frameTimeInSeconds);
     }

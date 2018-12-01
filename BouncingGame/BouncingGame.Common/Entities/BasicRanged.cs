@@ -11,6 +11,7 @@ namespace SpellDefense.Common.Entities
     {
         public List<Projectile> projectiles;
         public int drawSize;
+        public CCNode collisionRect;
         public BasicRanged(Team.ColorChoice teamColor) : base(teamColor)
         {
             this.drawSize = 20;
@@ -23,6 +24,7 @@ namespace SpellDefense.Common.Entities
             this.aggroRange = base.aggroRange * 10;
             this.meleeUnit = false;
             this.projectiles = new List<Projectile>();
+            
 
         CreateCollision();
             //this last... ALWAYS!
@@ -79,20 +81,12 @@ namespace SpellDefense.Common.Entities
         }
         */
 
-        protected override void UpdateProjectiles(float frameTimeInSeconds)
-        {
-            foreach(Projectile projectile in projectiles)
-            {
-                projectile.update(frameTimeInSeconds);
-            }
-        }
-
         public override void CreateProjectile()
         {
             Projectile myProjectile = new Projectile(this.AttackTarget, this.attackPwr, teamColor);
-            this.projectiles.Add(myProjectile);
-            this.AddChild(myProjectile);
-
+            this.Parent.AddChild(myProjectile);
+            myProjectile.Position = this.Position;
+            AddProjectile(myProjectile);
         }
 
     }

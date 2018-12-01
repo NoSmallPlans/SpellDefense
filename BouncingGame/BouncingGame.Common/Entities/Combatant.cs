@@ -9,6 +9,9 @@ namespace SpellDefense.Common.Entities
 {
     public abstract class Combatant : GamePiece
     {
+        //Special function pointer, for ranged units
+        public Action<Projectile> AddProjectile;
+
         protected Boolean meleeUnit;
         float timeUntilAttack;
         protected int attackPwr;
@@ -131,7 +134,7 @@ namespace SpellDefense.Common.Entities
                 DrawTargetLine();
             }
 
-            if (!meleeUnit) UpdateProjectiles(frameTimeInSeconds);
+            //if (!meleeUnit) UpdateProjectiles(frameTimeInSeconds);
         }
 
         private void EngageTarget()
@@ -162,7 +165,7 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        protected abstract void UpdateProjectiles(float frameTimeInSeconds);
+        
 
 
     }

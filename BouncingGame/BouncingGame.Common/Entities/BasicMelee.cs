@@ -71,11 +71,6 @@ namespace SpellDefense.Common.Entities
             throw new NotImplementedException();
         }
 
-        protected override void UpdateProjectiles(float frameTimeInSeconds)
-        {
-            throw new NotImplementedException();
-        }
-
 
 
     }
