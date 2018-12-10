@@ -35,18 +35,21 @@ namespace SpellDefense.Common.Scenes
                                             (int)GameCoefficients.BattlefieldDimensions.GetHeight(), 
                                             (int)GameCoefficients.BattlefieldDimensions.GetWidth(),
                                             this.gameplayLayer);
+            GameCoefficients.cardHUD = this.cardHUD;
             this.CreateText();
             this.CreateCombatantSpawner();
             this.redTeam = new Team(Team.ColorChoice.RED);
             this.blueTeam = new Team(Team.ColorChoice.BLUE);
             this.CreateTeamBases();
 
+            gameplayLayer.AddChild(battlefield);
+            gameplayLayer.AddChild(cardHUD);
             targetLines = new List<CCDrawNode>();
 
             GameCoefficients.gameplayLayer = gameplayLayer;
-
-        Schedule(Activity);
+            Schedule(Activity);
         }
+
 
         private void InitLayers()
         {
@@ -102,10 +105,6 @@ namespace SpellDefense.Common.Scenes
                 blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
                 combatantSpawner.Activity(frameTimeInSeconds);
-
-                //DebugActivity();
-
-                //CheckCollisions();
             }
         }
 
@@ -125,8 +124,14 @@ namespace SpellDefense.Common.Scenes
                 redTeam.AddCombatant(combatant, blueTeam.TeamBase());
             else
                 blueTeam.AddCombatant(combatant, redTeam.TeamBase());
-            GameCoefficients.gameplayLayer.AddChild(combatant);
+            //GameCoefficients.gameplayLayer.AddChild(combatant);
+            battlefield.AddChild(combatant);
             //gameplayLayer.AddChild(combatant);
+        }
+
+        private void HandleCardDrawn(Card card)
+        {
+            cardHUD.AddChild(card);
         }
     }
 }

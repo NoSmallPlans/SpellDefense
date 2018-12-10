@@ -28,3 +28,13 @@ C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\Boun
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\SpellDefense.Common.pdb
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\box2d.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\CocosSharp.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\MonoGame.Framework.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CoreCompileInputs.cache
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb

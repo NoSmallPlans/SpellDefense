@@ -1,4 +1,5 @@
 ﻿using CocosSharp;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace SpellDefense.Common.Entities
         private List<Combatant> combatants;
         private List<Projectile> projectiles;
         private Base teamBase;
+        CardManager cardManager;
 
         public Base TeamBase()
         {
@@ -30,6 +32,8 @@ namespace SpellDefense.Common.Entities
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
+            cardManager = new CardManager(teamColor);
+            GameCoefficients.cardHUD.AddChild(cardManager);
         }
 
         public Base makeBase()

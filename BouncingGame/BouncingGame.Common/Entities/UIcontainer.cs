@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SpellDefense.Common.Entities
 {
-    class UIcontainer : CCNode
+    public class UIcontainer : CCNode
     {
         protected CCDrawNode drawNode;
         public CCBoundingBoxI container;

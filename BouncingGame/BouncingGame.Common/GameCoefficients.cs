@@ -16,6 +16,7 @@ namespace SpellDefense.Common
         public static bool debug = false;
 
         public static CCLayer gameplayLayer;
+        public static UIcontainer cardHUD;
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 
         // if the game initially spawns one combatant per 5 seconds, then 
@@ -55,8 +56,6 @@ namespace SpellDefense.Common
                 const float MENU_RATIO = 0.15f;
                 return MENU_RATIO * desiredHeight;
             }
-
-
         }
 
         //Eventually Battlefield dimensions will be more adaptive

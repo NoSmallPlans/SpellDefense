@@ -26,7 +26,7 @@ namespace SpellDefense.Common.Entities
             this.projectiles = new List<Projectile>();
             
 
-        CreateCollision();
+            CreateCollision();
             //this last... ALWAYS!
             drawNode = new CCDrawNode();
             this.CreateGraphic();
@@ -70,16 +70,7 @@ namespace SpellDefense.Common.Entities
                 drawNode.DrawCircle(this.Position, (int)aggroRange, CCColor4B.Blue);
                 drawNode.DrawCircle(this.Position, (int)attackRange, CCColor4B.Orange);
             }
-
         }
-
-        /*
-        protected void AttackPhase(float frameTimeInSeconds, List<Combatant> enemies, GamePiece defaultEnemy)
-        {
-            base.AttackPhase(frameTimeInSeconds, enemies, defaultEnemy);
-            updateProjectiles(frameTimeInSeconds);
-        }
-        */
 
         public override void CreateProjectile()
         {
