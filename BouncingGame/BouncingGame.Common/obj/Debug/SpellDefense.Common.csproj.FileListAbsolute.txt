@@ -38,3 +38,6 @@ D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Commo
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.pdb
+C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.dll
+C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.pdb
+C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.xml

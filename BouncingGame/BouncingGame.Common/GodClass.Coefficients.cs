@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SpellDefense.Common
 {
-    public static class GameCoefficients
+    public static partial class GodClass
     {
 
         public const float StartingCombatantPerSecond = .005f;
@@ -16,6 +16,7 @@ namespace SpellDefense.Common
         public static bool debug = false;
 
         public static CCLayer gameplayLayer;
+        public static UIcontainer battlefield;
         public static UIcontainer cardHUD;
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 

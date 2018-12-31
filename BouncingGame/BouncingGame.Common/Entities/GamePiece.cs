@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
@@ -39,13 +40,13 @@ namespace SpellDefense.Common.Entities
             protected set;
         }
 
-        public Team.ColorChoice teamColor
+        public TeamColor teamColor
         {
             get;
             private set;
         }
 
-        public GamePiece(Team.ColorChoice teamColor)
+        public GamePiece(TeamColor teamColor)
         {
             this.teamColor = teamColor;
             state = State.waiting;

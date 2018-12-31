@@ -111,6 +111,7 @@ class MonoPackageManager_Resources {
 		"Lidgren.Network.dll",
 		"MonoGame.Framework.dll",
 		"SpellDefense.Common.dll",
+		"Newtonsoft.Json.dll",
 	};
 	public static final String[] Dependencies = new String[]{
 	};

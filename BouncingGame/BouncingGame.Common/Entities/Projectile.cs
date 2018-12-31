@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
 using static SpellDefense.Common.Entities.Team;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
     public class Projectile : CCNode
     {
-        public Projectile(GamePiece target, int dmg, ColorChoice teamColor)
+        public Projectile(GamePiece target, int dmg, TeamColor teamColor)
         {
             this.dmg = dmg;
             this.target = target;
@@ -25,7 +26,7 @@ namespace SpellDefense.Common.Entities
         protected float moveSpeed;
         public int dmg;
         protected int drawSize;
-        ColorChoice teamColor;
+        TeamColor teamColor;
 
         public void update(float frameTimePerSecond)
         {
@@ -70,7 +71,7 @@ namespace SpellDefense.Common.Entities
 
             drawNode = new CCDrawNode();
 
-            if (this.teamColor == Team.ColorChoice.RED)
+            if (this.teamColor == TeamColor.RED)
             {
                 team = CCColor4B.Red;
             }

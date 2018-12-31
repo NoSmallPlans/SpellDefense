@@ -3,3 +3,6 @@ Lidgren.Network
 MonoGame.Framework
 SpellDefense.Common
 System.Runtime
+Newtonsoft.Json
+System.Resources.ResourceManager
+System.Reflection.Extensions

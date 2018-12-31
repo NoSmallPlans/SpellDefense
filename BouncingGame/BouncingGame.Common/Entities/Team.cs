@@ -5,35 +5,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
     public class Team
     {
-        public enum ColorChoice { RED, BLUE };
+        CombatantSpawner combatantSpawner;
 
-        public ColorChoice teamColor
-        {
-            get;
-            protected set;
-        }
         private List<Combatant> combatants;
         private List<Projectile> projectiles;
         private Base teamBase;
+        private Base enemyBase;
         CardManager cardManager;
+        TeamColor teamColor;
 
         public Base TeamBase()
         {
             return teamBase;
         }
 
-        public Team(ColorChoice teamColor)
+        public Team(TeamColor teamColor)
         {
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
             cardManager = new CardManager(teamColor);
-            GameCoefficients.cardHUD.AddChild(cardManager);
+            GodClass.cardHUD.AddChild(cardManager);
+        }
+
+        public void SetEnemyBase(Base enemyBase)
+        {
+            this.enemyBase = enemyBase;
         }
 
         public Base makeBase()
@@ -120,6 +123,24 @@ namespace SpellDefense.Common.Entities
         {
             projectile.RemoveFromParent();
             list.Remove(projectile);
+        }
+
+        public void CreateCombatantSpawner()
+        {
+            combatantSpawner = new CombatantSpawner(teamColor);
+            combatantSpawner.CombatantSpawned += HandleCombatantSpawned;
+            combatantSpawner.CreateSpawnPts();
+        }
+
+        private void HandleCombatantSpawned(Combatant combatant)
+        {
+            this.AddCombatant(combatant, enemyBase);
+            GodClass.battlefield.AddChild(combatant);
+        }
+
+        public void SpawnPhase(float frameTimeInSeconds)
+        {
+            combatantSpawner.Activity(frameTimeInSeconds);
         }
     }
 }

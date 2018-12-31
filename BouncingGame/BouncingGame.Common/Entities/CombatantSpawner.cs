@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
@@ -13,15 +14,17 @@ namespace SpellDefense.Common.Entities
         List<CCPoint> RedSpawns;
         List<CCPoint> BlueSpawns;
         Random rnd = new Random();
+        TeamColor teamColor;
 
-        public CombatantSpawner()
+        public CombatantSpawner(TeamColor teamColor)
         {
             this.RedSpawns = new List<CCPoint>();
             this.BlueSpawns = new List<CCPoint>();
             IsSpawning = true;
-            TimeInbetweenSpawns = 1 / GameCoefficients.StartingCombatantPerSecond;
+            TimeInbetweenSpawns = 1 / GodClass.StartingCombatantPerSecond;
             // So that spawning starts immediately:
             timeSinceLastSpawn = TimeInbetweenSpawns;
+            this.teamColor = teamColor;
         }
 
 
@@ -29,7 +32,7 @@ namespace SpellDefense.Common.Entities
         {
             //TOOD remove +-10 magic numbers
             //TODO rename parent to something besides daddy... Thats weird
-            UIcontainer daddy = (UIcontainer)this.Parent;
+            UIcontainer daddy = GodClass.battlefield;
             float redX = daddy.minX + 10;
             float blueX = daddy.width - 10;
             float yBottom = daddy.height / 4;
@@ -102,8 +105,10 @@ namespace SpellDefense.Common.Entities
             {
                 timeSinceLastSpawn -= TimeInbetweenSpawns;
 
-                Spawn(RedSpawns, Team.ColorChoice.RED);
-                Spawn(BlueSpawns, Team.ColorChoice.BLUE);
+                if(teamColor == TeamColor.RED)
+                    Spawn(RedSpawns, TeamColor.RED);
+                else
+                    Spawn(BlueSpawns, TeamColor.BLUE);
             }
         }
 
@@ -114,7 +119,7 @@ namespace SpellDefense.Common.Entities
             // game becomes impossibly difficult very quickly.
             var currentCombatantPerSecond = 1 / TimeInbetweenSpawns;
 
-            var amountToAdd = frameTime / GameCoefficients.TimeForExtraCombatantPerSecond;
+            var amountToAdd = frameTime / GodClass.TimeForExtraCombatantPerSecond;
 
             var newCombatantPerSecond = currentCombatantPerSecond + amountToAdd;
 
@@ -123,14 +128,14 @@ namespace SpellDefense.Common.Entities
         }
 
         // made public for debugging, may make it private later:
-        private void Spawn(List<CCPoint> spawns, Team.ColorChoice team)
+        private void Spawn(List<CCPoint> spawns, TeamColor teamColor)
         {
             //TODO - Fix me
             //Spawn both ranged and melee
             BasicRanged Combatant;
             
             int i = rnd.Next(0,3);
-            Combatant = new BasicRanged(team);
+            Combatant = new BasicRanged(teamColor);
             Combatant.PositionX = spawns[i].X;
             Combatant.PositionY = spawns[i].Y;
             if (CombatantSpawned != null)

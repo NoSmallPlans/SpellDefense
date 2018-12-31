@@ -37,7 +37,7 @@ namespace SpellDefense.Common
             // We use a lower-resolution display to get a pixellated appearance
             //int width = 800;
             //int height = 480;
-            GameView.DesignResolution = new CCSizeI(GameCoefficients.desiredWidth, GameCoefficients.desiredHeight);
+            GameView.DesignResolution = new CCSizeI(GodClass.desiredWidth, GodClass.desiredHeight);
             GameView.ResolutionPolicy = CCViewResolutionPolicy.ShowAll;
             //InitializeAudio();
 

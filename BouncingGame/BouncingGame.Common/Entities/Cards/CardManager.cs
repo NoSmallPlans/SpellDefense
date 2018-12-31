@@ -1,10 +1,14 @@
 ﻿using CocosSharp;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static SpellDefense.Common.Entities.Team;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities.Cards
 {
@@ -12,17 +16,19 @@ namespace SpellDefense.Common.Entities.Cards
     {
         Deck deck;
         List<Card> hand;
+        List<Card> cardLibrary;
         int maxHandSize;
         int currentHandSize;
-        ColorChoice teamColor;
+        TeamColor teamColor;
         int maxMana;
         int currentMana;
         int cardSpacing;
         int cardStartingX;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
+        
 
-        public CardManager(ColorChoice team)
+        public CardManager(TeamColor team)
         {
             maxHandSize = 3;
             maxMana = 6;
@@ -31,7 +37,7 @@ namespace SpellDefense.Common.Entities.Cards
             hand = new List<Card>();
             teamColor = team;
             cardSpacing = 100;
-            if (team == ColorChoice.BLUE)
+            if (team == TeamColor.BLUE)
                 cardStartingX = 400;
             else
                 cardStartingX = 0;
@@ -52,7 +58,7 @@ namespace SpellDefense.Common.Entities.Cards
             card.CardClicked += CardClicked;
             hand.Add(card);
             currentHandSize++;
-            GameCoefficients.cardHUD.AddChild(card);
+            GodClass.cardHUD.AddChild(card);
 
             UpdateHandPositions();
         }
@@ -68,7 +74,10 @@ namespace SpellDefense.Common.Entities.Cards
 
         private void InitDeck()
         {
-            deck.CreateDeck();
+            foreach (String cardDef in GodClass.CardLibrary)
+            {
+                deck.AddCard(cardDef);
+            }
         }
 
         private void InitHand()
@@ -85,10 +94,10 @@ namespace SpellDefense.Common.Entities.Cards
         //Draw New Card
         public void CardClicked(Card card)
         {
-            if(currentMana >= card.manaCost)
+            if(currentMana >= card.cardCost)
             {
-                UpdateMana(-card.manaCost);
-                card.Play();
+                UpdateMana(-card.cardCost);
+                card.Play(new int[] { (int)this.teamColor });
                 card.RemoveFromParent();
                 card.CardClicked -= CardClicked;
                 hand.Remove(card);

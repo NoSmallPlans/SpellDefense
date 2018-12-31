@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
@@ -26,7 +27,7 @@ namespace SpellDefense.Common.Entities
         protected float attackRange;
         protected float aggroRange;
         
-        public Combatant(Team.ColorChoice teamColor) : base(teamColor)
+        public Combatant(TeamColor teamColor) : base(teamColor)
         {
             state = State.walking;
             aggroRange = 64;
@@ -129,7 +130,7 @@ namespace SpellDefense.Common.Entities
             EngageTarget();
 
             //Debugging line to help with targeting
-            if (GameCoefficients.debug)
+            if (GodClass.debug)
             {
                 DrawTargetLine();
             }

@@ -2,6 +2,7 @@
 using SpellDefense.Common.Entities;
 using System;
 using System.Collections.Generic;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Scenes
 {
@@ -27,29 +28,41 @@ namespace SpellDefense.Common.Scenes
         {
             this.gameView = gameView;
             this.InitLayers();
-            this.cardHUD = new CardHUD(0, 0, (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
-                                             (int)GameCoefficients.CardHUDdimensions.GetWidth(), 
+            this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(), 
+                                             (int)GodClass.CardHUDdimensions.GetWidth(), 
                                              this.gameplayLayer);
             this.battlefield = new UIcontainer(0, 
-                                            (int)GameCoefficients.CardHUDdimensions.GetHeight(), 
-                                            (int)GameCoefficients.BattlefieldDimensions.GetHeight(), 
-                                            (int)GameCoefficients.BattlefieldDimensions.GetWidth(),
+                                            (int)GodClass.CardHUDdimensions.GetHeight(), 
+                                            (int)GodClass.BattlefieldDimensions.GetHeight(), 
+                                            (int)GodClass.BattlefieldDimensions.GetWidth(),
                                             this.gameplayLayer);
-            GameCoefficients.cardHUD = this.cardHUD;
+            GodClass.battlefield = battlefield;
+            GodClass.cardHUD = this.cardHUD;
             this.CreateText();
-            this.CreateCombatantSpawner();
-            this.redTeam = new Team(Team.ColorChoice.RED);
-            this.blueTeam = new Team(Team.ColorChoice.BLUE);
-            this.CreateTeamBases();
+            this.InitTeams();
 
             gameplayLayer.AddChild(battlefield);
             gameplayLayer.AddChild(cardHUD);
             targetLines = new List<CCDrawNode>();
 
-            GameCoefficients.gameplayLayer = gameplayLayer;
+            GodClass.gameplayLayer = gameplayLayer;
             Schedule(Activity);
         }
 
+
+        private void InitTeams()
+        {
+            this.redTeam = new Team(TeamColor.RED);
+            this.blueTeam = new Team(TeamColor.BLUE);
+            gameplayLayer.AddChild(redTeam.makeBase());
+            gameplayLayer.AddChild(blueTeam.makeBase());
+            redTeam.SetEnemyBase(blueTeam.GetBase());
+            blueTeam.SetEnemyBase(redTeam.GetBase());
+            redTeam.CreateCombatantSpawner();
+            blueTeam.CreateCombatantSpawner();
+            GodClass.red = redTeam;
+            GodClass.blue = blueTeam;
+        }
 
         private void InitLayers()
         {
@@ -64,29 +77,15 @@ namespace SpellDefense.Common.Scenes
             this.AddLayer(this.hudLayer);
         }
 
-        private void CreateCombatantSpawner()
-        {
-            combatantSpawner = new CombatantSpawner();
-            combatantSpawner.CombatantSpawned += HandleCombatantSpawned;
-            this.battlefield.AddChild(combatantSpawner);
-            combatantSpawner.CreateSpawnPts();
-        }
-
         private void CreateText()
         {
             System.Diagnostics.Debug.WriteLine("Battle Screen");
             CCLabel label = new CCLabel("Battle Screen", "Arial", 30, CCLabelFormat.SystemFont);
-            label.PositionX = GameCoefficients.BattlefieldDimensions.GetWidth() / 2.0f;
-            label.PositionY = GameCoefficients.BattlefieldDimensions.GetHeight() / 2.0f;
+            label.PositionX = GodClass.BattlefieldDimensions.GetWidth() / 2.0f;
+            label.PositionY = GodClass.BattlefieldDimensions.GetHeight() / 2.0f;
             label.Color = CCColor3B.White;
 
             hudLayer.AddChild(label);
-        }
-
-        private void CreateTeamBases()
-        {
-            gameplayLayer.AddChild(redTeam.makeBase());
-            gameplayLayer.AddChild(blueTeam.makeBase());
         }
 
         private void Activity(float frameTimeInSeconds)
@@ -104,7 +103,8 @@ namespace SpellDefense.Common.Scenes
                 redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
                 blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
-                combatantSpawner.Activity(frameTimeInSeconds);
+                redTeam.SpawnPhase(frameTimeInSeconds);
+                blueTeam.SpawnPhase(frameTimeInSeconds);
             }
         }
 
@@ -114,19 +114,6 @@ namespace SpellDefense.Common.Scenes
         {
             combatant.RemoveFromParent();
             list.Remove(combatant);
-        }
-
-        private void HandleCombatantSpawned(Combatant combatant)
-        {
-            
-            //gameplayLayer.AddChild(combatant.targetLine);
-            if (combatant.teamColor == Team.ColorChoice.RED)
-                redTeam.AddCombatant(combatant, blueTeam.TeamBase());
-            else
-                blueTeam.AddCombatant(combatant, redTeam.TeamBase());
-            //GameCoefficients.gameplayLayer.AddChild(combatant);
-            battlefield.AddChild(combatant);
-            //gameplayLayer.AddChild(combatant);
         }
 
         private void HandleCardDrawn(Card card)

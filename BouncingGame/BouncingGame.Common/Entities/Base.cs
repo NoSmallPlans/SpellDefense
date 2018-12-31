@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
@@ -12,7 +13,7 @@ namespace SpellDefense.Common.Entities
         CCSprite sprite;
         CCDrawNode healthBar;
 
-        public Base(Team.ColorChoice teamColor) : base(teamColor)
+        public Base(TeamColor teamColor) : base(teamColor)
         {
             maxHealth = 1000;
             currentHealth = maxHealth;
@@ -20,14 +21,14 @@ namespace SpellDefense.Common.Entities
             sprite = new CCSprite("CastleGreen");
             sprite.Scale = 0.3f;
             float spriteWidth = sprite.ContentSize.Width * sprite.ScaleX / 4;
-            if (teamColor == Team.ColorChoice.RED)
+            if (teamColor == TeamColor.RED)
             {
                 sprite.RotationY = 180;
-                this.Position = new CCPoint(-spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);                
+                this.Position = new CCPoint(-spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);                
             }
             else
             {
-                this.Position = new CCPoint(GameCoefficients.BattlefieldDimensions.GetWidth() + spriteWidth, GameCoefficients.BattlefieldDimensions.GetHeight() / 2);
+                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() + spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);
             }
 
             drawNode = new CCDrawNode();

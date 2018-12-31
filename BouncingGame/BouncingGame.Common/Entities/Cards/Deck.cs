@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static SpellDefense.Common.Entities.Team;
+using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities.Cards
 {
@@ -12,9 +13,9 @@ namespace SpellDefense.Common.Entities.Cards
         List<Card> cards;
         int topCard;
         int deckSize;
-        ColorChoice teamColor;
+        TeamColor teamColor;
 
-        public Deck(ColorChoice team)
+        public Deck(TeamColor team)
         {
             topCard = 0;
             deckSize = 21;
@@ -22,13 +23,9 @@ namespace SpellDefense.Common.Entities.Cards
             cards = new List<Card>();
         }
 
-        //Creates a random deck of cards
-        public void CreateDeck()
+        public void AddCard(String added)
         {
-            for(int i = 0; i < deckSize; i++)
-            {
-                cards.Add(new Card(teamColor, i));
-            }
+            cards.Add(new Card(added));
         }
 
         public void Shuffle()
