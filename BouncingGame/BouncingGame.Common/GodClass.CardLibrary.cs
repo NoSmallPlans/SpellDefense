@@ -11,6 +11,22 @@ namespace SpellDefense.Common
         public static String[] CardLibrary =
         {
             @"{
+                'cardTitle' : 'Haste'
+                ,'cardText': 'Give all my units 700 speed'
+                ,'cardCost': '0'
+                ,'cardImage': 'GreenGuy.png'
+                ,'cardActions': [
+                    {
+                        'actionName': 'statSetter'
+                        ,'compileTimeArgs': {
+                            'statName' : 'speed'
+                            ,'statVal' : '700.0'
+                        }
+                    }
+                ]
+            }"
+            ,
+            @"{
                 'cardTitle' : 'Nuke'
                 ,'cardText': 'Deal 75 damage to all bad guys'
                 ,'cardCost': '5'

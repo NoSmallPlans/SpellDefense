@@ -20,7 +20,36 @@ namespace SpellDefense.Common
 
         private static Dictionary<string, Func<JObject, CardAct>> functDict = new Dictionary<string, Func<JObject, CardAct>>()
         {
-            {"DmgAllUnits", delegate(JObject json)
+            {"statSetter", delegate(JObject json)
+            {
+                int requiredInputs = 1;
+                string statName = (string)json["statName"];
+                float statVal = (float)json["statVal"];
+                Func<int[], int> builtActionFunc = delegate(int[] inputs)
+                {
+                    TeamColor teamColor = (TeamColor)inputs[0];
+                    if(teamColor == TeamColor.RED)
+                    {
+                        foreach(Combatant c in red.GetCombatants())
+                        {
+                            c[statName] = statVal;
+                        }
+                    } else
+                    {
+                        foreach(Combatant c in blue.GetCombatants())
+                        {
+                            c[statName] = statVal;
+                        }
+                    }
+
+                    return 1;
+                };
+
+
+                return new CardAct(builtActionFunc, requiredInputs);
+            }}
+
+            ,{"DmgAllUnits", delegate(JObject json)
             {
                 int requiredInputs = 1;
                 int dmg = (int)json["dmg"];

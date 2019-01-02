@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
@@ -84,6 +85,11 @@ namespace SpellDefense.Common.Entities
 
         public abstract void CreateCollision();
 
+        public object this[string propertyName]
+        {
+            get { return GetType().GetRuntimeProperty(propertyName).GetValue(this, null); }
+            set { GetType().GetRuntimeProperty(propertyName).SetValue(this, value, null); }
+        }
 
         //public abstract void Activity(float frameTimeInSeconds);
     }

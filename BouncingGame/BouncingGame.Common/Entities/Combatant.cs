@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
@@ -15,10 +16,10 @@ namespace SpellDefense.Common.Entities
 
         protected Boolean meleeUnit;
         float timeUntilAttack;
-        protected int attackPwr;
+        public int attackPwr { get; set; }
         public GamePiece defaultEnemy;
         GamePiece attackTarget;
-        public float speed;
+        public float speed { get; set; }
         protected float attackSpeed;
         public CCDrawNode targetLine;
 
@@ -166,7 +167,7 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        
+
 
 
     }
