@@ -11,9 +11,10 @@ namespace SpellDefense.Common
         public static String[] CardLibrary =
         {
             @"{
-                'cardTitle' : 'Damage Bad Guys'
+                'cardTitle' : 'Nuke'
                 ,'cardText': 'Deal 75 damage to all bad guys'
                 ,'cardCost': '5'
+                ,'cardImage': 'nuke.png'
                 ,'cardActions': [
                     {
                         'actionName': 'DmgAllUnits'
@@ -22,9 +23,10 @@ namespace SpellDefense.Common
                 ]
             }"
             ,@"{
-                'cardTitle' : 'Tiny Damage Bad Guys'
+                'cardTitle' : 'Fireball'
                 ,'cardText': 'Deal 10 damage to all bad guys' 
                 ,'cardCost': '2'
+                ,'cardImage': 'fireball.png'
                 ,'cardActions': [
                     {
                         'actionName': 'DmgAllUnits'

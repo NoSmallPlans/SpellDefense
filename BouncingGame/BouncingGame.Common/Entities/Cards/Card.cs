@@ -10,11 +10,20 @@ namespace SpellDefense.Common.Entities
 {
     public partial class Card : CCNode
     {
+        public enum CardState
+        {
+            Rest,
+            Selected,
+            Expanded
+        };
+
+        private CardState state;
 
         public Card(String cardJson)
         {
             LogicInit(cardJson);
             this.UIInit();
+            state = CardState.Rest;
         }
     }
 }

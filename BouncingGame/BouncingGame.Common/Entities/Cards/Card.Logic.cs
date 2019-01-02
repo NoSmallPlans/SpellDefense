@@ -14,12 +14,14 @@ namespace SpellDefense.Common.Entities
         private List<CardAct> cardActionList = new List<CardAct>();
         string cardTitle;
         string cardText;
+        string cardImage;
         public int cardCost;
         public void LogicInit(String text)
         {
             JObject testJson = JObject.Parse(text);
-            this.cardTitle = (string)testJson["cardTitle"];
-            this.cardText = (string)testJson["cardText"];
+            cardTitle = (string)testJson["cardTitle"];
+            cardText = (string)testJson["cardText"];
+            cardImage = (string)testJson["cardImage"];
             this.cardCost = (int)testJson["cardCost"];
             JArray cardActions = (JArray)testJson["cardActions"];
 

@@ -33,7 +33,6 @@ D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Commo
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\box2d.dll
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\CocosSharp.dll
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\MonoGame.Framework.dll
-D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CoreCompileInputs.cache
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csproj.CopyComplete
 D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.dll
@@ -41,3 +40,6 @@ D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Commo
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.dll
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.pdb
 C:\Users\cushingk\Documents\Projects\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.xml
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.dll
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\bin\Debug\Newtonsoft.Json.xml
+D:\Development\Xamarin\SpellDefense\SpellDefense\BouncingGame\BouncingGame.Common\obj\Debug\SpellDefense.Common.csprojAssemblyReference.cache

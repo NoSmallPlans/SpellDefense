@@ -16,7 +16,6 @@ namespace SpellDefense.Common.Entities.Cards
     {
         Deck deck;
         List<Card> hand;
-        List<Card> cardLibrary;
         int maxHandSize;
         int currentHandSize;
         TeamColor teamColor;
@@ -24,6 +23,9 @@ namespace SpellDefense.Common.Entities.Cards
         int currentMana;
         int cardSpacing;
         int cardStartingX;
+        int cardStartingY;
+        DateTime timeCardTouched;
+        double cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
         
@@ -41,6 +43,7 @@ namespace SpellDefense.Common.Entities.Cards
                 cardStartingX = 400;
             else
                 cardStartingX = 0;
+            cardStartingY = -100;
             InitDeck();
             InitHand();
             CreateGraphics();
@@ -55,7 +58,6 @@ namespace SpellDefense.Common.Entities.Cards
         public void DrawCard()
         {
             Card card = deck.DrawCard();
-            card.CardClicked += CardClicked;
             hand.Add(card);
             currentHandSize++;
             GodClass.cardHUD.AddChild(card);
@@ -67,8 +69,8 @@ namespace SpellDefense.Common.Entities.Cards
         {
             for(int i = 0; i < currentHandSize; i++)
             {
-                hand[i].Position = new CCPoint(i * cardSpacing + cardStartingX, 0);
-                hand[i].CreateGraphic();
+                hand[i].Position = new CCPoint(i * cardSpacing + cardStartingX, cardStartingY);
+                hand[i].OriginalPosition = hand[i].Position;
             }
         }
 
@@ -92,14 +94,14 @@ namespace SpellDefense.Common.Entities.Cards
         //Play Card
         //Remove card from CardHub
         //Draw New Card
-        public void CardClicked(Card card)
+        public void PlayCard(Card card, CCPoint pos)
         {
             if(currentMana >= card.cardCost)
             {
                 UpdateMana(-card.cardCost);
                 card.Play(new int[] { (int)this.teamColor });
                 card.RemoveFromParent();
-                card.CardClicked -= CardClicked;
+                card.State = Card.CardState.Rest;
                 hand.Remove(card);
                 currentHandSize--;
                 DrawCard();
@@ -110,7 +112,37 @@ namespace SpellDefense.Common.Entities.Cards
         {
             touchListener = new CCEventListenerTouchAllAtOnce();
             touchListener.OnTouchesEnded = HandleTouchesEnded;
+            touchListener.OnTouchesMoved = HandleTouchesMoved;
+            touchListener.OnTouchesBegan = HandleTouchesBegan;
             AddEventListener(touchListener, this);
+        }
+
+        private void HandleTouchesMoved(List<CCTouch> arg1, CCEvent arg2)
+        {
+            foreach (Card c in hand)
+            {
+                if (c.GetBoundingBox().ContainsPoint(arg1[0].Location))
+                {
+                    DateTime checkTime = DateTime.Now;
+                    if ((checkTime - timeCardTouched).TotalSeconds >= cardZoomTime)
+                    {
+                        c.State = Card.CardState.Expanded;                        
+                    }
+                    break;
+                }
+            }
+        }
+
+        private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
+        {
+            foreach (Card c in hand)
+            {
+                if (c.GetBoundingBox().ContainsPoint(arg1[0].Location))
+                {
+                    timeCardTouched = DateTime.Now;
+                    break;
+                }
+            }
         }
 
         private void HandleTouchesEnded(List<CCTouch> arg1, CCEvent arg2)
@@ -119,9 +151,40 @@ namespace SpellDefense.Common.Entities.Cards
             {
                 if (c.GetBoundingBox().ContainsPoint(arg1[0].Location))
                 {
-                    CardClicked(c);
-                    break;
+                    if(c.State == Card.CardState.Rest)
+                    {
+                        DeselectCards();
+                        c.State = Card.CardState.Selected;
+                    }
+                    else
+                    {
+                        c.State = Card.CardState.Rest;
+                    }
+                    return;
                 }
+                if(c.State == Card.CardState.Expanded)
+                {
+                    c.State = Card.CardState.Rest;
+                }
+            }
+            if (GodClass.BattlefieldDimensions.GetBounds().ContainsPoint(arg1[0].Location))
+            {
+                foreach (Card card in hand)
+                {
+                    if (card.State == Card.CardState.Selected)
+                    {
+                        PlayCard(card, arg1[0].LocationOnScreen);
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void DeselectCards()
+        {
+            foreach(Card c in hand)
+            {
+                c.State = Card.CardState.Rest;
             }
         }
 

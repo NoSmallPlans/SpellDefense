@@ -35,6 +35,7 @@
     <Compile Include="Entities\BasicRanged.cs" />
     <Compile Include="Entities\Cards\Card.cs" />
     <Compile Include="Entities\Cards\Card.Logic.cs" />
+    <Compile Include="Entities\Cards\Card.RenderTexture.cs" />
     <Compile Include="Entities\Cards\Card.UI.cs" />
     <Compile Include="Entities\Cards\CardAct.cs" />
     <Compile Include="Entities\Cards\CardManager.cs" />

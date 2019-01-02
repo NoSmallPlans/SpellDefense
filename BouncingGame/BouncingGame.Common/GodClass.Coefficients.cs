@@ -84,6 +84,11 @@ namespace SpellDefense.Common
             {
                 return desiredHeight - CardHUDdimensions.GetHeight();
             }
+
+            public static CCRect GetBounds()
+            {
+                return new CCRect(GetMinX(), GetMinY(), GetWidth(), GetHeight());
+            }
         }
 
     }

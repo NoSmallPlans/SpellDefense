@@ -10,40 +10,95 @@ namespace SpellDefense.Common.Entities
 {
     public partial class Card : CCNode
     {
-        CCDrawNode drawNode;
-        int height;
-        int width;
-        CCColor4B background;
-        public Action<Card> CardClicked;
+        CCSprite borderSprite;
+        CCPoint originalPosition;
 
         private void UIInit()
         {
-            height = 75;
-            width = 50;
-            background = CCColor4B.Red;
+            RenderTextures();
+            ColorIconTexture = CCTextureCache.SharedTextureCache.AddImage("GreenIcon.png");
+            CardTexture = CCTextureCache.SharedTextureCache.AddImage(cardImage);
+            CardName = cardTitle;
+            DescriptionText = cardText;
+            UsesRenderTexture = true;
+            Opacity = 255;
         }
 
-        public void Play()
+        public CCPoint OriginalPosition
         {
-            
+            get
+            {
+                return originalPosition;
+            }
+            set
+            {
+                originalPosition = value;
+            }
+        }
+
+        public CardState State
+        {
+            get
+            {
+                return state;
+            }
+            set
+            {
+                switch(value)
+                {
+                    case CardState.Rest:
+                        RestState();
+                        break;
+                    case CardState.Selected:
+                        SelectedState();
+                        break;
+                    case CardState.Expanded:
+                        ExpandedState();
+                        break;
+                    default:
+                        break;
+                }
+                state = value;
+            }
+        }
+
+        private void RestState()
+        {
+            this.Position = originalPosition;
+            Scale = 1.0f;
+            this.RemoveChild(borderSprite);
+        }
+
+        private void SelectedState()
+        {
+            this.Position = new CCPoint(originalPosition.X, originalPosition.Y + 100);
+            Scale = 1.0f;
+            if (borderSprite == null)
+            {
+                CreateBorderSprite();
+            }
+            else
+            {
+                AddChild(borderSprite);
+            }
+        }
+
+        private void ExpandedState()
+        {
+            Scale = 2.0f;
+            Position = new CCPoint(originalPosition.X, originalPosition.Y + 300);
         }
 
         public CCRect GetBoundingBox()
         {
-            return new CCRect(this.Position.X, this.Position.Y, this.drawNode.BoundingBox.Size.Width, this.drawNode.BoundingBox.Size.Height);
+            return new CCRect(this.Position.X, this.Position.Y, this.renderTexture.Sprite.BoundingBox.Size.Width, this.renderTexture.Sprite.BoundingBox.Size.Height);
         }
 
-        public void CreateGraphic()
+        private void CreateBorderSprite()
         {
-            drawNode = new CCDrawNode();
-            this.AddChild(drawNode);            
-
-            var cardRect = new CCRect(0, 0, width, height);
-            drawNode.DrawRect(cardRect, fillColor: background);
-            var label = new CCLabel(cardTitle.ToString(), "Arial", 20, CCLabelFormat.SystemFont);
-            label.Color = CCColor3B.White;
-            label.PositionY = 12;
-            drawNode.AddChild(label);
+            borderSprite = new CCSprite("CardHighlight.png");
+            borderSprite.AnchorPoint = CCPoint.Zero;
+            this.AddChild(borderSprite);
         }
     }
 }
