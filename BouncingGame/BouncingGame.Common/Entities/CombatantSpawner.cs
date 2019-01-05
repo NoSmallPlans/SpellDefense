@@ -29,7 +29,7 @@ namespace SpellDefense.Common.Entities
         public CombatantSpawner(TeamColor teamColor)
         {
             IsSpawning = true;
-            TimeInbetweenSpawns = 4;
+            TimeInbetweenSpawns = 16;
             // So that spawning starts immediately:
             timeSinceLastSpawn = TimeInbetweenSpawns;
             this.teamColor = teamColor;
@@ -129,8 +129,6 @@ namespace SpellDefense.Common.Entities
             if (IsSpawning)
             {
                 SpawningActivity(frameTime);
-
-                SpawnReductionTimeActivity(frameTime);
             }
         }
 
@@ -140,7 +138,7 @@ namespace SpellDefense.Common.Entities
 
             if (timeSinceLastSpawn > TimeInbetweenSpawns)
             {
-                timeSinceLastSpawn -= TimeInbetweenSpawns;
+                timeSinceLastSpawn = 0;
 
                 if(teamColor == TeamColor.RED)
                     Spawn(redSpawn);

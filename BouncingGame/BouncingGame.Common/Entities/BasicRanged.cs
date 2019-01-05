@@ -12,8 +12,6 @@ namespace SpellDefense.Common.Entities
     class BasicRanged : Combatant
     {
         public List<Projectile> projectiles;
-        public int drawSize;
-        public CCNode collisionRect;
         public BasicRanged(TeamColor teamColor) : base(teamColor)
         {
             this.drawSize = 20;
@@ -26,11 +24,16 @@ namespace SpellDefense.Common.Entities
             this.aggroRange = base.aggroRange * 10;
             this.meleeUnit = false;
             this.projectiles = new List<Projectile>();
-            
 
             CreateCollision();
+            InitDraw();
+        }
+
+        private void InitDraw()
+        {            
             //this last... ALWAYS!
             drawNode = new CCDrawNode();
+            this.AddChild(drawNode);
             this.CreateGraphic();
         }
 
@@ -53,19 +56,13 @@ namespace SpellDefense.Common.Entities
                 team = CCColor4B.Blue;
             }
 
-            this.AddChild(drawNode);
-
             CCV3F_C4B pt1 = new CCV3F_C4B(new CCPoint(0, 0), team);
             CCV3F_C4B pt2 = new CCV3F_C4B(new CCPoint(this.drawSize/2, this.drawSize), team);
             CCV3F_C4B pt3 = new CCV3F_C4B(new CCPoint(this.drawSize, 0), team);
             CCV3F_C4B[] ptArray = { pt1, pt2, pt3 };
             drawNode.DrawTriangleList(ptArray);
 
-            float barHeight = this.drawSize * .2f;
-            float currentBarWidth = this.drawSize * (this.currentHealth / this.maxHealth);
-
-            var greenHealth = new CCRect(-this.drawSize / 2, this.drawSize * 0.5f + barHeight, currentBarWidth, barHeight);
-            drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+            DrawHealthBar();
 
             if (GodClass.debug)
             {

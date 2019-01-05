@@ -10,7 +10,6 @@ namespace SpellDefense.Common.Entities
 {
     class BasicMelee : Combatant
     {
-        public int drawSize;
         public BasicMelee(TeamColor teamColor) : base(teamColor)
         {
             this.drawSize = 20;
@@ -22,8 +21,14 @@ namespace SpellDefense.Common.Entities
             this.meleeUnit = true;
 
             CreateCollision();
+            InitDraw();
+        }
+
+        private void InitDraw()
+        {
             //this last... ALWAYS!
             drawNode = new CCDrawNode();
+            this.AddChild(drawNode);
             this.CreateGraphic();
         }
 
@@ -46,18 +51,14 @@ namespace SpellDefense.Common.Entities
                 team = CCColor4B.Blue;
             }
             
-            this.AddChild(drawNode);
+            //this.AddChild(drawNode);
 
             drawNode.DrawRect(
                 p: CCPoint.Zero,
                 size: this.drawSize,
                 color: team);
 
-            float barHeight = this.drawSize * .2f;
-            float currentBarWidth = this.drawSize * (this.currentHealth / this.maxHealth);
-
-            var greenHealth = new CCRect(-this.drawSize / 2, this.drawSize*0.5f + barHeight, currentBarWidth, barHeight);
-            drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+            DrawHealthBar();
 
             if (GodClass.debug)
             {

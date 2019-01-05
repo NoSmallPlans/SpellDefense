@@ -13,7 +13,7 @@ namespace SpellDefense.Common.Entities
     {
         //Special function pointer, for ranged units
         public Action<Projectile> AddProjectile;
-
+        public int drawSize;
         protected Boolean meleeUnit;
         float timeUntilAttack;
         public int attackPwr { get; set; }
@@ -167,7 +167,14 @@ namespace SpellDefense.Common.Entities
             }
         }
 
+        protected void DrawHealthBar()
+        {
+            float barHeight = this.drawSize * .2f;
+            float currentBarWidth = this.drawSize * (this.currentHealth / this.maxHealth);
 
+            var greenHealth = new CCRect(-this.drawSize / 2, this.drawSize * 0.5f + barHeight, currentBarWidth, barHeight);
+            drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+        }
 
 
     }
