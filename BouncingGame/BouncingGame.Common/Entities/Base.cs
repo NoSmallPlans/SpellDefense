@@ -54,10 +54,10 @@ namespace SpellDefense.Common.Entities
         public override void CreateGraphic()
         {
             DrawHealthBar();
-            DrawCollisionBorder();
+            //DrawDebugCollisionBorder();
         }
 
-        private void DrawCollisionBorder()
+        private void DrawDebugCollisionBorder()
         {
             drawNode.DrawRect(new CCRect(0, 0, collisionWidth, collisionHeight));
         }

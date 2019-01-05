@@ -20,7 +20,7 @@ namespace SpellDefense.Common.Entities
         //Index 1...count represents current and future temporary spawns
         List<List<Unit>> spawnLists;  
 
-        struct Unit
+        class Unit
         {
             public int num;
             public string combatantType;
