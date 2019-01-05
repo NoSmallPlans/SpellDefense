@@ -11,6 +11,40 @@ namespace SpellDefense.Common
         public static String[] CardLibrary =
         {
             @"{
+                'cardTitle' : 'Add Ranged'
+                ,'cardText': 'Adds a ranged unit to all spawns'
+                ,'cardCost': '1'
+                ,'cardImage': 'BlueGuy.png'
+                ,'cardActions': [
+                    {
+                        'actionName': 'addUnit'
+                        ,'compileTimeArgs': {
+                            'combatantType' : 'BasicRanged'
+                            ,'num' : '1'
+                            ,'spawns' : '0'
+                        }
+                    }
+                ]
+            }"
+            ,
+            @"{
+                'cardTitle' : 'Spawn 2 Melee'
+                ,'cardText': 'Adds 2 Melee units to the next spawn'
+                ,'cardCost': '1'
+                ,'cardImage': 'BlueGuy.png'
+                ,'cardActions': [
+                    {
+                        'actionName': 'addUnit'
+                        ,'compileTimeArgs': {
+                            'combatantType' : 'BasicMelee'
+                            ,'num' : '2'
+                            ,'spawns' : '1'
+                        }
+                    }
+                ]
+            }"
+            ,
+            @"{
                 'cardTitle' : 'Haste'
                 ,'cardText': 'Give all my units 700 speed'
                 ,'cardCost': '0'

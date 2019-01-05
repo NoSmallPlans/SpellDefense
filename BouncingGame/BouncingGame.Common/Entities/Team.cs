@@ -11,7 +11,7 @@ namespace SpellDefense.Common.Entities
 {
     public class Team
     {
-        CombatantSpawner combatantSpawner;
+        public CombatantSpawner combatantSpawner;
 
         private List<Combatant> combatants;
         private List<Projectile> projectiles;

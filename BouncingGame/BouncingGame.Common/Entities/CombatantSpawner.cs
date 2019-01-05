@@ -11,22 +11,76 @@ namespace SpellDefense.Common.Entities
 
     public class CombatantSpawner : CCNode
     {
-        List<CCPoint> RedSpawns;
-        List<CCPoint> BlueSpawns;
-        Random rnd = new Random();
+        CCPoint redSpawn;
+        CCPoint blueSpawn;
         TeamColor teamColor;
+
+        //Units that will spawn every spawn event
+        //Firt list, index 0, represents permanent spawns
+        //Index 1...count represents current and future temporary spawns
+        List<List<Unit>> spawnLists;  
+
+        struct Unit
+        {
+            public int num;
+            public string combatantType;
+        }
 
         public CombatantSpawner(TeamColor teamColor)
         {
-            this.RedSpawns = new List<CCPoint>();
-            this.BlueSpawns = new List<CCPoint>();
             IsSpawning = true;
-            TimeInbetweenSpawns = 1 / GodClass.StartingCombatantPerSecond;
+            TimeInbetweenSpawns = 4;
             // So that spawning starts immediately:
             timeSinceLastSpawn = TimeInbetweenSpawns;
             this.teamColor = teamColor;
+            InitSpawnLists();
         }
 
+        private void InitSpawnLists()
+        {
+            spawnLists = new List<List<Unit>>();
+            AddSpawn(3, 0, "BasicMelee");        
+        }
+
+        private Combatant GetCombatant(string combatantType)
+        {
+            switch(combatantType)
+            {
+                case "BasicRanged":
+                    return new BasicRanged(teamColor);
+                case "BasicMelee":
+                    return new BasicMelee(teamColor);
+                default:
+                    return new BasicMelee(teamColor);
+            }
+        }
+
+        public void AddSpawn(int num, int spawns, string combatantType)
+        {
+            //Check to see if list exists
+            //Check to see if combatant type exists
+            //Add to list
+            Unit unit;
+            for(int i = 0; i <= spawns; i++)
+            {
+                if(spawnLists.Count <= i)
+                {
+                    spawnLists.Add(new List<Unit>());
+                }
+                if (spawnLists[i].Any(q => q.combatantType == combatantType))
+                {
+                    unit = spawnLists[i].First(q => q.combatantType == combatantType);
+                    unit.num += num;
+                }
+                else
+                {
+                    unit = new Unit();
+                    unit.num = num;
+                    unit.combatantType = combatantType;
+                    spawnLists[i].Add(unit);
+                }
+            }
+        }
 
         public void CreateSpawnPts()
         {
@@ -35,19 +89,10 @@ namespace SpellDefense.Common.Entities
             UIcontainer daddy = GodClass.battlefield;
             float redX = daddy.minX + 10;
             float blueX = daddy.width - 10;
-            float yBottom = daddy.height / 4;
             float yMid = daddy.height / 2;
-            float yTop = daddy.height * .75f;
 
-
-            RedSpawns.Add(new CCPoint(redX, yBottom));
-            RedSpawns.Add(new CCPoint(redX, yMid));
-            RedSpawns.Add(new CCPoint(redX, yTop));
-
-            BlueSpawns.Add(new CCPoint(blueX, yBottom));
-            BlueSpawns.Add(new CCPoint(blueX, yMid));
-            BlueSpawns.Add(new CCPoint(blueX, yTop));
-
+            redSpawn = new CCPoint(redX, yMid);
+            blueSpawn = new CCPoint(blueX, yMid);
         }
 
         float timeSinceLastSpawn;
@@ -67,14 +112,6 @@ namespace SpellDefense.Common.Entities
                 return toReturn;
             }
         }
-
-        /*
-        public CCLayer Layer
-        {
-            get;
-            set;
-        }
-        */
         
 
         public Action<Combatant> CombatantSpawned;
@@ -106,9 +143,9 @@ namespace SpellDefense.Common.Entities
                 timeSinceLastSpawn -= TimeInbetweenSpawns;
 
                 if(teamColor == TeamColor.RED)
-                    Spawn(RedSpawns, TeamColor.RED);
+                    Spawn(redSpawn);
                 else
-                    Spawn(BlueSpawns, TeamColor.BLUE);
+                    Spawn(blueSpawn);
             }
         }
 
@@ -128,24 +165,39 @@ namespace SpellDefense.Common.Entities
         }
 
         // made public for debugging, may make it private later:
-        private void Spawn(List<CCPoint> spawns, TeamColor teamColor)
+        private void Spawn(CCPoint spawnPoint)
         {
-            //TODO - Fix me
-            //Spawn both ranged and melee
-            BasicRanged Combatant;
-            
-            int i = rnd.Next(0,3);
-            Combatant = new BasicRanged(teamColor);
-            Combatant.PositionX = spawns[i].X;
-            Combatant.PositionY = spawns[i].Y;
-            if (CombatantSpawned != null)
+            int rows = 3;
+            int curRow = 1;
+            int curCol = 1;
+            //TODO remove hard coding on spacing, change it to sprite width/height
+            float heightSpacing = 40.0f;
+            float widthSpacing = 40.0f;
+
+            for (int i = 0; i < (spawnLists.Count > 1 ? 2 : 1); i++)
             {
-                CombatantSpawned(Combatant);
+                foreach (Unit unit in spawnLists[i])
+                {
+                    for (int n = 0; n < unit.num; n++)
+                    {
+                        Combatant c = GetCombatant(unit.combatantType);
+                        c.Position = spawnPoint;
+                        c.PositionX += curCol * widthSpacing;
+                        c.PositionY += curRow * heightSpacing;
+                        curRow++;
+                        if (curRow > rows)
+                        {
+                            curRow = 1;
+                            curCol++;
+                        }
+                        CombatantSpawned(c);
+                    }
+                }
             }
-            
+            if (spawnLists.Count > 1)
+            {
+                spawnLists.RemoveAt(1);
+            }
         }
-
-
-
     }
 }
