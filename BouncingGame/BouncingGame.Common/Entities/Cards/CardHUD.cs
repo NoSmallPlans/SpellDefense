@@ -19,9 +19,9 @@ namespace SpellDefense.Common.Entities
             this.drawNode = new CCDrawNode();
             this.AddChild(drawNode);
             this.drawNode.DrawRect(new CCRect(this.minX, this.minY, (float)this.width, (float)this.height),
-                fillColor: CCColor4B.Green,
+                fillColor: CCColor4B.Gray,
                 borderWidth: 0,
-                borderColor: CCColor4B.Green);
+                borderColor: CCColor4B.Gray);
             this.targetLayer.AddChild(drawNode);
         }
     }

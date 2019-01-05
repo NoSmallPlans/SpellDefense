@@ -38,7 +38,6 @@ namespace SpellDefense.Common.Scenes
                                             this.gameplayLayer);
             GodClass.battlefield = battlefield;
             GodClass.cardHUD = this.cardHUD;
-            this.CreateText();
             this.InitTeams();
 
             gameplayLayer.AddChild(battlefield);
@@ -75,17 +74,6 @@ namespace SpellDefense.Common.Scenes
             this.AddLayer(this.gameplayLayer);
             this.AddLayer(this.foregroundLayer);
             this.AddLayer(this.hudLayer);
-        }
-
-        private void CreateText()
-        {
-            System.Diagnostics.Debug.WriteLine("Battle Screen");
-            CCLabel label = new CCLabel("Battle Screen", "Arial", 30, CCLabelFormat.SystemFont);
-            label.PositionX = GodClass.BattlefieldDimensions.GetWidth() / 2.0f;
-            label.PositionY = GodClass.BattlefieldDimensions.GetHeight() / 2.0f;
-            label.Color = CCColor3B.White;
-
-            hudLayer.AddChild(label);
         }
 
         private void Activity(float frameTimeInSeconds)

@@ -11,6 +11,23 @@ namespace SpellDefense.Common
         public static String[] CardLibrary =
         {
             @"{
+                'cardTitle' : 'Slow'
+                ,'cardText': 'Halves unit speed'
+                ,'cardCost': '0'
+                ,'cardImage': 'GreenGuy.png'
+                ,'cardActions': [
+                    {
+                        'actionName': 'statMultiplier'
+                        ,'compileTimeArgs': {
+                            'statName' : 'speed'
+                            ,'statMult' : '0.5'
+                        }
+                    }
+                ]
+            }"
+            ,
+
+            @"{
                 'cardTitle' : 'Add Ranged'
                 ,'cardText': 'Adds a ranged unit to all spawns'
                 ,'cardCost': '1'
