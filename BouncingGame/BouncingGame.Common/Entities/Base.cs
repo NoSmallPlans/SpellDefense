@@ -11,13 +11,16 @@ namespace SpellDefense.Common.Entities
     public class Base : GamePiece
     {
         CCSprite sprite;
+        CCDrawNode debuggingCastleDrawNode;
 
         public Base(TeamColor teamColor) : base(teamColor)
         {
             maxHealth = 1000;
             currentHealth = maxHealth;
             drawNode = new CCDrawNode();
+            debuggingCastleDrawNode = new CCDrawNode();
             this.AddChild(drawNode);
+            this.AddChild(debuggingCastleDrawNode);
             CreateCastleSprite();
             CreateCollision();
             CreateGraphic();
@@ -53,14 +56,16 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateGraphic()
         {
-            this.Radius = this.sprite.ContentSize.Width / 2;
+            this.Radius = this.sprite.ScaledContentSize.Width / 2;
             DrawHealthBar();
             DrawCollisionBorder();
         }
 
         private void DrawCollisionBorder()
         {
-            drawNode.DrawRect(new CCRect(-this.sprite.ScaledContentSize.Width/2, -this.sprite.ScaledContentSize.Height / 2, collisionWidth, collisionHeight));
+            debuggingCastleDrawNode.DrawRect(new CCRect(0, 0, collisionWidth, collisionHeight));
+            debuggingCastleDrawNode.PositionX = -this.Radius;
+            debuggingCastleDrawNode.PositionY = -this.Radius;
         }
 
         protected void DrawHealthBar()
@@ -71,12 +76,16 @@ namespace SpellDefense.Common.Entities
             float currentBarWidth = drawSizeWidth * (this.currentHealth / this.maxHealth);
             if(teamColor == TeamColor.RED)
             {
-                var greenHealth = new CCRect(0.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect(0, 0, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+                drawNode.PositionX = 0.6f*drawSizeWidth;
+                drawNode.PositionY = drawSizeHeight;
             } else
             {
-                var greenHealth = new CCRect(-1.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect(0, 0, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+                drawNode.PositionX = -1.6f*drawSizeWidth;
+                drawNode.PositionY = drawSizeHeight;
             }
             
         }
