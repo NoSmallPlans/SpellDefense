@@ -14,7 +14,7 @@ namespace SpellDefense.Common
         public const float StartingCombatantPerSecond = .005f;
 
         public static bool debug = false;
-
+        public static bool online = false;
         public static CCLayer gameplayLayer;
         public static UIcontainer battlefield;
         public static UIcontainer cardHUD;

@@ -28,8 +28,9 @@ namespace SpellDefense.Common.Scenes
         UIcontainer battlefield;
         UIcontainer cardHUD;
         List<CCDrawNode> targetLines;
+        GameState gameState;
 
-        public GameState gameState
+        public GameState GamesState
         {
             get
             {
