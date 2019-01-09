@@ -34,6 +34,8 @@ namespace SpellDefense.Common.Entities
             GodClass.cardHUD.AddChild(cardManager);
         }
 
+        public Action<TeamColor> GameOver;
+
         public void SetEnemyBase(Base enemyBase)
         {
             this.enemyBase = enemyBase;
@@ -41,12 +43,9 @@ namespace SpellDefense.Common.Entities
 
         public Base makeBase()
         {
+            Base b = new Base(this.teamColor);
+            b.GameOver += GameOver;
             return this.teamBase = new Base(this.teamColor);
-        }
-
-        public void AddBase(Base myBase)
-        {
-            this.teamBase = myBase;
         }
 
         public Base GetBase()

@@ -8,13 +8,20 @@ namespace SpellDefense.Common.Scenes
 {
     public class GameScene : CCScene
     {
+        public enum GameState
+        {
+            Playing,
+            Paused,
+            Over
+        }
+
         CCLayer backgroundLayer;
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
+        CCLayer restartLayer;
 
         private CCGameView gameView;
-        private CombatantSpawner combatantSpawner;
 
         Team redTeam;
         Team blueTeam;
@@ -22,7 +29,26 @@ namespace SpellDefense.Common.Scenes
         UIcontainer cardHUD;
         List<CCDrawNode> targetLines;
 
-        private bool hasGameEnded;
+        public GameState gameState
+        {
+            get
+            {
+                return gameState;
+            }
+            set
+            {
+                gameState = value;
+                switch(value)
+                {
+                    case GameState.Playing:
+                        break;
+                    case GameState.Paused:
+                        break;
+                    case GameState.Over:                        
+                        break;
+                }
+            }
+        }
 
         public GameScene(CCGameView gameView) : base(gameView)
         {
@@ -46,6 +72,7 @@ namespace SpellDefense.Common.Scenes
 
             GodClass.gameplayLayer = gameplayLayer;
             Schedule(Activity);
+            gameState = GameState.Playing;
         }
 
 
@@ -59,6 +86,8 @@ namespace SpellDefense.Common.Scenes
             blueTeam.SetEnemyBase(redTeam.GetBase());
             redTeam.CreateCombatantSpawner();
             blueTeam.CreateCombatantSpawner();
+            redTeam.GameOver += this.GameOver;
+            blueTeam.GameOver += this.GameOver;
             GodClass.red = redTeam;
             GodClass.blue = blueTeam;
         }
@@ -79,7 +108,7 @@ namespace SpellDefense.Common.Scenes
         private void Activity(float frameTimeInSeconds)
         {
 
-            if (hasGameEnded == false)
+            if (gameState == GameState.Playing)
             {
 
                 redTeam.Cleanup();
@@ -107,6 +136,20 @@ namespace SpellDefense.Common.Scenes
         private void HandleCardDrawn(Card card)
         {
             cardHUD.AddChild(card);
+        }
+
+        private void GameOver(TeamColor team)
+        {
+            gameState = GameState.Over;
+            string label;
+            if(team == TeamColor.BLUE)
+            {
+                label = "Blue Team Wins!";
+            }
+            else
+            {
+                label = "Red Team Wins!";
+            }
         }
     }
 }

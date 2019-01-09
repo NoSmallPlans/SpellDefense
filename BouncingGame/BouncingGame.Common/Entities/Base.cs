@@ -11,7 +11,7 @@ namespace SpellDefense.Common.Entities
     public class Base : GamePiece
     {
         CCSprite sprite;
-
+        public Action<TeamColor> GameOver;
         public Base(TeamColor teamColor) : base(teamColor)
         {
             maxHealth = 1000;
@@ -80,6 +80,14 @@ namespace SpellDefense.Common.Entities
             }
             
         }
-    }
 
+        public override void UpdateHealth(float amt)
+        {
+            base.UpdateHealth(amt);
+            if(currentHealth <= 0)
+            {
+                GameOver(teamColor);
+            }
+        }
+    }
 }

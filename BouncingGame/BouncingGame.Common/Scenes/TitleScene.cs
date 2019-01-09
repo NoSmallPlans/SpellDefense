@@ -24,12 +24,12 @@ namespace SpellDefense.Common.Scenes
 
         private void CreateText()
         {
-            System.Diagnostics.Debug.WriteLine("Tap to begin");
+            System.Diagnostics.Debug.WriteLine("Local Multiplayer");
             var label = new CCLabel("Tap to begin", "Arial", 30, CCLabelFormat.SystemFont);
             label.PositionX = layer.ContentSize.Width / 2.0f;
             label.PositionY = layer.ContentSize.Height / 2.0f;
             label.Color = CCColor3B.White;
-
+            
             layer.AddChild(label);
         }
 

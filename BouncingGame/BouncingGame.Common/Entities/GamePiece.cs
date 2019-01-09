@@ -75,7 +75,7 @@ namespace SpellDefense.Common.Entities
             CreateGraphic();
         }
 
-        public void UpdateHealth(float amt)
+        public virtual void UpdateHealth(float amt)
         {
             this.currentHealth += amt;
             if (this.currentHealth < 0)
