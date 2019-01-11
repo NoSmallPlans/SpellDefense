@@ -30,8 +30,24 @@ namespace SpellDefense.Common.Entities
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
-            cardManager = new CardManager(teamColor);
-            GodClass.cardHUD.AddChild(cardManager);
+            if (GodClass.online)
+            {
+                if(GodClass.clientRef.host && teamColor == TeamColor.RED)
+                {
+                    cardManager = new CardManager(teamColor);
+                    GodClass.cardHUD.AddChild(cardManager);
+                }
+                else if(!GodClass.clientRef.host && teamColor == TeamColor.BLUE)
+                {
+                    cardManager = new CardManager(teamColor);
+                    GodClass.cardHUD.AddChild(cardManager);
+                }
+            }
+            else
+            {
+                cardManager = new CardManager(teamColor);
+                GodClass.cardHUD.AddChild(cardManager);
+            }            
         }
 
         public Action<TeamColor> GameOver;

@@ -3,6 +3,7 @@ using SpellDefense.Common.Entities;
 using System;
 using System.Collections.Generic;
 using static SpellDefense.Common.GodClass;
+using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common.Scenes
 {
@@ -21,6 +22,8 @@ namespace SpellDefense.Common.Scenes
         CCLayer hudLayer;
         CCLayer restartLayer;
 
+        private Client client;
+        MsgStruct msgQueue;
         private CCGameView gameView;
 
         Team redTeam;
@@ -53,18 +56,29 @@ namespace SpellDefense.Common.Scenes
 
         public GameScene(CCGameView gameView) : base(gameView)
         {
+            gameState = GameState.Paused;
             this.gameView = gameView;
             this.InitLayers();
-            this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(), 
-                                             (int)GodClass.CardHUDdimensions.GetWidth(), 
-                                             this.gameplayLayer);
-            this.battlefield = new UIcontainer(0, 
-                                            (int)GodClass.CardHUDdimensions.GetHeight(), 
-                                            (int)GodClass.BattlefieldDimensions.GetHeight(), 
+
+            InitClient();
+            if (!GodClass.online)
+                InitGame();
+            Schedule(Activity);
+        }
+
+        private void InitGame()
+        {
+            this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
+                                 (int)GodClass.CardHUDdimensions.GetWidth(),
+                                 this.gameplayLayer);
+            this.battlefield = new UIcontainer(0,
+                                            (int)GodClass.CardHUDdimensions.GetHeight(),
+                                            (int)GodClass.BattlefieldDimensions.GetHeight(),
                                             (int)GodClass.BattlefieldDimensions.GetWidth(),
                                             this.gameplayLayer);
             GodClass.battlefield = battlefield;
             GodClass.cardHUD = this.cardHUD;
+
             this.InitTeams();
 
             gameplayLayer.AddChild(battlefield);
@@ -72,10 +86,20 @@ namespace SpellDefense.Common.Scenes
             targetLines = new List<CCDrawNode>();
 
             GodClass.gameplayLayer = gameplayLayer;
-            Schedule(Activity);
-            gameState = GameState.Playing;
+            GodClass.InitLibrary();
+
+            GamesState = GameState.Playing;
         }
 
+        private void InitClient()
+        {
+            client = new Client();
+            GodClass.clientRef = client;
+            if(GodClass.online)
+            {
+                client.StartClient();
+            }
+        }
 
         private void InitTeams()
         {
@@ -108,25 +132,59 @@ namespace SpellDefense.Common.Scenes
 
         private void Activity(float frameTimeInSeconds)
         {
-
-            if (gameState == GameState.Playing)
+            try
             {
+                if (GodClass.online)
+                    client.ReceiveMessage();
+                msgQueue = client.CheckQueue();
+                if (msgQueue.Message != "none")
+                {
+                    ExecuteAction(msgQueue);
+                }
+                if (gameState == GameState.Playing)
+                {
+                    redTeam.Cleanup();
+                    blueTeam.Cleanup();
 
-                redTeam.Cleanup();
-                blueTeam.Cleanup();
+                    redTeam.MovePhase(frameTimeInSeconds);
+                    blueTeam.MovePhase(frameTimeInSeconds);
 
-                redTeam.MovePhase(frameTimeInSeconds);
-                blueTeam.MovePhase(frameTimeInSeconds);
+                    redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
+                    blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
-                redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
-                blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
-
-                redTeam.SpawnPhase(frameTimeInSeconds);
-                blueTeam.SpawnPhase(frameTimeInSeconds);
+                    redTeam.SpawnPhase(frameTimeInSeconds);
+                    blueTeam.SpawnPhase(frameTimeInSeconds);
+                }
+            }
+            catch(Exception ex)
+            {
+                string msg = ex.Message;
             }
         }
 
-
+        private void ExecuteAction(MsgStruct msg)
+        {
+            int teamColor;
+            //Parse actions
+            switch(msg.type)
+            {
+                case MsgType.GameStart:
+                    if(GamesState != GameState.Playing)
+                        InitGame();                   
+                    break;
+                case MsgType.PlayCard:
+                    string[] args = msg.Message.Split(';');                    
+                    if (args.Length > 1)
+                    {
+                        string cardName = args[0];
+                        int.TryParse(args[1], out teamColor);
+                        GodClass.PlayCard(cardName, new int[] { teamColor });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void Destroy(Combatant combatant, List<Combatant> list)
         {

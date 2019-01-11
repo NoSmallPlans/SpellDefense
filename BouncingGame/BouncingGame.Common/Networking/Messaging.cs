@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpellDefense.Common.Networking
 {
-    class Messaging
+    public class Messaging
     {
         public enum MsgType
         {

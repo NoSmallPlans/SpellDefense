@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpellDefense.Common.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,24 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
+        public static Dictionary<string, Card> library;
+
+        public static void InitLibrary()
+        {
+            Card c;
+            library = new Dictionary<string, Card>();
+            foreach(string s in CardLibrary)
+            {
+                c = new Card(s);
+                library.Add(c.CardName, c);
+            }
+        }
+
+        public static void PlayCard(string name, int[] args)
+        {
+            library[name].Play(args);
+        }
+
         public static String[] CardLibrary =
         {
             @"{

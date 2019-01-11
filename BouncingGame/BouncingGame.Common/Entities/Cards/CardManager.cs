@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static SpellDefense.Common.Entities.Team;
 using static SpellDefense.Common.GodClass;
+using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common.Entities.Cards
 {
@@ -99,13 +100,36 @@ namespace SpellDefense.Common.Entities.Cards
             if(currentMana >= card.cardCost)
             {
                 UpdateMana(-card.cardCost);
-                card.Play(new int[] { (int)this.teamColor });
+                if (GodClass.online)
+                {
+                    //Send Message to opponent
+                    GodClass.clientRef.SendMessage(ConstructCardMessage(false, card.CardName));
+                }
+                //Play card locally
+                GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName));
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
                 hand.Remove(card);
                 currentHandSize--;
                 DrawCard();
             }
+        }
+
+        private string ConstructCardMessage(bool self, string cardName)
+        {
+            string message = cardName + ";" + ((int)teamColor).ToString();
+            string timeStamp = DateTime.UtcNow.AddSeconds(2).ToString();
+            string msgType;
+            if(self)
+            {
+                msgType = ((int)MsgType.QueueCard).ToString();
+               
+            }
+            else
+            {
+                msgType = ((int)MsgType.PlayCard).ToString();
+            }
+            return msgType + "," + message + "," + timeStamp;
         }
 
         private void CreateTouchListener()

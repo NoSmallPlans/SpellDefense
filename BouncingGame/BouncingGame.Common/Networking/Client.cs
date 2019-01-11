@@ -8,13 +8,18 @@ using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common
 {
-    class Client
+    public class Client
     {
         private NetClient client;
         Queue<MsgStruct> messageQueue;
         double deviceTimeDiff = 0;
         double travelTimeInSeconds = 0;
-        bool host;
+        public bool host;
+
+        public Client()
+        {
+            messageQueue = new Queue<MsgStruct>();
+        }
 
         public void StartClient()
         {
@@ -28,8 +33,6 @@ namespace SpellDefense.Common
             int port = 14242;
             client.Connect(ip, port);
             host = false;
-
-            messageQueue = new Queue<MsgStruct>();
         }
 
         public void SendMessage(string text)
@@ -71,6 +74,7 @@ namespace SpellDefense.Common
                                 travelTimeInSeconds = (now - hostDevTime).TotalSeconds;
                                 deviceTimeDiff = (hostDevTime - clientDevTime).TotalSeconds;
                                 deviceTimeDiff -= travelTimeInSeconds;
+                                //Send time difference to opponent
                                 response = (int)MsgType.SendTime + "," + (deviceTimeDiff).ToString();
                                 SendMessage(response);
                             }
@@ -78,12 +82,12 @@ namespace SpellDefense.Common
                             {
                                 //Receive time diff from opponent
                                 deviceTimeDiff = double.Parse(args[1]) * -1;
+                                StartGame();
                             }
                             break;
-
                         case MsgType.PlayCard:
                             MsgStruct ms = new MsgStruct();
-                            ms.type = (MsgType)int.Parse(args[0]);
+                            ms.type = MsgType.PlayCard;
                             ms.timeStamp = DateTime.Parse(args[2]);
                             ms.timeStamp = ms.timeStamp.AddSeconds(deviceTimeDiff);
                             ms.Message = args[1];
@@ -91,9 +95,19 @@ namespace SpellDefense.Common
                             break;
                         case MsgType.QueueCard:
                             ms = new MsgStruct();
-                            ms.type = (MsgType)int.Parse(args[0]);
+                            ms.type = MsgType.PlayCard;
                             ms.timeStamp = DateTime.Parse(args[2]);
                             ms.Message = args[1];
+                            messageQueue.Enqueue(ms);
+                            break;
+                        case MsgType.GameStart:
+                            ms = new MsgStruct();
+                            ms.type = MsgType.GameStart;
+                            ms.timeStamp = DateTime.Parse(args[1]);
+                            if(host)
+                            {
+                                ms.timeStamp = ms.timeStamp.AddSeconds(deviceTimeDiff);
+                            }
                             messageQueue.Enqueue(ms);
                             break;
                         default:
@@ -131,18 +145,35 @@ namespace SpellDefense.Common
             return reply;
         }
 
-        public string CheckQueue()
+        public MsgStruct CheckQueue()
         {
+            MsgStruct ms = new MsgStruct();
             if (messageQueue.Count > 0)
             {
-                MsgStruct ms = messageQueue.Peek();
+                ms = messageQueue.Peek();
                 if (ms.timeStamp <= DateTime.UtcNow)
                 {
                     messageQueue.Dequeue();
-                    return ms.Message + " Now: " + String.Format("{0:T}", DateTime.UtcNow) + " X: " + String.Format("{0:T}", ms.timeStamp);
+                }
+                else
+                {
+                    ms = new MsgStruct();
                 }
             }
-            return "";
+            else
+            {
+                ms.Message = "none";
+            }
+            return ms;
+        }
+
+        private void StartGame()
+        {
+            DateTime startTime = DateTime.UtcNow.AddSeconds(2);
+            //Queue and Send Game Start Message
+            string response = (int)MsgType.GameStart + "," + startTime;
+            SendMessage(response);
+            ParseMessage(response);
         }
     }
 }

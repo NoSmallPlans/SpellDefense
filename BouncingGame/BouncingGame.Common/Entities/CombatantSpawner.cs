@@ -61,7 +61,7 @@ namespace SpellDefense.Common.Entities
             //Check to see if combatant type exists
             //Add to list
             Squad squad;
-            for(int i = 0; i <= spawns; i++)
+            for(int i = spawns > 0 ? 1 : 0; i <= spawns; i++)
             {
                 if(spawnLists.Count <= i)
                 {
