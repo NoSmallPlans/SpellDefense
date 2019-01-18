@@ -2,6 +2,7 @@
 using SpellDefense.Common.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static SpellDefense.Common.GodClass;
 using static SpellDefense.Common.Networking.Messaging;
 
@@ -9,6 +10,7 @@ namespace SpellDefense.Common.Scenes
 {
     public class GameScene : CCScene
     {
+#region Variables
         public enum GameState
         {
             Playing,
@@ -20,18 +22,20 @@ namespace SpellDefense.Common.Scenes
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
-        CCLayer restartLayer;
 
         private Client client;
-        MsgStruct msgQueue;
         private CCGameView gameView;
 
+        bool simReady = false;
+        bool startGame = false;
         Team redTeam;
         Team blueTeam;
         UIcontainer battlefield;
         UIcontainer cardHUD;
         List<CCDrawNode> targetLines;
         GameState gameState;
+        Stopwatch messageWatch;
+        int messageTimeWait = 500;
 
         public GameState GamesState
         {
@@ -53,16 +57,14 @@ namespace SpellDefense.Common.Scenes
                 }
             }
         }
-
+#endregion
         public GameScene(CCGameView gameView) : base(gameView)
         {
             gameState = GameState.Paused;
             this.gameView = gameView;
             this.InitLayers();
-
+            messageWatch = new Stopwatch();
             InitClient();
-            if (!GodClass.online)
-                InitGame();
             Schedule(Activity);
         }
 
@@ -130,35 +132,87 @@ namespace SpellDefense.Common.Scenes
             this.AddLayer(this.hudLayer);
         }
 
+        //Avoiding using any floats with lockstep multiplayer
+        //Therefore float frameTimeInSeconds is being ignored
         private void Activity(float frameTimeInSeconds)
         {
             try
             {
                 if (GodClass.online)
-                    client.ReceiveMessage();
-                msgQueue = client.CheckQueue();
-                if (msgQueue.Message != "none")
                 {
-                    ExecuteAction(msgQueue);
+                    startGame = client.ReceiveMessage();
+                    if(startGame)
+                    {
+                        InitGame();
+                        SendActions();
+                        messageWatch.Start();
+                    }
+                    if (client.incomingActionQueue.Count >= 2)
+                    {
+                        simReady = true;
+                    }
+                    else if(messageWatch.ElapsedMilliseconds >= messageTimeWait)
+                    {
+                        SendActions(true);
+                        messageWatch.Restart();
+                    }
                 }
-                if (gameState == GameState.Playing)
+                if (simReady)
                 {
-                    redTeam.Cleanup();
-                    blueTeam.Cleanup();
-
-                    redTeam.MovePhase(frameTimeInSeconds);
-                    blueTeam.MovePhase(frameTimeInSeconds);
-
-                    redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
-                    blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
-
-                    redTeam.SpawnPhase(frameTimeInSeconds);
-                    blueTeam.SpawnPhase(frameTimeInSeconds);
+                    PlayActions();
+                    SimulateGame();
+                    SendActions();
+                    messageWatch.Restart();
+                    simReady = false;
                 }
             }
             catch(Exception ex)
             {
                 string msg = ex.Message;
+            }
+        }
+
+        private void SimulateGame()
+        {
+            //Constant frame time of 30FPS
+            float frameTimeInSeconds = 1.0f / 30.0f;
+
+            redTeam.Cleanup();
+            blueTeam.Cleanup();
+
+            redTeam.MovePhase(frameTimeInSeconds);
+            blueTeam.MovePhase(frameTimeInSeconds);
+
+            redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
+            blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
+
+            redTeam.SpawnPhase(frameTimeInSeconds);
+            blueTeam.SpawnPhase(frameTimeInSeconds);
+        }
+
+        //Any actions received from the server are played 
+        private void PlayActions()
+        {
+            int actionCount = client.incomingActionQueue.Count;
+            if (actionCount > 1)
+            {
+                for (int i = 0; i < actionCount; i++)
+                {
+                    ExecuteAction(client.incomingActionQueue.Dequeue());
+                }
+            }
+        }
+        
+        //Send any queued actions from player to the server
+        private void SendActions(bool sendPrev=false)
+        {
+            if (sendPrev)
+            {
+                client.SendPrevActionToServer();
+            }
+            else
+            {
+                client.SendActionToServer();
             }
         }
 
@@ -168,10 +222,6 @@ namespace SpellDefense.Common.Scenes
             //Parse actions
             switch(msg.type)
             {
-                case MsgType.GameStart:
-                    if(GamesState != GameState.Playing)
-                        InitGame();                   
-                    break;
                 case MsgType.PlayCard:
                     string[] args = msg.Message.Split(';');                    
                     if (args.Length > 1)

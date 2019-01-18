@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SpellDefense.Common.GodClass;
 using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common
@@ -11,14 +12,15 @@ namespace SpellDefense.Common
     public class Client
     {
         private NetClient client;
-        Queue<MsgStruct> messageQueue;
-        double deviceTimeDiff = 0;
-        double travelTimeInSeconds = 0;
-        public bool host;
+        public Queue<MsgStruct> incomingActionQueue;
+        public Queue<string> outActionQueue;
+        private string prevAction;
+        public TeamColor teamColor;
 
         public Client()
         {
-            messageQueue = new Queue<MsgStruct>();
+            incomingActionQueue = new Queue<MsgStruct>();
+            outActionQueue = new Queue<string>();
         }
 
         public void StartClient()
@@ -32,7 +34,6 @@ namespace SpellDefense.Common
             string ip = "73.109.92.27";//"192.168.0.10";
             int port = 14242;
             client.Connect(ip, port);
-            host = false;
         }
 
         public void SendMessage(string text)
@@ -42,82 +43,44 @@ namespace SpellDefense.Common
             client.FlushSendQueue();
         }
 
-        public void ParseMessage(string msg)
+        public bool ParseMessage(string msg)
         {
             string[] args = msg.Split(',');
-            if (args.Length > 1)
+            int msgTest;
+            if (int.TryParse(args[0], out msgTest))
             {
-                int msgTest;
-                if (int.TryParse(args[0], out msgTest))
+                MsgType msgType = (MsgType)msgTest;
+                switch (msgType)
                 {
-                    MsgType msgType = (MsgType)msgTest;
-                    switch (msgType)
-                    {
-                        case MsgType.Matched:
-                            host = (args[1] == "host");
-                            if (host)
-                                SendMessage((int)MsgType.ReqTime + "," + DateTime.UtcNow.ToString());
-                            break;
-                        case MsgType.ReqTime:
-                            string hostTime = args[1];
-                            string clientTime = DateTime.UtcNow.ToString();
-                            string response = (int)MsgType.SendTime + "," + hostTime + "," + clientTime;
-                            SendMessage(response);
-                            break;
-                        case MsgType.SendTime:
-                            if (host)
-                            {
-                                //Calculate time difference between devices
-                                DateTime now = DateTime.UtcNow;
-                                DateTime hostDevTime = DateTime.Parse(args[1]);
-                                DateTime clientDevTime = DateTime.Parse(args[2]);
-                                travelTimeInSeconds = (now - hostDevTime).TotalSeconds;
-                                deviceTimeDiff = (hostDevTime - clientDevTime).TotalSeconds;
-                                deviceTimeDiff -= travelTimeInSeconds;
-                                //Send time difference to opponent
-                                response = (int)MsgType.SendTime + "," + (deviceTimeDiff).ToString();
-                                SendMessage(response);
-                            }
-                            else
-                            {
-                                //Receive time diff from opponent
-                                deviceTimeDiff = double.Parse(args[1]) * -1;
-                                StartGame();
-                            }
-                            break;
-                        case MsgType.PlayCard:
-                            MsgStruct ms = new MsgStruct();
-                            ms.type = MsgType.PlayCard;
-                            ms.timeStamp = DateTime.Parse(args[2]);
-                            ms.timeStamp = ms.timeStamp.AddSeconds(deviceTimeDiff);
-                            ms.Message = args[1];
-                            messageQueue.Enqueue(ms);
-                            break;
-                        case MsgType.QueueCard:
-                            ms = new MsgStruct();
-                            ms.type = MsgType.PlayCard;
-                            ms.timeStamp = DateTime.Parse(args[2]);
-                            ms.Message = args[1];
-                            messageQueue.Enqueue(ms);
-                            break;
-                        case MsgType.GameStart:
-                            ms = new MsgStruct();
-                            ms.type = MsgType.GameStart;
-                            ms.timeStamp = DateTime.Parse(args[1]);
-                            if(host)
-                            {
-                                ms.timeStamp = ms.timeStamp.AddSeconds(deviceTimeDiff);
-                            }
-                            messageQueue.Enqueue(ms);
-                            break;
-                        default:
-                            return;
-                    }
+                    case MsgType.NoAction:
+                        MsgStruct ms = new MsgStruct();
+                        ms.type = MsgType.NoAction;
+                        ms.Message = "no";
+                        incomingActionQueue.Enqueue(ms);
+                        break;
+                    case MsgType.PlayCard:
+                        ms = new MsgStruct();
+                        ms.type = MsgType.PlayCard;
+                        ms.Message = args[1];
+                        incomingActionQueue.Enqueue(ms);
+                        break;
+                    case MsgType.QueueCard:
+                        ms = new MsgStruct();
+                        ms.type = MsgType.PlayCard;
+                        ms.Message = args[1];
+                        incomingActionQueue.Enqueue(ms);
+                        break;
+                    case MsgType.GameStart:
+                        teamColor = (TeamColor)int.Parse(args[1]);
+                        return true;
+                    default:
+                        return false;
                 }
             }
+            return false;
         }
 
-        public string ReceiveMessage()
+        public bool ReceiveMessage()
         {
             string reply = "";
             NetIncomingMessage im;
@@ -134,7 +97,7 @@ namespace SpellDefense.Common
                     case NetIncomingMessageType.Data:
                         {
                             reply = im.ReadString();
-                            ParseMessage(reply);
+                            return ParseMessage(reply);
                             break;
                         }
                     default:
@@ -142,29 +105,25 @@ namespace SpellDefense.Common
                 }
                 client.Recycle(im);
             }
-            return reply;
+            return false;
         }
 
-        public MsgStruct CheckQueue()
+        public void SendPrevActionToServer()
         {
-            MsgStruct ms = new MsgStruct();
-            if (messageQueue.Count > 0)
+            SendMessage(prevAction);
+        }
+
+        public void SendActionToServer()
+        {
+            if (outActionQueue.Count > 0)
             {
-                ms = messageQueue.Peek();
-                if (ms.timeStamp <= DateTime.UtcNow)
-                {
-                    messageQueue.Dequeue();
-                }
-                else
-                {
-                    ms = new MsgStruct();
-                }
+                prevAction = outActionQueue.Dequeue();
             }
             else
             {
-                ms.Message = "none";
+                prevAction = (((int)MsgType.NoAction).ToString() + ",no");
             }
-            return ms;
+            SendMessage(prevAction);
         }
 
         private void StartGame()

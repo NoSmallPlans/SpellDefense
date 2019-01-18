@@ -17,7 +17,7 @@ namespace SpellDefense.Common.Entities
         CCSprite colorIcon;
         CCSprite cardSprite;
         CCLabel cardNameDisplay;
-        CCLabel hpDisplay;
+        CCLabel costDisplay;
         CCLabel descriptionDisplay;
 
         CCRenderTexture renderTexture;
@@ -34,15 +34,15 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        public string HpText
+        public string CostText
         {
             get
             {
-                return hpDisplay.Text;
+                return costDisplay.Text;
             }
             set
             {
-                hpDisplay.Text = value;
+                costDisplay.Text = value;
             }
         }
 
@@ -136,7 +136,7 @@ namespace SpellDefense.Common.Entities
 
             CreatecardNameDisplay();
 
-            CreateHpDisplay();
+            CreateCostDisplay();
 
             CreateDescriptionDisplay();
 
@@ -188,12 +188,12 @@ namespace SpellDefense.Common.Entities
             cardNameDisplay.PositionY = background.ContentSize.Height - 10;
         }
 
-        private void CreateHpDisplay()
+        private void CreateCostDisplay()
         {
-            hpDisplay = CreateLabel("HP: 10/10");
-            hpDisplay.AnchorPoint = new CCPoint(0, .5f);
-            hpDisplay.PositionY = 80;
-            hpDisplay.PositionX = 10;
+            costDisplay = CreateLabel("Mana: 10/10");
+            costDisplay.AnchorPoint = new CCPoint(0, .5f);
+            costDisplay.PositionY = 80;
+            costDisplay.PositionX = 10;
         }
 
         private void CreateDescriptionDisplay()
@@ -214,7 +214,7 @@ namespace SpellDefense.Common.Entities
             visualComponents.Add(colorIcon);
             visualComponents.Add(cardSprite);
             visualComponents.Add(cardNameDisplay);
-            visualComponents.Add(hpDisplay);
+            visualComponents.Add(costDisplay);
             visualComponents.Add(descriptionDisplay);
         }
         /*

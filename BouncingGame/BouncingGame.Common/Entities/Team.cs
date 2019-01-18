@@ -32,12 +32,7 @@ namespace SpellDefense.Common.Entities
             projectiles = new List<Projectile>();
             if (GodClass.online)
             {
-                if(GodClass.clientRef.host && teamColor == TeamColor.RED)
-                {
-                    cardManager = new CardManager(teamColor);
-                    GodClass.cardHUD.AddChild(cardManager);
-                }
-                else if(!GodClass.clientRef.host && teamColor == TeamColor.BLUE)
+                if(teamColor == GodClass.clientRef.teamColor)
                 {
                     cardManager = new CardManager(teamColor);
                     GodClass.cardHUD.AddChild(cardManager);

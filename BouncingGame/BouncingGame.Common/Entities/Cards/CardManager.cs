@@ -26,7 +26,7 @@ namespace SpellDefense.Common.Entities.Cards
         int cardStartingX;
         int cardStartingY;
         DateTime timeCardTouched;
-        double cardZoomTime = 0.5f;
+        float cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
         
@@ -105,8 +105,11 @@ namespace SpellDefense.Common.Entities.Cards
                     //Send Message to opponent
                     GodClass.clientRef.SendMessage(ConstructCardMessage(false, card.CardName));
                 }
-                //Play card locally
-                GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName));
+                else
+                {
+                    //Play card locally
+                    GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName));
+                }
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
                 hand.Remove(card);
@@ -129,7 +132,7 @@ namespace SpellDefense.Common.Entities.Cards
             {
                 msgType = ((int)MsgType.PlayCard).ToString();
             }
-            return msgType + "," + message + "," + timeStamp;
+            return msgType + "," + message;
         }
 
         private void CreateTouchListener()
@@ -227,11 +230,11 @@ namespace SpellDefense.Common.Entities.Cards
         private void CreateGraphics()
         {
             string manaString = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
-            manaLabel = new CCLabel(manaString, "Arial", 20, CCLabelFormat.SystemFont);
+            manaLabel = new CCLabel(manaString, "Arial", 24, CCLabelFormat.SystemFont);
             this.AddChild(manaLabel);
             manaLabel.Color = CCColor3B.White;
-            manaLabel.PositionY = 100;
-            manaLabel.PositionX = cardStartingX + 40;
+            manaLabel.PositionY = 130;
+            manaLabel.PositionX = cardStartingX + 50;
         }
     }
 }

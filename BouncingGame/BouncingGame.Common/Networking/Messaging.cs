@@ -10,16 +10,14 @@ namespace SpellDefense.Common.Networking
     {
         public enum MsgType
         {
+            NoAction,
             Matched,
             GameStart,
             PlayCard,
-            ReqTime,
-            SendTime,
             QueueCard
         }
         public struct MsgStruct
         {
-            public DateTime timeStamp;
             public string Message;
             public MsgType type;
         }

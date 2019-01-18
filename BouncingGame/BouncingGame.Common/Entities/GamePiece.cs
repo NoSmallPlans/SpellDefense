@@ -31,7 +31,7 @@ namespace SpellDefense.Common.Entities
             protected set
             {
                 this.radius = value;
-                this.drawNode.Position = new CCPoint(-value, value);
+                this.drawNode.Position = new CCPoint((float)-value, (float)value);
             }
 
         }

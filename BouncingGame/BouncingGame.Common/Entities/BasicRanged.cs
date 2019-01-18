@@ -58,9 +58,9 @@ namespace SpellDefense.Common.Entities
                 team = CCColor4B.Blue;
             }
 
-            CCV3F_C4B pt1 = new CCV3F_C4B(new CCPoint(this.Radius, this.Radius*2), team);
+            CCV3F_C4B pt1 = new CCV3F_C4B(new CCPoint(-this.Radius, this.Radius*2), team);
             CCV3F_C4B pt2 = new CCV3F_C4B(new CCPoint(0, 0), team);
-            CCV3F_C4B pt3 = new CCV3F_C4B(new CCPoint(this.Radius*2, 0), team);
+            CCV3F_C4B pt3 = new CCV3F_C4B(new CCPoint(-this.Radius*2, 0), team);
             CCV3F_C4B[] ptArray = { pt1, pt2, pt3 };
             drawNode.DrawTriangleList(ptArray);
 
