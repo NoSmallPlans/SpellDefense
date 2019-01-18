@@ -5,28 +5,31 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
+using Newtonsoft.Json.Linq;
 using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
 {
     public abstract class Combatant : GamePiece
     {
+        private List<CardAct> abilityList = new List<CardAct>();
         //Special function pointer, for ranged units
         public Action<Projectile> AddProjectile;
         public float drawSize;
         protected Boolean meleeUnit;
-        float timeUntilAttack;
-        public float attackPwr { get; set; }
+        double timeUntilAttack;
+        public int attackPwr { get; set; }
         public GamePiece defaultEnemy;
         GamePiece attackTarget;
-        public float speed { get; set; }
-        protected float attackSpeed;
+        public double moveSpeed { get; set; }
+        protected double attackSpeed { get; set; }
         public CCDrawNode targetLine;
+        string spriteImage { get; set; }
 
 
         //How long are this combatant's arms? Glad you asked...
-        protected float attackRange;
-        protected float aggroRange;
+        protected double attackRange { get; set; }
+        protected double aggroRange { get; set; }
         
         public Combatant(TeamColor teamColor) : base(teamColor)
         {
@@ -135,8 +138,6 @@ namespace SpellDefense.Common.Entities
             {
                 DrawTargetLine();
             }
-
-            //if (!meleeUnit) UpdateProjectiles(frameTimeInSeconds);
         }
 
         private void EngageTarget()
@@ -159,8 +160,8 @@ namespace SpellDefense.Common.Entities
                 double diffX = attackTarget.Position.X - Position.X;
                 double diffY = attackTarget.Position.Y - Position.Y;
                 double length = Math.Sqrt(diffX * diffX + diffY * diffY); //Pythagorean law
-                float dx = (float)(diffX / length * speed * frameTimeInSeconds); //higher speed is faster
-                float dy = (float)(diffY / length * speed * frameTimeInSeconds);
+                float dx = (float)(diffX / length * moveSpeed * frameTimeInSeconds); //higher speed is faster
+                float dy = (float)(diffY / length * moveSpeed * frameTimeInSeconds);
 
                 this.Position += new CCPoint(dx, dy);
 
@@ -177,6 +178,26 @@ namespace SpellDefense.Common.Entities
             drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
         }
 
+        public void InitFromJSON(String text)
+        {
+            JObject testJson = JObject.Parse(text);
+            attackSpeed = (double)testJson["attackSpeed"];
+            moveSpeed = (double)testJson["moveSpeed"];
+            spriteImage = (string)testJson["spriteImage"];
+            attackPwr = (int)testJson["attackPwr"];
+            maxHealth = (int)testJson["maxHealth"];
+            attackRange = (int)testJson["attackRange"];
+            aggroRange = (int)testJson["aggroRange"];
+            JArray abilities = (JArray)testJson["abilities"];
+
+            foreach (JObject ability in abilities)
+            {
+                string abilityName = (string)ability["actionName"];
+                JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
+                CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
+                this.abilityList.Add(tempAction);
+            }
+        }
 
     }
 }

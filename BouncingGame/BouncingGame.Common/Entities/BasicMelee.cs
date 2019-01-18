@@ -14,7 +14,7 @@ namespace SpellDefense.Common.Entities
         {
             this.drawSize = 20;
             this.Radius = drawSize / 2;
-            this.speed = 40;
+            this.moveSpeed = 40;
             this.currentHealth = 100;
             this.maxHealth = 100;
             this.attackPwr = 20;

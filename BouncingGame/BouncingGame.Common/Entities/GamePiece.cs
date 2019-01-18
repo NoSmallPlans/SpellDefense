@@ -38,12 +38,12 @@ namespace SpellDefense.Common.Entities
 
         private float radius;
 
-        public float currentHealth
+        public int currentHealth
         {
             get;
             protected set;
         }
-        public float maxHealth
+        public int maxHealth
         {
             get;
             protected set;
@@ -75,7 +75,7 @@ namespace SpellDefense.Common.Entities
             CreateGraphic();
         }
 
-        public void UpdateHealth(float amt)
+        public void UpdateHealth(int amt)
         {
             this.currentHealth += amt;
             if (this.currentHealth < 0)

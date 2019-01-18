@@ -39,7 +39,7 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(3, 0, "BasicMelee");
+            AddSpawn(3, 0, "soldier");
         }
 
         private Combatant GetCombatant(string combatantType)
@@ -178,7 +178,9 @@ namespace SpellDefense.Common.Entities
                 {
                     for (int n = 0; n < squad.qty; n++)
                     {
-                        Combatant c = GetCombatant(squad.combatantType);
+                        Combatant c = new BasicMelee(teamColor);//GetCombatant(squad.combatantType);
+                        string unitJson = GodClass.UnitLibrary[squad.combatantType];
+                        c.InitFromJSON(unitJson);
                         c.Position = spawnPoint;
                         c.PositionX += curCol * widthSpacing;
                         c.PositionY += curRow * heightSpacing;

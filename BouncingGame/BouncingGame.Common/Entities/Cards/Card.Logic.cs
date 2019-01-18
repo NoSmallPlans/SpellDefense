@@ -36,9 +36,6 @@ namespace SpellDefense.Common.Entities
 
         public void Play(int[] inputArgs = null)
         {
-            //Console.WriteLine("Playing " + this.cardTitle);
-            //Console.WriteLine(this.cardText);
-
             int indxPtr = 0;
             int[] actionSpecificArgs;
             int actionArgCount;

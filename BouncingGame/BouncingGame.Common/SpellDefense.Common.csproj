@@ -51,6 +51,7 @@
     <Compile Include="GodClass.CardLibrary.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
+    <Compile Include="GodClass.UnitLibrary.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
   </ItemGroup>

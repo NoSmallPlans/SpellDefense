@@ -36,7 +36,7 @@ namespace SpellDefense.Common
                     {
                         'actionName': 'addUnit'
                         ,'compileTimeArgs': {
-                            'combatantType' : 'BasicRanged'
+                            'combatantType' : 'archer'
                             ,'num' : '1'
                             ,'spawns' : '0'
                         }
@@ -45,16 +45,16 @@ namespace SpellDefense.Common
             }"
             ,
             @"{
-                'cardTitle' : 'Spawn 2 Melee'
-                ,'cardText': 'Adds 2 Melee units to the next spawn'
+                'cardTitle' : 'Spawn Soldier'
+                ,'cardText': 'Adds soldier to the next spawn'
                 ,'cardCost': '1'
                 ,'cardImage': 'BlueGuy.png'
                 ,'cardActions': [
                     {
                         'actionName': 'addUnit'
                         ,'compileTimeArgs': {
-                            'combatantType' : 'BasicMelee'
-                            ,'num' : '2'
+                            'combatantType' : 'soldier'
+                            ,'num' : '1'
                             ,'spawns' : '1'
                         }
                     }
