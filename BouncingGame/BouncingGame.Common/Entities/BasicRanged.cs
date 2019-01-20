@@ -24,8 +24,6 @@ namespace SpellDefense.Common.Entities
             this.aggroRange = base.aggroRange * 10;
             this.meleeUnit = false;
             this.projectiles = new List<Projectile>();
-
-            CreateCollision();
             InitDraw();
         }
 
@@ -35,12 +33,6 @@ namespace SpellDefense.Common.Entities
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
             this.CreateGraphic();
-        }
-
-        public override void CreateCollision()
-        {
-            this.collisionHeight = this.drawSize;
-            this.collisionWidth = this.drawSize;
         }
 
         public override void CreateGraphic()

@@ -141,8 +141,14 @@ namespace SpellDefense.Common.Entities
         }
 
         private void EngageTarget()
-        {            
-            if (distanceTo(this, attackTarget) <= attackRange)
+        {
+            //If attack range of 1, check for collision between targets
+            if (attackRange <= 1 && CheckCollision(this, attackTarget))
+            {
+                AttackEnemy(attackTarget);
+                state = State.attacking;
+            }
+            else if (distanceTo(this, attackTarget) <= attackRange)
             {
                 AttackEnemy(attackTarget);
                 state = State.attacking;
@@ -153,6 +159,11 @@ namespace SpellDefense.Common.Entities
             }
         }
         
+        private bool CheckCollision(Combatant c1, GamePiece c2)
+        {
+            return c1.BoundingBox.IntersectsRect(c2.BoundingBox);
+        }
+
         public void MovePhase(float frameTimeInSeconds)
         {
             if (this.state == State.walking)
@@ -174,7 +185,6 @@ namespace SpellDefense.Common.Entities
             float currentBarWidth = (float)(this.drawSize * (this.currentHealth / this.maxHealth));
 
             var greenHealth = new CCRect(-this.drawSize/2, this.drawSize/2 + barHeight, currentBarWidth, barHeight);
-            //var greenHealth = new CCRect(0, 0, currentBarWidth, barHeight);
             drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
         }
 

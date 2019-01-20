@@ -18,7 +18,7 @@ namespace SpellDefense.Common
                     ,'attackPwr': '25'
                     ,'spriteImage': 'GreenGuy.png'
                     ,'maxHealth': '100'
-                    ,'attackRange': '20'
+                    ,'attackRange': '1'
                     ,'aggroRange': '100'
                     ,'abilities': [
                         {

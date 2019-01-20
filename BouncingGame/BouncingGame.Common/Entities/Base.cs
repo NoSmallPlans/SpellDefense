@@ -18,20 +18,12 @@ namespace SpellDefense.Common.Entities
             currentHealth = maxHealth;
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
-            CreateCastleSprite();
-            CreateCollision();
             CreateGraphic();
         }
 
         public override void Collided(Combatant enemy)
         {
             throw new NotImplementedException();
-        }
-
-        public override void CreateCollision()
-        {
-            this.collisionHeight = sprite.ScaledContentSize.Height;
-            this.collisionWidth = sprite.ScaledContentSize.Width;
         }
 
         private void CreateCastleSprite()
@@ -53,7 +45,10 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateGraphic()
         {
+            CreateCastleSprite();
             DrawHealthBar();
+            this.ContentSize = sprite.ScaledContentSize;
+            drawNode.DrawRect(this.BoundingBox);
         }
 
         protected void DrawHealthBar()

@@ -33,8 +33,6 @@ namespace SpellDefense.Common.Entities
             get;
             protected set;
         }
-        public float collisionWidth;
-        public float collisionHeight;
 
         public State state
         {
@@ -85,8 +83,6 @@ namespace SpellDefense.Common.Entities
 
 
         public abstract void CreateGraphic();
-
-        public abstract void CreateCollision();
 
         public object this[string propertyName]
         {

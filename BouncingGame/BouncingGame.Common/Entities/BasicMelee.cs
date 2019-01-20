@@ -19,8 +19,6 @@ namespace SpellDefense.Common.Entities
             this.attackPwr = 20;
             this.attackSpeed = 2;
             this.meleeUnit = true;
-
-            CreateCollision();
             InitDraw();
         }
 
@@ -30,12 +28,6 @@ namespace SpellDefense.Common.Entities
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
             this.CreateGraphic();
-        }
-
-        public override void CreateCollision()
-        {
-            this.collisionHeight = this.drawSize;
-            this.collisionWidth = this.drawSize;
         }
 
         public override void CreateGraphic()
@@ -55,7 +47,7 @@ namespace SpellDefense.Common.Entities
                 p: CCPoint.Zero,
                 size: this.drawSize,
                 color: team);
-
+            this.ContentSize = new CCSize(drawSize, drawSize);
             DrawHealthBar();
 
         }
