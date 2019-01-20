@@ -21,6 +21,11 @@ namespace SpellDefense.Common.Entities
             CreateGraphic();
         }
 
+        public double GetCurrentHealth()
+        {
+            return this.currentHealth;
+        }
+
         public override void Collided(Combatant enemy)
         {
             throw new NotImplementedException();

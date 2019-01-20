@@ -99,6 +99,14 @@ namespace SpellDefense.Common.Scenes
                     redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
                     blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
+                    if(redTeam.GetBase().GetCurrentHealth() <= 0 || 
+                       blueTeam.GetBase().GetCurrentHealth() <= 0)
+                    {
+                        string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
+                        this.ShowEndScreen(winningTeam);
+                        this.hasGameEnded = true;
+                    }
+
                     redTeam.SpawnPhase(frameTimeInSeconds);
                     blueTeam.SpawnPhase(frameTimeInSeconds);
                 }
@@ -120,6 +128,42 @@ namespace SpellDefense.Common.Scenes
         private void HandleCardDrawn(Card card)
         {
             cardHUD.AddChild(card);
+        }
+
+        private void ShowEndScreen(string teamName)
+        {
+            var labelA = new CCLabel("Game Over", "Arial", 30, CCLabelFormat.SystemFont);
+            labelA.PositionX = gameplayLayer.ContentSize.Width / 2.0f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height / 2.0f;
+            labelA.Color = CCColor3B.White;
+            gameplayLayer.AddChild(labelA);
+
+            string winnerString = teamName + " wins!";
+            var labelB = new CCLabel(winnerString, "Arial", 30, CCLabelFormat.SystemFont);
+            labelB.PositionX = gameplayLayer.ContentSize.Width / 2.0f;
+            labelB.PositionY = gameplayLayer.ContentSize.Height / 2.25f;
+            labelB.Color = CCColor3B.White;
+            gameplayLayer.AddChild(labelB);
+
+            CreateTouchListener();
+        }
+
+        private void StartOver()
+        {
+            CCGameView tempGameView = GameController.GameView;
+            GameController.Initialize(tempGameView);
+        }
+
+        private void CreateTouchListener()
+        {
+            var touchListener = new CCEventListenerTouchAllAtOnce();
+            touchListener.OnTouchesBegan = HandleTouchesBegan;
+            gameplayLayer.AddEventListener(touchListener);
+        }
+
+        private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
+        {
+            this.StartOver();
         }
     }
 }

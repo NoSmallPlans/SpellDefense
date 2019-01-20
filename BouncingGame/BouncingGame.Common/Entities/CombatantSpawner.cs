@@ -162,7 +162,6 @@ namespace SpellDefense.Common.Entities
 
         }
 
-        // made public for debugging, may make it private later:
         private void Spawn(CCPoint spawnPoint)
         {
             int rows = 3;
@@ -182,8 +181,15 @@ namespace SpellDefense.Common.Entities
                         string unitJson = GodClass.UnitLibrary[squad.combatantType];
                         c.InitFromJSON(unitJson);
                         c.Position = spawnPoint;
-                        c.PositionX += curCol * widthSpacing;
+                        if(teamColor == TeamColor.RED)
+                        {
+                            c.PositionX += curCol * widthSpacing;
+                        } else
+                        {
+                            c.PositionX -= curCol * widthSpacing;
+                        }
                         c.PositionY += curRow * heightSpacing;
+
                         curRow++;
                         if (curRow > rows)
                         {
