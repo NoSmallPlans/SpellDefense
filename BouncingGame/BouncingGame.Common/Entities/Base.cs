@@ -53,14 +53,7 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateGraphic()
         {
-            this.Radius = this.sprite.ContentSize.Width / 2;
             DrawHealthBar();
-            DrawCollisionBorder();
-        }
-
-        private void DrawCollisionBorder()
-        {
-            drawNode.DrawRect(new CCRect(-this.sprite.ScaledContentSize.Width/2, -this.sprite.ScaledContentSize.Height / 2, collisionWidth, collisionHeight));
         }
 
         protected void DrawHealthBar()
@@ -68,7 +61,7 @@ namespace SpellDefense.Common.Entities
             float drawSizeWidth = sprite.ScaledContentSize.Width / 2;
             float drawSizeHeight = sprite.ScaledContentSize.Height / 2;
             float barHeight = drawSizeHeight * .2f;
-            float currentBarWidth = drawSizeWidth * (this.currentHealth / this.maxHealth);
+            float currentBarWidth = (float)(drawSizeWidth * (this.currentHealth / this.maxHealth));
             if(teamColor == TeamColor.RED)
             {
                 var greenHealth = new CCRect(0.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);

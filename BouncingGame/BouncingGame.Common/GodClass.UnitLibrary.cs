@@ -13,12 +13,12 @@ namespace SpellDefense.Common
              {
                 "soldier",
                 @"{
-                    'attackSpeed' : '5'
-                    ,'moveSpeed': '50'
+                    'attackSpeed' : '1'
+                    ,'moveSpeed': '25'
                     ,'attackPwr': '25'
                     ,'spriteImage': 'GreenGuy.png'
                     ,'maxHealth': '100'
-                    ,'attackRange': '1'
+                    ,'attackRange': '20'
                     ,'aggroRange': '100'
                     ,'abilities': [
                         {

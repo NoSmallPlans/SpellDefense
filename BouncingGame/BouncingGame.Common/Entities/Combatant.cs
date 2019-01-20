@@ -171,10 +171,10 @@ namespace SpellDefense.Common.Entities
         protected void DrawHealthBar()
         {
             float barHeight = this.drawSize * .2f;
-            float currentBarWidth = this.drawSize * (this.currentHealth / this.maxHealth);
+            float currentBarWidth = (float)(this.drawSize * (this.currentHealth / this.maxHealth));
 
-            //var greenHealth = new CCRect(-this.drawSize, this.drawSize + barHeight, currentBarWidth, barHeight);
-            var greenHealth = new CCRect(0, 0, currentBarWidth, barHeight);
+            var greenHealth = new CCRect(-this.drawSize/2, this.drawSize/2 + barHeight, currentBarWidth, barHeight);
+            //var greenHealth = new CCRect(0, 0, currentBarWidth, barHeight);
             drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
         }
 

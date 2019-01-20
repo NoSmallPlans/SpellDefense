@@ -26,26 +26,33 @@ namespace SpellDefense.Common.Scenes
 
         public GameScene(CCGameView gameView) : base(gameView)
         {
-            this.gameView = gameView;
-            this.InitLayers();
-            this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(), 
-                                             (int)GodClass.CardHUDdimensions.GetWidth(), 
-                                             this.gameplayLayer);
-            this.battlefield = new UIcontainer(0, 
-                                            (int)GodClass.CardHUDdimensions.GetHeight(), 
-                                            (int)GodClass.BattlefieldDimensions.GetHeight(), 
-                                            (int)GodClass.BattlefieldDimensions.GetWidth(),
-                                            this.gameplayLayer);
-            GodClass.battlefield = battlefield;
-            GodClass.cardHUD = this.cardHUD;
-            this.InitTeams();
+            try
+            {
+                this.gameView = gameView;
+                this.InitLayers();
+                this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
+                                                 (int)GodClass.CardHUDdimensions.GetWidth(),
+                                                 this.gameplayLayer);
+                this.battlefield = new UIcontainer(0,
+                                                (int)GodClass.CardHUDdimensions.GetHeight(),
+                                                (int)GodClass.BattlefieldDimensions.GetHeight(),
+                                                (int)GodClass.BattlefieldDimensions.GetWidth(),
+                                                this.gameplayLayer);
+                GodClass.battlefield = battlefield;
+                GodClass.cardHUD = this.cardHUD;
+                this.InitTeams();
 
-            gameplayLayer.AddChild(battlefield);
-            gameplayLayer.AddChild(cardHUD);
-            targetLines = new List<CCDrawNode>();
+                gameplayLayer.AddChild(battlefield);
+                gameplayLayer.AddChild(cardHUD);
+                targetLines = new List<CCDrawNode>();
 
-            GodClass.gameplayLayer = gameplayLayer;
-            Schedule(Activity);
+                GodClass.gameplayLayer = gameplayLayer;
+                Schedule(Activity);
+            }
+            catch(Exception ex)
+            {
+                string msg = ex.Message;
+            }
         }
 
 
@@ -78,21 +85,27 @@ namespace SpellDefense.Common.Scenes
 
         private void Activity(float frameTimeInSeconds)
         {
-
-            if (hasGameEnded == false)
+            try
             {
+                if (hasGameEnded == false)
+                {
 
-                redTeam.Cleanup();
-                blueTeam.Cleanup();
+                    redTeam.Cleanup();
+                    blueTeam.Cleanup();
 
-                redTeam.MovePhase(frameTimeInSeconds);
-                blueTeam.MovePhase(frameTimeInSeconds);
+                    redTeam.MovePhase(frameTimeInSeconds);
+                    blueTeam.MovePhase(frameTimeInSeconds);
 
-                redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
-                blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
+                    redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
+                    blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
-                redTeam.SpawnPhase(frameTimeInSeconds);
-                blueTeam.SpawnPhase(frameTimeInSeconds);
+                    redTeam.SpawnPhase(frameTimeInSeconds);
+                    blueTeam.SpawnPhase(frameTimeInSeconds);
+                }
+            }
+            catch(Exception ex)
+            {
+                string msg = ex.Message;
             }
         }
 

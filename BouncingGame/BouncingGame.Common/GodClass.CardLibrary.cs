@@ -19,7 +19,7 @@ namespace SpellDefense.Common
                     {
                         'actionName': 'statMultiplier'
                         ,'compileTimeArgs': {
-                            'statName' : 'speed'
+                            'statName' : 'moveSpeed'
                             ,'statMult' : '0.5'
                         }
                     }
@@ -70,7 +70,7 @@ namespace SpellDefense.Common
                     {
                         'actionName': 'statSetter'
                         ,'compileTimeArgs': {
-                            'statName' : 'speed'
+                            'statName' : 'moveSpeed'
                             ,'statVal' : '700.0'
                         }
                     }

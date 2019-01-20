@@ -22,28 +22,13 @@ namespace SpellDefense.Common.Entities
 
         protected CCDrawNode drawNode = new CCDrawNode();
         CCDrawNode debugGrahic;
-        public float Radius
-        {
-            get
-            {
-                return this.radius;
-            }
-            protected set
-            {
-                this.radius = value;
-                this.drawNode.Position = new CCPoint(-value, value);
-            }
 
-        }
-
-        private float radius;
-
-        public int currentHealth
+        public double currentHealth
         {
             get;
             protected set;
         }
-        public int maxHealth
+        public double maxHealth
         {
             get;
             protected set;
