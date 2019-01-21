@@ -42,6 +42,7 @@ namespace SpellDefense.Common.Entities
             AddSpawn(3, 0, "soldier");
         }
 
+        /*
         private Combatant GetCombatant(string combatantType)
         {
             switch(combatantType)
@@ -54,7 +55,7 @@ namespace SpellDefense.Common.Entities
                     return new BasicMelee(teamColor);
             }
         }
-
+        */
         public void AddSpawn(int qty, int spawns, string combatantType)
         {
             //Check to see if list exists
@@ -177,9 +178,8 @@ namespace SpellDefense.Common.Entities
                 {
                     for (int n = 0; n < squad.qty; n++)
                     {
-                        Combatant c = new BasicMelee(teamColor);//GetCombatant(squad.combatantType);
                         string unitJson = GodClass.UnitLibrary[squad.combatantType];
-                        c.InitFromJSON(unitJson);
+                        Combatant c = new BasicMelee(teamColor, unitJson);
                         c.Position = spawnPoint;
                         if(teamColor == TeamColor.RED)
                         {

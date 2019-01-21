@@ -25,18 +25,22 @@ namespace SpellDefense.Common.Entities
         protected double attackSpeed { get; set; }
         public CCDrawNode targetLine;
         string spriteImage { get; set; }
-
+        string colorName { get; set; }
+        CCColor4B drawColor;
 
         //How long are this combatant's arms? Glad you asked...
         protected double attackRange { get; set; }
         protected double aggroRange { get; set; }
         
-        public Combatant(TeamColor teamColor) : base(teamColor)
+        public Combatant(TeamColor teamColor, string unitStats) : base(teamColor)
         {
             state = State.walking;
             aggroRange = 64;
             attackRange = 16;
             targetLine = new CCDrawNode();
+
+            InitFromJSON(unitStats);
+            drawColor = ConvertStringToColor(colorName);
         }
 
         private void DrawTargetLine()
@@ -198,6 +202,7 @@ namespace SpellDefense.Common.Entities
             maxHealth = (int)testJson["maxHealth"];
             attackRange = (int)testJson["attackRange"];
             aggroRange = (int)testJson["aggroRange"];
+            colorName = (string)testJson["color"];
             JArray abilities = (JArray)testJson["abilities"];
 
             foreach (JObject ability in abilities)
@@ -207,6 +212,38 @@ namespace SpellDefense.Common.Entities
                 CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
                 this.abilityList.Add(tempAction);
             }
+        }
+
+        private CCColor4B ConvertStringToColor(string color)
+        {
+            string[] rgb = color.Split(',');
+            float r = float.Parse(rgb[0]);
+            float g = float.Parse(rgb[1]);
+            float b = float.Parse(rgb[2]);
+            return new CCColor4B(r,g,b, 255);
+        }
+
+        public override void CreateGraphic()
+        {
+            ContentSize = new CCSize(this.drawSize, this.drawSize);
+            if (this.teamColor == TeamColor.RED)
+            {
+                drawNode.DrawRect(
+                    p: CCPoint.Zero,
+                    size: this.drawSize,
+                    color: drawColor);
+            }
+            else
+            {
+                //drawNode.AnchorPoint = new CCPoint(0, 0);
+                //drawNode.Position = new CCPoint(-drawSize / 2, -drawSize / 2);
+                CCV3F_C4B pt1 = new CCV3F_C4B(new CCPoint(drawSize, 0), drawColor);
+                CCV3F_C4B pt2 = new CCV3F_C4B(new CCPoint(0, 0), drawColor);
+                CCV3F_C4B pt3 = new CCV3F_C4B(new CCPoint(drawSize/2, drawSize), drawColor);
+                CCV3F_C4B[] ptArray = { pt1, pt2, pt3 };
+                drawNode.DrawTriangleList(ptArray);
+            }
+            DrawHealthBar();
         }
 
     }
