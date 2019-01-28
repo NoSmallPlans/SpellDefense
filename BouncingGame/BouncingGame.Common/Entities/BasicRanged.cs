@@ -12,7 +12,7 @@ namespace SpellDefense.Common.Entities
     class BasicRanged : Combatant
     {
         public List<Projectile> projectiles;
-        public BasicRanged(TeamColor teamColor) : base(teamColor)
+        public BasicRanged(TeamColor teamColor, string unitJson) : base(teamColor, unitJson)
         {
             this.drawSize = 25;
             this.moveSpeed = 40;

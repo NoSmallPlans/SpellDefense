@@ -10,7 +10,7 @@ namespace SpellDefense.Common.Entities
 {
     class BasicMelee : Combatant
     {
-        public BasicMelee(TeamColor teamColor) : base(teamColor)
+        public BasicMelee(TeamColor teamColor, string unitStats) : base(teamColor, unitStats)
         {
             this.drawSize = 20;
             this.moveSpeed = 40;
@@ -28,28 +28,6 @@ namespace SpellDefense.Common.Entities
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
             this.CreateGraphic();
-        }
-
-        public override void CreateGraphic()
-        {
-            CCColor4B team;
-            ContentSize = new CCSize(this.drawSize, this.drawSize);
-            if (this.teamColor == TeamColor.RED)
-            {
-                team = CCColor4B.Red;
-            }
-            else
-            {
-                team = CCColor4B.Blue;
-            }
-            drawNode.AnchorPoint = CCPoint.AnchorLowerLeft;
-            drawNode.DrawRect(
-                p: CCPoint.Zero,
-                size: this.drawSize,
-                color: team);
-            this.ContentSize = new CCSize(drawSize, drawSize);
-            DrawHealthBar();
-
         }
 
         public override void CreateProjectile()
