@@ -33,17 +33,18 @@ namespace SpellDefense.Common.Entities
 
         private void CreateCastleSprite()
         {
-            sprite = new CCSprite("CastleGreen");
+            sprite = new CCSprite("SmallCastleGreen");
             sprite.Scale = 0.3f;
-            float spriteWidth = sprite.ContentSize.Width * sprite.ScaleX / 4;
+            sprite.AnchorPoint = CCPoint.AnchorLowerLeft;
+            float spriteWidth = sprite.ScaledContentSize.Width;
             if (teamColor == TeamColor.RED)
             {
-                sprite.RotationY = 180;
-                this.Position = new CCPoint(-spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);
+                sprite.FlipX = true;
+                this.Position = new CCPoint(0, GodClass.BattlefieldDimensions.GetHeight() / 4);
             }
             else
             {
-                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() + spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);
+                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 4);
             }
             this.AddChild(sprite);
         }
@@ -53,22 +54,22 @@ namespace SpellDefense.Common.Entities
             CreateCastleSprite();
             DrawHealthBar();
             this.ContentSize = sprite.ScaledContentSize;
-            drawNode.DrawRect(this.BoundingBox);
         }
-
+        
         protected void DrawHealthBar()
         {
-            float drawSizeWidth = sprite.ScaledContentSize.Width / 2;
-            float drawSizeHeight = sprite.ScaledContentSize.Height / 2;
-            float barHeight = drawSizeHeight * .2f;
+            float drawSizeWidth = GodClass.BattlefieldDimensions.GetWidth() / 4;
+            float drawSizeHeight = sprite.ScaledContentSize.Height;
+            float barHeight = drawSizeHeight * .05f;
             float currentBarWidth = (float)(drawSizeWidth * (this.currentHealth / this.maxHealth));
-            if(teamColor == TeamColor.RED)
+            float borderCushion = 0.05f * GodClass.BattlefieldDimensions.GetWidth();
+            if (teamColor == TeamColor.RED)
             {
-                var greenHealth = new CCRect(0.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect(borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
             } else
             {
-                var greenHealth = new CCRect(-1.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect((-1*drawSizeWidth)+borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
             }
             
