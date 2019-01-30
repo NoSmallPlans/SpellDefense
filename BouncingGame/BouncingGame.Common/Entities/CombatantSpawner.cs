@@ -18,11 +18,11 @@ namespace SpellDefense.Common.Entities
         //Units that will spawn every spawn event
         //Firt list, index 0, represents permanent spawns
         //Index 1...count represents current and future temporary spawns
-        List<List<Unit>> spawnLists;  
+        List<List<Squad>> spawnLists;  
 
-        class Unit
+        class Squad
         {
-            public int num;
+            public int qty;
             public string combatantType;
         }
 
@@ -38,8 +38,8 @@ namespace SpellDefense.Common.Entities
 
         private void InitSpawnLists()
         {
-            spawnLists = new List<List<Unit>>();
-            AddSpawn(3, 0, "BasicMelee");        
+            spawnLists = new List<List<Squad>>();
+            AddSpawn(3, 0, "BasicMelee");
         }
 
         private Combatant GetCombatant(string combatantType)
@@ -55,29 +55,29 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        public void AddSpawn(int num, int spawns, string combatantType)
+        public void AddSpawn(int qty, int spawns, string combatantType)
         {
             //Check to see if list exists
             //Check to see if combatant type exists
             //Add to list
-            Unit unit;
+            Squad squad;
             for(int i = 0; i <= spawns; i++)
             {
                 if(spawnLists.Count <= i)
                 {
-                    spawnLists.Add(new List<Unit>());
+                    spawnLists.Add(new List<Squad>());
                 }
                 if (spawnLists[i].Any(q => q.combatantType == combatantType))
                 {
-                    unit = spawnLists[i].First(q => q.combatantType == combatantType);
-                    unit.num += num;
+                    squad = spawnLists[i].First(q => q.combatantType == combatantType);
+                    squad.qty += qty;
                 }
                 else
                 {
-                    unit = new Unit();
-                    unit.num = num;
-                    unit.combatantType = combatantType;
-                    spawnLists[i].Add(unit);
+                    squad = new Squad();
+                    squad.qty = qty;
+                    squad.combatantType = combatantType;
+                    spawnLists[i].Add(squad);
                 }
             }
         }
@@ -174,11 +174,11 @@ namespace SpellDefense.Common.Entities
 
             for (int i = 0; i < (spawnLists.Count > 1 ? 2 : 1); i++)
             {
-                foreach (Unit unit in spawnLists[i])
+                foreach (Squad squad in spawnLists[i])
                 {
-                    for (int n = 0; n < unit.num; n++)
+                    for (int n = 0; n < squad.qty; n++)
                     {
-                        Combatant c = GetCombatant(unit.combatantType);
+                        Combatant c = GetCombatant(squad.combatantType);
                         c.Position = spawnPoint;
                         c.PositionX += curCol * widthSpacing;
                         c.PositionY += curRow * heightSpacing;

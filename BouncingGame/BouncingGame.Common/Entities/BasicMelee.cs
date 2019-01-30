@@ -13,6 +13,7 @@ namespace SpellDefense.Common.Entities
         public BasicMelee(TeamColor teamColor) : base(teamColor)
         {
             this.drawSize = 20;
+            this.Radius = drawSize / 2;
             this.speed = 40;
             this.currentHealth = 100;
             this.maxHealth = 100;
@@ -41,6 +42,7 @@ namespace SpellDefense.Common.Entities
         public override void CreateGraphic()
         {
             CCColor4B team;
+            this.Radius = this.drawSize / 2;
 
             if (this.teamColor == TeamColor.RED)
             {
@@ -50,21 +52,14 @@ namespace SpellDefense.Common.Entities
             {
                 team = CCColor4B.Blue;
             }
-            
-            //this.AddChild(drawNode);
 
+            //this.AddChild(drawNode);
             drawNode.DrawRect(
                 p: CCPoint.Zero,
                 size: this.drawSize,
                 color: team);
 
             DrawHealthBar();
-
-            if (GodClass.debug)
-            {
-                drawNode.DrawCircle(this.Position, (int)aggroRange, CCColor4B.Blue);
-                drawNode.DrawCircle(this.Position, (int)attackRange, CCColor4B.Orange);
-            }
 
         }
 

@@ -43,6 +43,35 @@ namespace SpellDefense.Common
                 return new CardAct(builtActionFunc, requiredInputs);
             }}
 
+            ,{"statMultiplier", delegate(JObject json)
+            {
+                int requiredInputs = 1;
+                string statName = (string)json["statName"];
+                float statMult = (float)json["statMult"];
+                Func<int[], int> builtActionFunc = delegate(int[] inputs)
+                {
+                    TeamColor teamColor = (TeamColor)inputs[0];
+                    if(teamColor == TeamColor.RED)
+                    {
+                        foreach(Combatant c in red.GetCombatants())
+                        {
+                            c[statName] = (float)c[statName]*statMult;
+                        }
+                    } else
+                    {
+                        foreach(Combatant c in blue.GetCombatants())
+                        {
+                            c[statName] = (float)c[statName]*statMult;
+                        }
+                    }
+
+                    return 1;
+                };
+
+
+                return new CardAct(builtActionFunc, requiredInputs);
+            }}
+
             ,{"statSetter", delegate(JObject json)
             {
                 int requiredInputs = 1;
