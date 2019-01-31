@@ -22,7 +22,7 @@ namespace SpellDefense.Common.Entities
             cardTitle = (string)testJson["cardTitle"];
             cardText = (string)testJson["cardText"];
             cardImage = (string)testJson["cardImage"];
-            this.cardCost = (int)testJson["cardCost"];
+            cardCost = (int)testJson["cardCost"];
             JArray cardActions = (JArray)testJson["cardActions"];
 
             foreach (JObject cardAction in cardActions)
@@ -36,9 +36,6 @@ namespace SpellDefense.Common.Entities
 
         public void Play(int[] inputArgs = null)
         {
-            //Console.WriteLine("Playing " + this.cardTitle);
-            //Console.WriteLine(this.cardText);
-
             int indxPtr = 0;
             int[] actionSpecificArgs;
             int actionArgCount;

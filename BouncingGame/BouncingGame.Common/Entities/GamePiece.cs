@@ -22,34 +22,17 @@ namespace SpellDefense.Common.Entities
 
         protected CCDrawNode drawNode = new CCDrawNode();
         CCDrawNode debugGrahic;
-        public float Radius
-        {
-            get
-            {
-                return this.radius;
-            }
-            protected set
-            {
-                this.radius = value;
-                this.drawNode.Position = new CCPoint(-value, value);
-            }
 
-        }
-
-        private float radius;
-
-        public float currentHealth
+        public double currentHealth
         {
             get;
             protected set;
         }
-        public float maxHealth
+        public double maxHealth
         {
             get;
             protected set;
         }
-        public float collisionWidth;
-        public float collisionHeight;
 
         public State state
         {
@@ -75,7 +58,7 @@ namespace SpellDefense.Common.Entities
             CreateGraphic();
         }
 
-        public void UpdateHealth(float amt)
+        public void UpdateHealth(int amt)
         {
             this.currentHealth += amt;
             if (this.currentHealth < 0)
@@ -100,8 +83,6 @@ namespace SpellDefense.Common.Entities
 
 
         public abstract void CreateGraphic();
-
-        public abstract void CreateCollision();
 
         public object this[string propertyName]
         {

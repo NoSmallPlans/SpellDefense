@@ -40,7 +40,7 @@ namespace SpellDefense.Common.Entities.Cards
             teamColor = team;
             cardSpacing = 100;
             if (team == TeamColor.BLUE)
-                cardStartingX = 400;
+                cardStartingX = 700;
             else
                 cardStartingX = 0;
             cardStartingY = -100;

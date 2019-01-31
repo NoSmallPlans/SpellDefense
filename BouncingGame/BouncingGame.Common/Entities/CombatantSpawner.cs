@@ -39,9 +39,10 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(3, 0, "BasicMelee");
+            AddSpawn(3, 0, "soldier");
         }
 
+        /*
         private Combatant GetCombatant(string combatantType)
         {
             switch(combatantType)
@@ -54,7 +55,7 @@ namespace SpellDefense.Common.Entities
                     return new BasicMelee(teamColor);
             }
         }
-
+        */
         public void AddSpawn(int qty, int spawns, string combatantType)
         {
             //Check to see if list exists
@@ -162,7 +163,6 @@ namespace SpellDefense.Common.Entities
 
         }
 
-        // made public for debugging, may make it private later:
         private void Spawn(CCPoint spawnPoint)
         {
             int rows = 3;
@@ -178,10 +178,18 @@ namespace SpellDefense.Common.Entities
                 {
                     for (int n = 0; n < squad.qty; n++)
                     {
-                        Combatant c = GetCombatant(squad.combatantType);
+                        string unitJson = GodClass.UnitLibrary[squad.combatantType];
+                        Combatant c = new BasicMelee(teamColor, unitJson);
                         c.Position = spawnPoint;
-                        c.PositionX += curCol * widthSpacing;
+                        if(teamColor == TeamColor.RED)
+                        {
+                            c.PositionX += curCol * widthSpacing;
+                        } else
+                        {
+                            c.PositionX -= curCol * widthSpacing;
+                        }
                         c.PositionY += curRow * heightSpacing;
+
                         curRow++;
                         if (curRow > rows)
                         {

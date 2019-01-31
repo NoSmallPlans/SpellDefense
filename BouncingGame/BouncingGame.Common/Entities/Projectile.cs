@@ -11,7 +11,7 @@ namespace SpellDefense.Common.Entities
 {
     public class Projectile : CCNode
     {
-        public Projectile(GamePiece target, float dmg, TeamColor teamColor)
+        public Projectile(GamePiece target, int dmg, TeamColor teamColor)
         {
             this.dmg = dmg;
             this.target = target;
@@ -23,8 +23,8 @@ namespace SpellDefense.Common.Entities
 
         protected CCDrawNode drawNode;
         protected GamePiece target;
-        protected float moveSpeed;
-        public float dmg;
+        protected int moveSpeed;
+        public int dmg;
         protected int drawSize;
         TeamColor teamColor;
 
@@ -48,7 +48,7 @@ namespace SpellDefense.Common.Entities
             return this.GetBoundingBox().IntersectsRect(target.GetBoundingBox());
         }
 
-        public void dealDmg(GamePiece target, float dmg)
+        public void dealDmg(GamePiece target, int dmg)
         {
             target.UpdateHealth(-dmg);
         }
