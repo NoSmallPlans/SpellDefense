@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,21 @@ namespace SpellDefense.Common.Entities.Cards
         public void InitFromJson(string json)
         {
             cards = new List<Card>();
-            
+            deckSize = 0;
+            JObject testJson = JObject.Parse(json);
+            JArray cardJArray = (JArray)testJson["cards"];
+
+            foreach (JObject card in cardJArray)
+            {
+                string cardName = (string)card["name"];
+                int count = (int)card["count"];
+                for(int i = 0; i < count; i++)
+                {
+                    cards.Add(new Card(GodClass.CardLibrary[cardName]));
+                    deckSize++;
+                }
+            }
+            cardsLeft = deckSize;
         }
 
         public void AddCard(String added)

@@ -8,6 +8,8 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
+        public static string playerOneDeck = "deck1";
+        public static string playerTwoDeck = "deck2";
         public static Dictionary<string, string> Decks = new Dictionary<string, string>()
         {
              {
@@ -16,11 +18,11 @@ namespace SpellDefense.Common
                     'cards': [
                         {
                             'name': 'fireball',
-                            'amount': '2'
+                            'count': '2'
                         },
                         {
-                            'name': 'Haste',
-                            'amount': '2'
+                            'name': 'haste',
+                            'count': '2'
                         },
                     ]
                 }"
@@ -30,12 +32,24 @@ namespace SpellDefense.Common
                 @"{
                     'cards': [
                         {
-                            'name': 'Add Ranged',
-                            'amount': '2'
+                            'name': 'addranged',
+                            'count': '2'
                         },
                         {
-                            'name': 'Slow',
-                            'amount': '2'
+                            'name': 'slow',
+                            'count': '2'
+                        },
+                        {
+                            'name': 'fireball',
+                            'count': '2'
+                        },
+                        {
+                            'name': 'nuke',
+                            'count': '2'
+                        },
+                        {
+                            'name': 'addsoldier',
+                            'count': '2'
                         },
                     ]
                 }"

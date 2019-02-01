@@ -14,7 +14,6 @@ namespace SpellDefense.Common.Scenes
         CCLayer hudLayer;
 
         private CCGameView gameView;
-        private CombatantSpawner combatantSpawner;
 
         Team redTeam;
         Team blueTeam;
