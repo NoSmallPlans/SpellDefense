@@ -16,6 +16,7 @@ namespace SpellDefense.Common
                     'attackSpeed' : '1'
                     ,'moveSpeed': '25'
                     ,'attackPwr': '25'
+                    ,'armor': '10'
                     ,'spriteImage': 'GreenGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '1'

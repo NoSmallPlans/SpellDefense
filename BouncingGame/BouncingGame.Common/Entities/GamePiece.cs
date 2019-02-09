@@ -52,11 +52,13 @@ namespace SpellDefense.Common.Entities
             state = State.waiting;
         }
 
-        private void UpdateHealthBar()
+        protected void UpdateHealthBar()
         {
             drawNode.Clear();
             CreateGraphic();
         }
+
+        public abstract void TakeDamage(int dmg);
 
         public void UpdateHealth(int amt)
         {
