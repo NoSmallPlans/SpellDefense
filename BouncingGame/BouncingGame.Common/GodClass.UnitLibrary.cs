@@ -11,16 +11,27 @@ namespace SpellDefense.Common
         public static Dictionary<string, string> UnitLibrary = new Dictionary<string, string>()
         {
              {
+                "skeleton",
+                @"{
+                    'attackSpeed' : '1'
+                    ,'moveSpeed': '25'
+                    ,'attackPwr': '25'
+                    ,'maxHealth': '100'
+                    ,'attackRange': '1'
+                    ,'aggroRange': '100'
+                    ,'sprite': 'skeleton'
+                }"
+            },
+             {
                 "soldier",
                 @"{
                     'attackSpeed' : '1'
                     ,'moveSpeed': '25'
                     ,'attackPwr': '25'
-                    ,'spriteImage': 'GreenGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '1'
                     ,'aggroRange': '100'
-                    ,'color': '0,255,255'
+                    ,'fillColor': '0,255,255'
                     ,'abilities': [
                         {
                             'actionName': 'statMultiplier'
@@ -38,11 +49,10 @@ namespace SpellDefense.Common
                     'attackSpeed' : '5'
                     ,'moveSpeed': '35'
                     ,'attackPwr': '25'
-                    ,'spriteImage': 'BlueGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '100'
                     ,'aggroRange': '100'
-                    ,'color': '0,255,0'
+                    ,'fillColor': '0,255,0'
                     ,'abilities': [
                         {
                             'actionName': 'statMultiplier'

@@ -72,7 +72,7 @@ namespace SpellDefense.Common.Entities
             for (int i = combatants.Count - 1; i >= 0; i--)
             {
                 combatants[i].Cleanup();
-                if (combatants[i].state == Combatant.State.dead)
+                if (combatants[i].State == Combatant.ActionState.dead)
                 {
                     DestroyCombatant(combatants[i], combatants);
                 }

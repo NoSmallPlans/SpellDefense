@@ -39,23 +39,9 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(3, 0, "soldier");
+            AddSpawn(3, 0, "skeleton");
         }
 
-        /*
-        private Combatant GetCombatant(string combatantType)
-        {
-            switch(combatantType)
-            {
-                case "BasicRanged":
-                    return new BasicRanged(teamColor);
-                case "BasicMelee":
-                    return new BasicMelee(teamColor);
-                default:
-                    return new BasicMelee(teamColor);
-            }
-        }
-        */
         public void AddSpawn(int qty, int spawns, string combatantType)
         {
             //Check to see if list exists

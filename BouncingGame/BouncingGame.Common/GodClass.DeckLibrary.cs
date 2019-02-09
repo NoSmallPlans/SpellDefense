@@ -17,7 +17,7 @@ namespace SpellDefense.Common
                 @"{
                     'cards': [
                         {
-                            'name': 'fireball',
+                            'name': 'addskeleton',
                             'count': '2'
                         },
                         {

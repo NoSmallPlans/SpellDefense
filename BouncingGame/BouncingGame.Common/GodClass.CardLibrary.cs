@@ -67,6 +67,25 @@ namespace SpellDefense.Common
                 }"
             },
             {
+                "addskeleton",
+                @"{
+                    'cardTitle' : 'Spawn Skeleton'
+                    ,'cardText': 'Adds skeleton to the next spawn'
+                    ,'cardCost': '1'
+                    ,'cardImage': 'BlueGuy.png'
+                    ,'cardActions': [
+                        {
+                            'actionName': 'addUnit'
+                            ,'compileTimeArgs': {
+                                'combatantType' : 'skeleton'
+                                ,'num' : '1'
+                                ,'spawns' : '1'
+                            }
+                        }
+                    ]
+                }"
+            },
+            {
                 "haste",
                 @"{
                     'cardTitle' : 'Haste'

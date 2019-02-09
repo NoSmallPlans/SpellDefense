@@ -12,7 +12,7 @@ namespace SpellDefense.Common.Entities
 
     public abstract class GamePiece : CCNode
     {
-        public enum State
+        public enum ActionState
         {
             waiting,
             walking,
@@ -22,6 +22,7 @@ namespace SpellDefense.Common.Entities
 
         protected CCDrawNode drawNode = new CCDrawNode();
         CCDrawNode debugGrahic;
+        private ActionState state;
 
         public double currentHealth
         {
@@ -34,10 +35,22 @@ namespace SpellDefense.Common.Entities
             protected set;
         }
 
-        public State state
+        public virtual ActionState State
         {
-            get;
-            protected set;
+            get
+            {
+                return this.state;
+            }
+            set
+            {
+                ActionStateChanged(value);
+                this.state = value;
+            }
+        }
+
+        protected virtual void ActionStateChanged(ActionState newState)
+        {
+            return;
         }
 
         public TeamColor teamColor
@@ -49,7 +62,7 @@ namespace SpellDefense.Common.Entities
         public GamePiece(TeamColor teamColor)
         {
             this.teamColor = teamColor;
-            state = State.waiting;
+            state = ActionState.waiting;
         }
 
         private void UpdateHealthBar()
@@ -75,7 +88,7 @@ namespace SpellDefense.Common.Entities
         {
             if (this.currentHealth <= 0)
             {
-                this.state = State.dead;
+                this.state = ActionState.dead;
             }
         }
 

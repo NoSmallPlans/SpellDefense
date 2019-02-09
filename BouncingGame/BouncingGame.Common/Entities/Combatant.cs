@@ -24,23 +24,45 @@ namespace SpellDefense.Common.Entities
         public double moveSpeed { get; set; }
         protected double attackSpeed { get; set; }
         public CCDrawNode targetLine;
-        string spriteImage { get; set; }
-        string colorName { get; set; }
+        string fillColorName { get; set; }
         CCColor4B drawColor;
+        CCSprite combatSprite;
+        CCAction walkAction, attackAction, deathAction, hitAction;
 
         //How long are this combatant's arms? Glad you asked...
         protected double attackRange { get; set; }
         protected double aggroRange { get; set; }
-        
+
+        protected override void ActionStateChanged(ActionState newState)
+        {
+            if (combatSprite != null && State != newState)
+            {
+                combatSprite.StopAllActions();
+                switch (newState)
+                {
+                    case ActionState.attacking:
+                        combatSprite.RunAction(attackAction);
+                        break;
+                    case ActionState.waiting:
+                        break;
+                    case ActionState.walking:
+                        combatSprite.RunAction(walkAction);
+                        break;
+                    case ActionState.dead:
+                        combatSprite.RunAction(deathAction);
+                        break;
+                }
+            }
+        }
+
         public Combatant(TeamColor teamColor, string unitStats) : base(teamColor)
         {
-            state = State.walking;
+            State = ActionState.walking;
             aggroRange = 64;
             attackRange = 16;
             targetLine = new CCDrawNode();
 
-            InitFromJSON(unitStats);
-            drawColor = ConvertStringToColor(colorName);
+            InitFromJSON(unitStats);            
         }
 
         private void DrawTargetLine()
@@ -63,7 +85,7 @@ namespace SpellDefense.Common.Entities
                 
                 if(enemy.currentHealth <= 0)
                 {
-                    this.state = State.walking;
+                    this.State = ActionState.walking;
                     this.attackTarget = null;
                 }
                 this.timeUntilAttack = this.attackSpeed;
@@ -77,7 +99,7 @@ namespace SpellDefense.Common.Entities
             if (this.attackTarget == null && enemy != null)
             {
                 this.attackTarget = enemy;
-                this.state = State.attacking;
+                this.State = ActionState.attacking;
             }
         }
 
@@ -126,7 +148,7 @@ namespace SpellDefense.Common.Entities
 
             if(this.attackTarget != null)
             {
-                if (state != State.attacking)
+                if (State != ActionState.attacking)
                 {
                     attackTarget = FindTarget(enemies, defaultEnemy);
                 }
@@ -150,16 +172,16 @@ namespace SpellDefense.Common.Entities
             if (attackRange <= 1 && CheckCollision(this, attackTarget))
             {
                 AttackEnemy(attackTarget);
-                state = State.attacking;
+                State = ActionState.attacking;
             }
             else if (distanceTo(this, attackTarget) <= attackRange)
             {
                 AttackEnemy(attackTarget);
-                state = State.attacking;
+                State = ActionState.attacking;
             }
             else
             {
-                state = State.walking;
+                State = ActionState.walking;
             }
         }
         
@@ -170,7 +192,7 @@ namespace SpellDefense.Common.Entities
 
         public void MovePhase(float frameTimeInSeconds)
         {
-            if (this.state == State.walking)
+            if (this.State == ActionState.walking)
             {
                 double diffX = attackTarget.Position.X - Position.X;
                 double diffY = attackTarget.Position.Y - Position.Y;
@@ -197,21 +219,56 @@ namespace SpellDefense.Common.Entities
             JObject testJson = JObject.Parse(text);
             attackSpeed = (double)testJson["attackSpeed"];
             moveSpeed = (double)testJson["moveSpeed"];
-            spriteImage = (string)testJson["spriteImage"];
             attackPwr = (int)testJson["attackPwr"];
             maxHealth = (int)testJson["maxHealth"];
             attackRange = (int)testJson["attackRange"];
             aggroRange = (int)testJson["aggroRange"];
-            colorName = (string)testJson["color"];
-            JArray abilities = (JArray)testJson["abilities"];
-
-            foreach (JObject ability in abilities)
-            {
-                string abilityName = (string)ability["actionName"];
-                JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
-                CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
-                this.abilityList.Add(tempAction);
+            if (testJson.ContainsKey("fillColor")) {
+                fillColorName = (string)testJson["fillColor"];
+                drawColor = ConvertStringToColor(fillColorName);
             }
+            if(testJson.ContainsKey("sprite")) {
+                InitSpriteFromJSON((string)testJson["sprite"]);
+            }
+            if (testJson.ContainsKey("abilities"))
+            {
+                JArray abilities = (JArray)testJson["abilities"];
+
+                foreach (JObject ability in abilities)
+                {
+                    string abilityName = (string)ability["actionName"];
+                    JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
+                    CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
+                    this.abilityList.Add(tempAction);
+                }
+            }
+        }
+
+        private void InitSpriteFromJSON(string name)
+        {
+            CCSpriteSheet spriteSheet = new CCSpriteSheet(name + ".plist", name + ".png");
+            var animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("walk"));
+            walkAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            combatSprite = new CCSprite(animFrames[0]);
+            combatSprite.AddAction(walkAction);
+            
+            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("attack"));
+            attackAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            combatSprite.AddAction(attackAction);
+
+            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("death"));
+            deathAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            combatSprite.AddAction(deathAction);
+
+            combatSprite.Scale = 1.5f;
+            this.ContentSize = combatSprite.ScaledContentSize;
+            if(teamColor == TeamColor.BLUE)
+            {
+                combatSprite.FlipX = true;
+            }
+            
+            this.AddChild(combatSprite);
+            combatSprite.RunAction(walkAction);
         }
 
         private CCColor4B ConvertStringToColor(string color)
