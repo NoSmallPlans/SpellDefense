@@ -43,6 +43,11 @@ namespace SpellDefense.Common
             client.FlushSendQueue();
         }
 
+        public void AddOutMessage(string msg)
+        {
+            outActionQueue.Enqueue(msg);
+        }
+
         public bool ParseMessage(string msg)
         {
             string[] args = msg.Split(',');
@@ -124,15 +129,6 @@ namespace SpellDefense.Common
                 prevAction = (((int)MsgType.NoAction).ToString() + ",no");
             }
             SendMessage(prevAction);
-        }
-
-        private void StartGame()
-        {
-            DateTime startTime = DateTime.UtcNow.AddSeconds(2);
-            //Queue and Send Game Start Message
-            string response = (int)MsgType.GameStart + "," + startTime;
-            SendMessage(response);
-            ParseMessage(response);
         }
     }
 }

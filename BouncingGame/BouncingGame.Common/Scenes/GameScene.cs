@@ -35,7 +35,7 @@ namespace SpellDefense.Common.Scenes
         List<CCDrawNode> targetLines;
         GameState gameState;
         Stopwatch messageWatch;
-        int messageTimeWait = 500;
+        int messageTimeWait = 900;
 
         public GameState GamesState
         {
@@ -65,6 +65,8 @@ namespace SpellDefense.Common.Scenes
             this.InitLayers();
             messageWatch = new Stopwatch();
             InitClient();
+            if (!GodClass.online)
+                startGame = true;
             Schedule(Activity);
         }
 
@@ -138,27 +140,13 @@ namespace SpellDefense.Common.Scenes
         {
             try
             {
-                if (GodClass.online)
-                {
-                    startGame = client.ReceiveMessage();
-                    if(startGame)
-                    {
-                        InitGame();
-                        SendActions();
-                        messageWatch.Start();
-                    }
-                    if (client.incomingActionQueue.Count >= 2)
-                    {
-                        simReady = true;
-                    }
-                    else if(messageWatch.ElapsedMilliseconds >= messageTimeWait)
-                    {
-                        SendActions(true);
-                        messageWatch.Restart();
-                    }
+                if (GodClass.online) {
+                    OnlineGameLoop();
                 }
-                if (simReady)
-                {
+                else {
+                    OfflineGameLoop();
+                }
+                if (simReady) {
                     PlayActions();
                     SimulateGame();
                     SendActions();
@@ -170,6 +158,35 @@ namespace SpellDefense.Common.Scenes
             {
                 string msg = ex.Message;
             }
+        }
+
+        private void OnlineGameLoop()
+        {
+            startGame = client.ReceiveMessage();
+            if (startGame)
+            {
+                InitGame();
+                SendActions();
+                messageWatch.Start();
+            }
+            if (client.incomingActionQueue.Count >= 2)
+            {
+                simReady = true;
+            }
+            else if (messageWatch.ElapsedMilliseconds >= messageTimeWait)
+            {
+                SendActions(true);
+                messageWatch.Restart();
+            }
+        }
+
+        private void OfflineGameLoop()
+        {
+            if (startGame) {
+                startGame = false;
+                InitGame();
+            }
+            simReady = true;
         }
 
         private void SimulateGame()

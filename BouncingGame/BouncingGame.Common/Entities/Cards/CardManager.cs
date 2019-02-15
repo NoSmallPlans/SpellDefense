@@ -102,8 +102,8 @@ namespace SpellDefense.Common.Entities.Cards
                 UpdateMana(-card.cardCost);
                 if (GodClass.online)
                 {
-                    //Send Message to opponent
-                    GodClass.clientRef.SendMessage(ConstructCardMessage(false, card.CardName));
+                    //Send Message to server
+                    GodClass.clientRef.AddOutMessage(ConstructCardMessage(false, card.CardName));
                 }
                 else
                 {
@@ -123,15 +123,7 @@ namespace SpellDefense.Common.Entities.Cards
             string message = cardName + ";" + ((int)teamColor).ToString();
             string timeStamp = DateTime.UtcNow.AddSeconds(2).ToString();
             string msgType;
-            if(self)
-            {
-                msgType = ((int)MsgType.QueueCard).ToString();
-               
-            }
-            else
-            {
-                msgType = ((int)MsgType.PlayCard).ToString();
-            }
+            msgType = ((int)MsgType.PlayCard).ToString();
             return msgType + "," + message;
         }
 
