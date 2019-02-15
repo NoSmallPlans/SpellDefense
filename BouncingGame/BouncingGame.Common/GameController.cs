@@ -43,7 +43,6 @@ namespace SpellDefense.Common
 
             var scene = new TitleScene(GameView);
             GameView.RunWithScene(scene);
-            
         }
 
         private static void InitializeAudio()

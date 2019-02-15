@@ -130,4 +130,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Images\CastleGreenSmall.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\SmallCastleGreen.png" />
+  </ItemGroup>
 </Project>

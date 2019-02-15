@@ -47,7 +47,7 @@ namespace SpellDefense.Common
             {
                 int requiredInputs = 1;
                 string statName = (string)json["statName"];
-                float statMult = (float)json["statMult"];
+                double statMult = (float)json["statMult"];
                 Func<int[], int> builtActionFunc = delegate(int[] inputs)
                 {
                     TeamColor teamColor = (TeamColor)inputs[0];
@@ -55,13 +55,13 @@ namespace SpellDefense.Common
                     {
                         foreach(Combatant c in red.GetCombatants())
                         {
-                            c[statName] = (float)c[statName]*statMult;
+                            c[statName] = (double)c[statName]*statMult;
                         }
                     } else
                     {
                         foreach(Combatant c in blue.GetCombatants())
                         {
-                            c[statName] = (float)c[statName]*statMult;
+                            c[statName] = (double)c[statName]*statMult;
                         }
                     }
 

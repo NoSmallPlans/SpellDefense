@@ -20,7 +20,7 @@ namespace SpellDefense.Common.Entities
             CardTexture = CCTextureCache.SharedTextureCache.AddImage(cardImage);
             CardName = cardTitle;
             DescriptionText = cardText;
-            CostText = "Mana: " + cardCost.ToString();
+            CostText = "Cost: " + cardCost.ToString();
             UsesRenderTexture = true;
             Opacity = 255;
         }

@@ -22,7 +22,7 @@ namespace SpellDefense.Common.Entities
             cardTitle = (string)testJson["cardTitle"];
             cardText = (string)testJson["cardText"];
             cardImage = (string)testJson["cardImage"];
-            this.cardCost = (int)testJson["cardCost"];
+            cardCost = (int)testJson["cardCost"];
             JArray cardActions = (JArray)testJson["cardActions"];
 
             foreach (JObject cardAction in cardActions)

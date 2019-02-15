@@ -11,8 +11,6 @@ namespace SpellDefense.Common.Entities
     public class Base : GamePiece
     {
         CCSprite sprite;
-        public Action<TeamColor> GameOver;
-
 
         public Base(TeamColor teamColor) : base(teamColor)
         {
@@ -20,9 +18,12 @@ namespace SpellDefense.Common.Entities
             currentHealth = maxHealth;
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
-            CreateCastleSprite();
-            CreateCollision();
             CreateGraphic();
+        }
+
+        public double GetCurrentHealth()
+        {
+            return this.currentHealth;
         }
 
         public override void Collided(Combatant enemy)
@@ -30,66 +31,57 @@ namespace SpellDefense.Common.Entities
             throw new NotImplementedException();
         }
 
-        public override void CreateCollision()
-        {
-            this.collisionHeight = sprite.ScaledContentSize.Height;
-            this.collisionWidth = sprite.ScaledContentSize.Width;
-        }
-
         private void CreateCastleSprite()
         {
-            sprite = new CCSprite("CastleGreenSmall");
+            sprite = new CCSprite("SmallCastleGreen");
             sprite.Scale = 0.3f;
-            float spriteWidth = sprite.ContentSize.Width * sprite.ScaleX / 4;
+            sprite.AnchorPoint = CCPoint.AnchorLowerLeft;
+            float spriteWidth = sprite.ScaledContentSize.Width;
             if (teamColor == TeamColor.RED)
             {
-                sprite.RotationY = 180;
-                this.Position = new CCPoint(spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);
+                sprite.FlipX = true;
+                this.Position = new CCPoint(0, GodClass.BattlefieldDimensions.GetHeight() / 4);
             }
             else
             {
-                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 2);
+                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 4);
             }
             this.AddChild(sprite);
         }
 
         public override void CreateGraphic()
         {
-            this.Radius = this.sprite.ScaledContentSize.Width / 2;
+            CreateCastleSprite();
             DrawHealthBar();
-            //DrawCollisionBorder();
+            this.ContentSize = sprite.ScaledContentSize;
         }
 
-        private void DrawCollisionBorder()
+        public override void TakeDamage(int dmg)
         {
-            drawNode.DrawRect(new CCRect(-this.sprite.ScaledContentSize.Width/2, -this.sprite.ScaledContentSize.Height / 2, collisionWidth, collisionHeight));
+            this.currentHealth -= dmg;
+            if (this.currentHealth < 0)
+                this.currentHealth = 0;
+            UpdateHealthBar();
         }
 
         protected void DrawHealthBar()
         {
-            float drawSizeWidth = sprite.ScaledContentSize.Width / 2;
-            float drawSizeHeight = sprite.ScaledContentSize.Height / 2;
-            float barHeight = drawSizeHeight * .2f;
-            float currentBarWidth = drawSizeWidth * (this.currentHealth / this.maxHealth);
-            
-            if(teamColor == TeamColor.RED)
+            float drawSizeWidth = GodClass.BattlefieldDimensions.GetWidth() / 4;
+            float drawSizeHeight = sprite.ScaledContentSize.Height;
+            float barHeight = drawSizeHeight * .05f;
+            float currentBarWidth = (float)(drawSizeWidth * (this.currentHealth / this.maxHealth));
+            float borderCushion = 0.05f * GodClass.BattlefieldDimensions.GetWidth();
+            if (teamColor == TeamColor.RED)
             {
-                var greenHealth = new CCRect(-Radius, drawSizeHeight+barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect(borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
             } else
             {
-                var greenHealth = new CCRect(-1.6f*drawSizeWidth, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect((-1*drawSizeWidth)+borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
             }
-        }
-
-        public override void UpdateHealth(float amt)
-        {
-            base.UpdateHealth(amt);
-            if(currentHealth <= 0)
-            {
-                GameOver(teamColor);
-            }
+            
         }
     }
+
 }

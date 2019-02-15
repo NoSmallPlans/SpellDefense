@@ -190,7 +190,7 @@ namespace SpellDefense.Common.Entities
 
         private void CreateCostDisplay()
         {
-            costDisplay = CreateLabel("Mana: 10/10");
+            costDisplay = CreateLabel("Cost: 10");
             costDisplay.AnchorPoint = new CCPoint(0, .5f);
             costDisplay.PositionY = 80;
             costDisplay.PositionX = 10;
@@ -217,26 +217,7 @@ namespace SpellDefense.Common.Entities
             visualComponents.Add(costDisplay);
             visualComponents.Add(descriptionDisplay);
         }
-        /*
-        private void SwitchToRenderingComponents()
-        {
-            if (renderTexture != null && this.Children.Contains(renderTexture.Sprite))
-            {
-                this.RemoveChild(renderTexture.Sprite);
-            }
 
-            bool areVisualComponentsAlreadyAdded = this.Children != null && this.Children.Contains(visualComponents[0]);
-
-            if (!areVisualComponentsAlreadyAdded)
-            {
-                foreach (var component in visualComponents)
-                {
-                    this.AddChild(component);
-                }
-            }
-
-        }
-        */
         private void SwitchToRenderTexture()
         {
             // The card needs to be moved to the origin (0,0) so it's rendered on the render target. 

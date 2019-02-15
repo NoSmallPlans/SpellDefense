@@ -77,9 +77,13 @@ namespace SpellDefense.Common.Entities.Cards
 
         private void InitDeck()
         {
-            foreach (String cardDef in GodClass.CardLibrary)
+            if(teamColor == TeamColor.RED)
             {
-                deck.AddCard(cardDef);
+                deck.InitFromJson(GodClass.Decks[GodClass.playerOneDeck]);
+            }
+            else
+            {
+                deck.InitFromJson(GodClass.Decks[GodClass.playerTwoDeck]);
             }
         }
 

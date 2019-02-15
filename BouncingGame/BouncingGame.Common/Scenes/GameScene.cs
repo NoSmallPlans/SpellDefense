@@ -85,9 +85,9 @@ namespace SpellDefense.Common.Scenes
 
             this.InitTeams();
 
-            gameplayLayer.AddChild(battlefield);
-            gameplayLayer.AddChild(cardHUD);
-            targetLines = new List<CCDrawNode>();
+                gameplayLayer.AddChild(battlefield);
+                gameplayLayer.AddChild(cardHUD);
+                targetLines = new List<CCDrawNode>();
 
             GodClass.gameplayLayer = gameplayLayer;
             GodClass.InitLibrary();
@@ -115,8 +115,6 @@ namespace SpellDefense.Common.Scenes
             blueTeam.SetEnemyBase(redTeam.GetBase());
             redTeam.CreateCombatantSpawner();
             blueTeam.CreateCombatantSpawner();
-            redTeam.GameOver += this.GameOver;
-            blueTeam.GameOver += this.GameOver;
             GodClass.red = redTeam;
             GodClass.blue = blueTeam;
         }
@@ -203,8 +201,17 @@ namespace SpellDefense.Common.Scenes
             redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
             blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
+            if (redTeam.GetBase().GetCurrentHealth() <= 0 ||
+                blueTeam.GetBase().GetCurrentHealth() <= 0)
+            {
+                string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
+                this.ShowEndScreen(winningTeam);
+                this.hasGameEnded = true;
+            }
+
             redTeam.SpawnPhase(frameTimeInSeconds);
             blueTeam.SpawnPhase(frameTimeInSeconds);
+
         }
 
         //Any actions received from the server are played 
@@ -264,18 +271,40 @@ namespace SpellDefense.Common.Scenes
             cardHUD.AddChild(card);
         }
 
-        private void GameOver(TeamColor team)
+        private void ShowEndScreen(string teamName)
         {
-            gameState = GameState.Over;
-            string label;
-            if(team == TeamColor.BLUE)
-            {
-                label = "Blue Team Wins!";
-            }
-            else
-            {
-                label = "Red Team Wins!";
-            }
+            var labelA = new CCLabel("Game Over", "Arial", 30, CCLabelFormat.SystemFont);
+            labelA.PositionX = gameplayLayer.ContentSize.Width / 2.0f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height / 2.0f;
+            labelA.Color = CCColor3B.White;
+            gameplayLayer.AddChild(labelA);
+
+            string winnerString = teamName + " wins!";
+            var labelB = new CCLabel(winnerString, "Arial", 30, CCLabelFormat.SystemFont);
+            labelB.PositionX = gameplayLayer.ContentSize.Width / 2.0f;
+            labelB.PositionY = gameplayLayer.ContentSize.Height / 2.25f;
+            labelB.Color = CCColor3B.White;
+            gameplayLayer.AddChild(labelB);
+
+            CreateTouchListener();
+        }
+
+        private void StartOver()
+        {
+            CCGameView tempGameView = GameController.GameView;
+            GameController.Initialize(tempGameView);
+        }
+
+        private void CreateTouchListener()
+        {
+            var touchListener = new CCEventListenerTouchAllAtOnce();
+            touchListener.OnTouchesBegan = HandleTouchesBegan;
+            gameplayLayer.AddEventListener(touchListener);
+        }
+
+        private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
+        {
+            this.StartOver();
         }
     }
 }
