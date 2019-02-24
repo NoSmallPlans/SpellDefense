@@ -45,6 +45,7 @@ namespace SpellDefense.Common.Scenes
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
                 targetLines = new List<CCDrawNode>();
+                ShowSpawnTimer();
 
                 GodClass.gameplayLayer = gameplayLayer;
                 Schedule(Activity);
@@ -89,6 +90,8 @@ namespace SpellDefense.Common.Scenes
             {
                 if (hasGameEnded == false)
                 {
+                    redTeam.combatantSpawner.UpdateSpawnCountDownLabel();
+                    blueTeam.combatantSpawner.UpdateSpawnCountDownLabel();
 
                     redTeam.Cleanup();
                     blueTeam.Cleanup();
@@ -164,6 +167,29 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
+        }
+
+        private void ShowSpawnTimer()
+        {
+            float leftLabelXModifier = 0.02f;
+            float leftLabelYModifier = 0.725f;
+            float rightLabelXModifier = 1-leftLabelXModifier;
+            float rightLabelYModifier = leftLabelYModifier;
+
+
+            var labelA = redTeam.combatantSpawner.GetSpawnCountDownLabel();
+            labelA.PositionX = gameplayLayer.ContentSize.Width * leftLabelXModifier;
+            labelA.PositionY = gameplayLayer.ContentSize.Height * leftLabelYModifier;
+            labelA.Color = CCColor3B.White;
+            hudLayer.AddChild(labelA);
+
+            
+            var labelB = blueTeam.combatantSpawner.GetSpawnCountDownLabel();
+            labelB.PositionX = gameplayLayer.ContentSize.Width * rightLabelXModifier;
+            labelB.PositionY = gameplayLayer.ContentSize.Height * rightLabelYModifier;
+            labelB.Color = CCColor3B.White;
+            hudLayer.AddChild(labelB);
+            
         }
     }
 }

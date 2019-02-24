@@ -14,6 +14,8 @@ namespace SpellDefense.Common.Entities
         CCPoint redSpawn;
         CCPoint blueSpawn;
         TeamColor teamColor;
+        CCLabel SpawnCountDownLabel;
+
 
         //Units that will spawn every spawn event
         //Firt list, index 0, represents permanent spawns
@@ -30,10 +32,22 @@ namespace SpellDefense.Common.Entities
         {
             IsSpawning = true;
             TimeInbetweenSpawns = 16;
+            TimeUntilNextSpawn = TimeInbetweenSpawns;
             // So that spawning starts immediately:
             timeSinceLastSpawn = TimeInbetweenSpawns;
             this.teamColor = teamColor;
             InitSpawnLists();
+        }
+
+        public CCLabel GetSpawnCountDownLabel()
+        {
+            SpawnCountDownLabel = new CCLabel(TimeUntilNextSpawn.ToString(), "Arial", 30, CCLabelFormat.SystemFont);
+            return SpawnCountDownLabel;
+        }
+
+        public void UpdateSpawnCountDownLabel()
+        {
+            SpawnCountDownLabel.Text = ((int)TimeUntilNextSpawn).ToString();
         }
 
         private void InitSpawnLists()
@@ -97,10 +111,17 @@ namespace SpellDefense.Common.Entities
         }
 
         float timeSinceLastSpawn;
+
         public float TimeInbetweenSpawns
         {
             get;
             set;
+        }
+
+        public float TimeUntilNextSpawn
+        {
+            get;
+            protected set;
         }
 
         public string DebugInfo
@@ -136,6 +157,7 @@ namespace SpellDefense.Common.Entities
         private void SpawningActivity(float frameTime)
         {
             timeSinceLastSpawn += frameTime;
+            TimeUntilNextSpawn = TimeInbetweenSpawns - timeSinceLastSpawn;
 
             if (timeSinceLastSpawn > TimeInbetweenSpawns)
             {
