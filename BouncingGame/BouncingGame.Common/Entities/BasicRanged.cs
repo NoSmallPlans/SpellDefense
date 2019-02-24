@@ -58,6 +58,11 @@ namespace SpellDefense.Common.Entities
             DrawHealthBar();
         }
 
+        protected override void PlayAttackAnimation()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void CreateProjectile()
         {
             Projectile myProjectile = new Projectile(this.AttackTarget, this.attackPwr, teamColor);
