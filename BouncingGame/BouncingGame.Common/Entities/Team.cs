@@ -55,7 +55,6 @@ namespace SpellDefense.Common.Entities
         public Base makeBase()
         {
             Base b = new Base(this.teamColor);
-            b.GameOver += GameOver;
             return this.teamBase = new Base(this.teamColor);
         }
 

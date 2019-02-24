@@ -34,8 +34,6 @@ namespace SpellDefense.Common.Scenes
         UIcontainer cardHUD;
         List<CCDrawNode> targetLines;
         GameState gameState;
-        Stopwatch messageWatch;
-        int messageTimeWait = 900;
 
         public GameState GamesState
         {
@@ -60,14 +58,21 @@ namespace SpellDefense.Common.Scenes
 #endregion
         public GameScene(CCGameView gameView) : base(gameView)
         {
-            gameState = GameState.Paused;
-            this.gameView = gameView;
-            this.InitLayers();
-            messageWatch = new Stopwatch();
-            InitClient();
-            if (!GodClass.online)
-                startGame = true;
-            Schedule(Activity);
+            try
+            {
+                Debug.WriteLine("Game Scene Init");
+                gameState = GameState.Paused;
+                this.gameView = gameView;
+                this.InitLayers();
+                InitClient();
+                if (!GodClass.online)
+                    startGame = true;
+                Schedule(Activity);
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+            }
         }
 
         private void InitGame()
@@ -144,17 +149,10 @@ namespace SpellDefense.Common.Scenes
                 else {
                     OfflineGameLoop();
                 }
-                if (simReady) {
-                    PlayActions();
-                    SimulateGame();
-                    SendActions();
-                    messageWatch.Restart();
-                    simReady = false;
-                }
             }
             catch(Exception ex)
             {
-                string msg = ex.Message;
+                Debug.WriteLine("Error: " + ex.Message);
             }
         }
 
@@ -165,26 +163,28 @@ namespace SpellDefense.Common.Scenes
             {
                 InitGame();
                 SendActions();
-                messageWatch.Start();
             }
             if (client.incomingActionQueue.Count >= 2)
             {
                 simReady = true;
             }
-            else if (messageWatch.ElapsedMilliseconds >= messageTimeWait)
+            if (simReady)
             {
-                SendActions(true);
-                messageWatch.Restart();
+                PlayActions();
+                SimulateGame();
+                SendActions();
+                simReady = false;
             }
         }
 
         private void OfflineGameLoop()
-        {
+        {            
             if (startGame) {
                 startGame = false;
                 InitGame();
             }
-            simReady = true;
+            PlayActions();
+            SimulateGame();
         }
 
         private void SimulateGame()
@@ -206,7 +206,7 @@ namespace SpellDefense.Common.Scenes
             {
                 string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
                 this.ShowEndScreen(winningTeam);
-                this.hasGameEnded = true;
+                //this.hasGameEnded = true;
             }
 
             redTeam.SpawnPhase(frameTimeInSeconds);
@@ -218,7 +218,7 @@ namespace SpellDefense.Common.Scenes
         private void PlayActions()
         {
             int actionCount = client.incomingActionQueue.Count;
-            if (actionCount > 1)
+            if (actionCount > 0)
             {
                 for (int i = 0; i < actionCount; i++)
                 {
@@ -247,6 +247,7 @@ namespace SpellDefense.Common.Scenes
             switch(msg.type)
             {
                 case MsgType.PlayCard:
+                    Debug.WriteLine("Play Card: " + msg.Message);
                     string[] args = msg.Message.Split(';');                    
                     if (args.Length > 1)
                     {

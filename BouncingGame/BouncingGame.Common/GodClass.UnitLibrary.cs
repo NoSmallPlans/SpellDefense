@@ -16,11 +16,11 @@ namespace SpellDefense.Common
                     'attackSpeed' : '1'
                     ,'moveSpeed': '25'
                     ,'attackPwr': '25'
-                    ,'armor': '10'
+                    ,'armor': '0'
                     ,'spriteImage': 'GreenGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '1'
-                    ,'aggroRange': '100'
+                    ,'aggroRange': '500'
                     ,'color': '0,255,255'
                     ,'abilities': [
                         {
@@ -42,7 +42,7 @@ namespace SpellDefense.Common
                     ,'spriteImage': 'BlueGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '100'
-                    ,'aggroRange': '100'
+                    ,'aggroRange': '500'
                     ,'color': '0,255,0'
                     ,'abilities': [
                         {

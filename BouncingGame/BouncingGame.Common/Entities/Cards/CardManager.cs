@@ -107,12 +107,12 @@ namespace SpellDefense.Common.Entities.Cards
                 if (GodClass.online)
                 {
                     //Send Message to server
-                    GodClass.clientRef.AddOutMessage(ConstructCardMessage(false, card.CardName));
+                    GodClass.clientRef.AddOutMessage(ConstructCardMessage(false, card.CardName.ToLower()));
                 }
                 else
                 {
                     //Play card locally
-                    GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName));
+                    GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName.ToLower()));
                 }
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
@@ -125,7 +125,6 @@ namespace SpellDefense.Common.Entities.Cards
         private string ConstructCardMessage(bool self, string cardName)
         {
             string message = cardName + ";" + ((int)teamColor).ToString();
-            string timeStamp = DateTime.UtcNow.AddSeconds(2).ToString();
             string msgType;
             msgType = ((int)MsgType.PlayCard).ToString();
             return msgType + "," + message;

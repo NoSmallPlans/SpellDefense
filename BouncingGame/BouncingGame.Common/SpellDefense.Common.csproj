@@ -52,8 +52,8 @@
     <Compile Include="GodClass.CardLibrary.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
-	<Compile Include="GodClass.UnitLibrary.cs" /> 
-	<Compile Include="GodClass.DeckLibrary.cs" />
+    <Compile Include="GodClass.UnitLibrary.cs" />
+    <Compile Include="GodClass.DeckLibrary.cs" />
     <Compile Include="Networking\Messaging.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
@@ -69,6 +69,9 @@
     </Reference>
     <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lidgren.Network.Portable.1.0.1\lib\portable-net45+sl50+win+wpa81+wp80\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v4.4\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>..\..\packages\CocosSharp.1.7.1.0\lib\portable-net45+win+wpa81+wp81\MonoGame.Framework.dll</HintPath>

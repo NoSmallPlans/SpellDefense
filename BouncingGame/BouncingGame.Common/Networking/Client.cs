@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using Java.IO;
+using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,10 @@ namespace SpellDefense.Common
         public void StartClient()
         {
             var config = new NetPeerConfiguration("spelldefense");
-            config.AutoFlushSendQueue = false;
+            config.AutoFlushSendQueue = true;
             client = new NetClient(config);
             client.Start();
+            client.FlushSendQueue();
 
              //TODO make these configurable in UI
             string ip = "73.109.92.27";//"192.168.0.10";
@@ -38,9 +40,9 @@ namespace SpellDefense.Common
 
         public void SendMessage(string text)
         {
-            NetOutgoingMessage message = client.CreateMessage(text);
-            client.SendMessage(message, NetDeliveryMethod.ReliableOrdered);
-            client.FlushSendQueue();
+            var outMessage = client.CreateMessage();
+            outMessage.Write(text);
+            client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void AddOutMessage(string msg)
@@ -68,6 +70,7 @@ namespace SpellDefense.Common
                         ms.type = MsgType.PlayCard;
                         ms.Message = args[1];
                         incomingActionQueue.Enqueue(ms);
+                        System.Diagnostics.Debug.WriteLine("Queue Card: " + ms.Message);
                         break;
                     case MsgType.QueueCard:
                         ms = new MsgStruct();
@@ -102,8 +105,9 @@ namespace SpellDefense.Common
                     case NetIncomingMessageType.Data:
                         {
                             reply = im.ReadString();
+                            if (!reply.Contains("no")) 
+                                System.Diagnostics.Debug.WriteLine("recieved: " + reply);
                             return ParseMessage(reply);
-                            break;
                         }
                     default:
                         break;
