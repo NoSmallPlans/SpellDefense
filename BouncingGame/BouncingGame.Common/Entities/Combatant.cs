@@ -23,6 +23,7 @@ namespace SpellDefense.Common.Entities
         GamePiece attackTarget;
         public double moveSpeed { get; set; }
         protected double attackSpeed { get; set; }
+        protected double armor { get; set; }
         public CCDrawNode targetLine;
         string spriteImage { get; set; }
         string colorName { get; set; }
@@ -55,7 +56,7 @@ namespace SpellDefense.Common.Entities
             {
                 if (meleeUnit)
                 {
-                    enemy.UpdateHealth(-this.attackPwr);
+                    enemy.TakeDamage(this.attackPwr);
                 } else {
                     CreateProjectile();
                 }
@@ -68,6 +69,14 @@ namespace SpellDefense.Common.Entities
                 }
                 this.timeUntilAttack = this.attackSpeed;
             }
+        }
+
+        public override void TakeDamage(int dmg)
+        {
+            this.currentHealth -= dmg - armor;
+            if (this.currentHealth < 0)
+                this.currentHealth = 0;
+            UpdateHealthBar();
         }
 
         public abstract void CreateProjectile();
@@ -203,6 +212,12 @@ namespace SpellDefense.Common.Entities
             attackRange = (int)testJson["attackRange"];
             aggroRange = (int)testJson["aggroRange"];
             colorName = (string)testJson["color"];
+            if(testJson.ContainsKey("armor")) {
+                armor = (double)testJson["armor"];
+            }
+            else {
+                armor = 0;
+            }
             JArray abilities = (JArray)testJson["abilities"];
 
             foreach (JObject ability in abilities)
@@ -235,8 +250,6 @@ namespace SpellDefense.Common.Entities
             }
             else
             {
-                //drawNode.AnchorPoint = new CCPoint(0, 0);
-                //drawNode.Position = new CCPoint(-drawSize / 2, -drawSize / 2);
                 CCV3F_C4B pt1 = new CCV3F_C4B(new CCPoint(drawSize, 0), drawColor);
                 CCV3F_C4B pt2 = new CCV3F_C4B(new CCPoint(0, 0), drawColor);
                 CCV3F_C4B pt3 = new CCV3F_C4B(new CCPoint(drawSize/2, drawSize), drawColor);

@@ -55,7 +55,15 @@ namespace SpellDefense.Common.Entities
             DrawHealthBar();
             this.ContentSize = sprite.ScaledContentSize;
         }
-        
+
+        public override void TakeDamage(int dmg)
+        {
+            this.currentHealth -= dmg;
+            if (this.currentHealth < 0)
+                this.currentHealth = 0;
+            UpdateHealthBar();
+        }
+
         protected void DrawHealthBar()
         {
             float drawSizeWidth = GodClass.BattlefieldDimensions.GetWidth() / 4;

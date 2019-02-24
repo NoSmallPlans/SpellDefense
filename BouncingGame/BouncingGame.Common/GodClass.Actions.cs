@@ -61,7 +61,7 @@ namespace SpellDefense.Common
                     {
                         foreach(Combatant c in blue.GetCombatants())
                         {
-                            c[statName] = (float)c[statName]*statMult;
+                            c[statName] = (double)c[statName]*statMult;
                         }
                     }
 
