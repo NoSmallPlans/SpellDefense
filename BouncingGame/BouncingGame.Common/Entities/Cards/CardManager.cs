@@ -28,8 +28,13 @@ namespace SpellDefense.Common.Entities.Cards
         double cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
-        List<Action> cardQueue;
-        
+        static List<Action> sharedQueue = new List<Action>();
+        static List<Action> redQueue = new List<Action>();
+        static List<Action> blueQueue = new List<Action>();
+        static bool blueTimerEventDone;
+        static bool redTimerEventDone;
+        static int turnCount;
+
 
         public CardManager(TeamColor team)
         {
@@ -49,7 +54,8 @@ namespace SpellDefense.Common.Entities.Cards
             InitHand();
             CreateGraphics();
             CreateTouchListener();
-            cardQueue = new List<Action>();
+            blueTimerEventDone = false;
+            redTimerEventDone = false;
 
             Schedule(t =>
             {
@@ -211,23 +217,76 @@ namespace SpellDefense.Common.Entities.Cards
             }
         }
 
+        public static void MergeQueues()
+        {
+            int i = 0;
+            while( i < blueQueue.Count && i < redQueue.Count)
+            {
+                //on even turns
+                if(turnCount % 2 == 0)
+                {
+                    sharedQueue.Add(blueQueue[i]);
+                    sharedQueue.Add(redQueue[i]);
+                } else
+                {
+                    sharedQueue.Add(redQueue[i]);
+                    sharedQueue.Add(blueQueue[i]);
+                }
+                i++;
+            }
+
+            if(blueQueue.Count > i)
+            {
+                while (i < blueQueue.Count)
+                {
+                    sharedQueue.Add(blueQueue[i]);
+                    i++;
+                }
+                
+            }
+
+            if (redQueue.Count > i)
+            {
+                while (i < redQueue.Count)
+                {
+                    sharedQueue.Add(redQueue[i]);
+                    i++;
+                }
+                
+            }
+            redQueue.Clear();
+            blueQueue.Clear();
+        }
+
         private void AddToQueue(Action cardPlay)
         {
-            cardQueue.Add(cardPlay);
+            if(this.teamColor == TeamColor.BLUE) blueQueue.Add(cardPlay);
+            if(this.teamColor == TeamColor.RED) redQueue.Add(cardPlay);
         }
 
         private void PlayCardQueue()
         {
-            foreach(Action cardPlay in cardQueue)
+            foreach(Action cardPlay in sharedQueue)
             {
                 cardPlay();
             }
-            cardQueue.Clear();
+            sharedQueue.Clear();
         }
 
         public void HandleSpawnTimeReached(object sender, EventArgs e)
         {
-            this.PlayCardQueue();
+            if(this.teamColor == TeamColor.BLUE) blueTimerEventDone = true;
+            if (this.teamColor == TeamColor.RED) redTimerEventDone = true;
+
+            if (redTimerEventDone && blueTimerEventDone)
+            {
+                MergeQueues();
+                this.PlayCardQueue();
+                redTimerEventDone = false;
+                blueTimerEventDone = false;
+                turnCount++;
+            }
+
         }
 
         private void DeselectCards()

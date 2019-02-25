@@ -168,8 +168,6 @@ namespace SpellDefense.Common.Entities
                     OnSpawnTimeReached(this, EventArgs.Empty);
                 }
 
-                //trigger spawn timer action
-
                 if (teamColor == TeamColor.RED)
                     Spawn(redSpawn);
                 else
