@@ -28,6 +28,7 @@ namespace SpellDefense.Common.Entities.Cards
         double cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
+        List<Action> cardQueue;
         
 
         public CardManager(TeamColor team)
@@ -48,6 +49,7 @@ namespace SpellDefense.Common.Entities.Cards
             InitHand();
             CreateGraphics();
             CreateTouchListener();
+            cardQueue = new List<Action>();
 
             Schedule(t =>
             {
@@ -98,18 +100,23 @@ namespace SpellDefense.Common.Entities.Cards
         //Play Card
         //Remove card from CardHub
         //Draw New Card
-        public void PlayCard(Card card, CCPoint pos)
+        public void UseCard(Card card, CCPoint pos)
         {
             if(currentMana >= card.cardCost)
             {
                 UpdateMana(-card.cardCost);
-                card.Play(new int[] { (int)this.teamColor });
+                QueueCard(card, pos);
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
                 hand.Remove(card);
                 currentHandSize--;
                 DrawCard();
             }
+        }
+
+        public void PlayCard(Card card, CCPoint pos)
+        {
+            card.Play(new int[] { (int)this.teamColor });
         }
 
         private void CreateTouchListener()
@@ -177,11 +184,50 @@ namespace SpellDefense.Common.Entities.Cards
                 {
                     if (card.State == Card.CardState.Selected)
                     {
-                        PlayCard(card, arg1[0].LocationOnScreen);
+                        UseCard(card, arg1[0].LocationOnScreen);
                         break;
                     }
                 }
             }
+        }
+
+        private void QueueCard(Card card, CCPoint pos)
+        {
+            Card.CardTimeOpts? cardTiming = card.GetCardTiming();
+            if(cardTiming == null)
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+            else if (cardTiming == Card.CardTimeOpts.Immediate)
+            {
+                PlayCard(card, pos);
+            } else if(cardTiming == Card.CardTimeOpts.Queued)
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+            else
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+        }
+
+        private void AddToQueue(Action cardPlay)
+        {
+            cardQueue.Add(cardPlay);
+        }
+
+        private void PlayCardQueue()
+        {
+            foreach(Action cardPlay in cardQueue)
+            {
+                cardPlay();
+            }
+            cardQueue.Clear();
+        }
+
+        public void HandleSpawnTimeReached(object sender, EventArgs e)
+        {
+            this.PlayCardQueue();
         }
 
         private void DeselectCards()

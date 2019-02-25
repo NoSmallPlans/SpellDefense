@@ -15,6 +15,7 @@ namespace SpellDefense.Common.Entities
         CCPoint blueSpawn;
         TeamColor teamColor;
         CCLabel SpawnCountDownLabel;
+        public EventHandler OnSpawnTimeReached;
 
 
         //Units that will spawn every spawn event
@@ -162,8 +163,14 @@ namespace SpellDefense.Common.Entities
             if (timeSinceLastSpawn > TimeInbetweenSpawns)
             {
                 timeSinceLastSpawn = 0;
+                if(OnSpawnTimeReached != null)
+                {
+                    OnSpawnTimeReached(this, EventArgs.Empty);
+                }
 
-                if(teamColor == TeamColor.RED)
+                //trigger spawn timer action
+
+                if (teamColor == TeamColor.RED)
                     Spawn(redSpawn);
                 else
                     Spawn(blueSpawn);

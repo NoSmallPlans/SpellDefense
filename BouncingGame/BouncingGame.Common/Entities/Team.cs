@@ -130,6 +130,7 @@ namespace SpellDefense.Common.Entities
             combatantSpawner = new CombatantSpawner(teamColor);
             combatantSpawner.CombatantSpawned += HandleCombatantSpawned;
             combatantSpawner.CreateSpawnPts();
+            combatantSpawner.OnSpawnTimeReached += cardManager.HandleSpawnTimeReached;
         }
 
         private void HandleCombatantSpawned(Combatant combatant)

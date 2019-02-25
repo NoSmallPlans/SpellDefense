@@ -15,15 +15,21 @@ namespace SpellDefense.Common.Entities
         string cardTitle;
         string cardText;
         string cardImage;
+
+        
         public int cardCost;
         public void LogicInit(String text)
         {
-            JObject testJson = JObject.Parse(text);
-            cardTitle = (string)testJson["cardTitle"];
-            cardText = (string)testJson["cardText"];
-            cardImage = (string)testJson["cardImage"];
-            cardCost = (int)testJson["cardCost"];
-            JArray cardActions = (JArray)testJson["cardActions"];
+            JObject cardJson = JObject.Parse(text);
+            cardTitle = (string)cardJson["cardTitle"];
+            cardText = (string)cardJson["cardText"];
+            cardImage = (string)cardJson["cardImage"];
+            cardCost = (int)cardJson["cardCost"];
+            if (cardJson.ContainsKey("cardTiming")) {
+                cardTiming = ((string)cardJson["cardTiming"]).ToLower() == "immediate" ? CardTimeOpts.Immediate : CardTimeOpts.Queued;
+            }
+
+            JArray cardActions = (JArray)cardJson["cardActions"];
 
             foreach (JObject cardAction in cardActions)
             {

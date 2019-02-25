@@ -73,6 +73,7 @@ namespace SpellDefense.Common
                     ,'cardText': 'Give all my units 700 speed'
                     ,'cardCost': '0'
                     ,'cardImage': 'GreenGuy.png'
+                    ,'cardTiming': 'Immediate'
                     ,'cardActions': [
                         {
                             'actionName': 'statSetter'
