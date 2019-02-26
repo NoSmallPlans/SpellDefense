@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using static SpellDefense.Common.GodClass;
@@ -12,6 +13,7 @@ namespace SpellDefense.Common.Scenes
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
+        TurnManager turnManager;
 
         private CCGameView gameView;
 
@@ -44,7 +46,12 @@ namespace SpellDefense.Common.Scenes
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
                 targetLines = new List<CCDrawNode>();
-                ShowSpawnTimer();
+
+                this.turnManager = new TurnManager();
+                turnManager.OnTurnTimeReached += CardManager.HandleTurnTimeReached;
+                turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
+                turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
+                ShowTurnTimer();
 
                 GodClass.gameplayLayer = gameplayLayer;
                 Schedule(Activity);
@@ -89,8 +96,7 @@ namespace SpellDefense.Common.Scenes
             {
                 if (hasGameEnded == false)
                 {
-                    redTeam.combatantSpawner.UpdateSpawnCountDownLabel();
-                    blueTeam.combatantSpawner.UpdateSpawnCountDownLabel();
+                    turnManager.UpdateTurnCountDownLabel();
 
                     redTeam.Cleanup();
                     blueTeam.Cleanup();
@@ -108,9 +114,7 @@ namespace SpellDefense.Common.Scenes
                         this.ShowEndScreen(winningTeam);
                         this.hasGameEnded = true;
                     }
-
-                    redTeam.SpawnPhase(frameTimeInSeconds);
-                    blueTeam.SpawnPhase(frameTimeInSeconds);
+                    turnManager.Activity(frameTimeInSeconds);
                 }
             }
             catch(Exception ex)
@@ -168,27 +172,13 @@ namespace SpellDefense.Common.Scenes
             this.StartOver();
         }
 
-        private void ShowSpawnTimer()
+        private void ShowTurnTimer()
         {
-            float leftLabelXModifier = 0.02f;
-            float leftLabelYModifier = 0.725f;
-            float rightLabelXModifier = 1-leftLabelXModifier;
-            float rightLabelYModifier = leftLabelYModifier;
-
-
-            var labelA = redTeam.combatantSpawner.GetSpawnCountDownLabel();
-            labelA.PositionX = gameplayLayer.ContentSize.Width * leftLabelXModifier;
-            labelA.PositionY = gameplayLayer.ContentSize.Height * leftLabelYModifier;
+            var labelA = turnManager.GetTurnCountDownLabel();
+            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
             labelA.Color = CCColor3B.White;
             hudLayer.AddChild(labelA);
-
-            
-            var labelB = blueTeam.combatantSpawner.GetSpawnCountDownLabel();
-            labelB.PositionX = gameplayLayer.ContentSize.Width * rightLabelXModifier;
-            labelB.PositionY = gameplayLayer.ContentSize.Height * rightLabelYModifier;
-            labelB.Color = CCColor3B.White;
-            hudLayer.AddChild(labelB);
-            
         }
     }
 }

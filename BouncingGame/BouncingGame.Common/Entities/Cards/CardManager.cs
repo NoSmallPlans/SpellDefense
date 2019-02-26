@@ -31,8 +31,6 @@ namespace SpellDefense.Common.Entities.Cards
         static List<Action> sharedQueue = new List<Action>();
         static List<Action> redQueue = new List<Action>();
         static List<Action> blueQueue = new List<Action>();
-        static bool blueTimerEventDone;
-        static bool redTimerEventDone;
         static int turnCount;
 
 
@@ -54,8 +52,6 @@ namespace SpellDefense.Common.Entities.Cards
             InitHand();
             CreateGraphics();
             CreateTouchListener();
-            blueTimerEventDone = false;
-            redTimerEventDone = false;
 
             Schedule(t =>
             {
@@ -264,7 +260,7 @@ namespace SpellDefense.Common.Entities.Cards
             if(this.teamColor == TeamColor.RED) redQueue.Add(cardPlay);
         }
 
-        private void PlayCardQueue()
+        private static void PlayCardQueue()
         {
             foreach(Action cardPlay in sharedQueue)
             {
@@ -273,20 +269,11 @@ namespace SpellDefense.Common.Entities.Cards
             sharedQueue.Clear();
         }
 
-        public void HandleSpawnTimeReached(object sender, EventArgs e)
+        public static void HandleTurnTimeReached(object sender, EventArgs e)
         {
-            if(this.teamColor == TeamColor.BLUE) blueTimerEventDone = true;
-            if (this.teamColor == TeamColor.RED) redTimerEventDone = true;
-
-            if (redTimerEventDone && blueTimerEventDone)
-            {
-                MergeQueues();
-                this.PlayCardQueue();
-                redTimerEventDone = false;
-                blueTimerEventDone = false;
-                turnCount++;
-            }
-
+            MergeQueues();
+            PlayCardQueue();
+            turnCount++;
         }
 
         private void DeselectCards()

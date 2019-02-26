@@ -43,6 +43,7 @@
     <Compile Include="Entities\GamePiece.cs" />
     <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\Team.cs" />
+    <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />
     <Compile Include="Entities\CombatantSpawner.cs" />
@@ -51,8 +52,8 @@
     <Compile Include="GodClass.CardLibrary.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
-	<Compile Include="GodClass.UnitLibrary.cs" /> 
-	<Compile Include="GodClass.DeckLibrary.cs" />
+    <Compile Include="GodClass.UnitLibrary.cs" />
+    <Compile Include="GodClass.DeckLibrary.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
   </ItemGroup>
