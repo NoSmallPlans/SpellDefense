@@ -49,10 +49,11 @@
     <Compile Include="Entities\Cards\CardHUD.cs" />
     <Compile Include="GodClass.Actions.cs" />
     <Compile Include="GodClass.CardLibrary.cs" />
+    <Compile Include="GodClass.Classes.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
-	<Compile Include="GodClass.UnitLibrary.cs" /> 
-	<Compile Include="GodClass.DeckLibrary.cs" />
+    <Compile Include="GodClass.UnitLibrary.cs" />
+    <Compile Include="GodClass.DeckLibrary.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
   </ItemGroup>

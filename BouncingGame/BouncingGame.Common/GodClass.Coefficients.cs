@@ -10,9 +10,6 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
-
-        public const float StartingCombatantPerSecond = .005f;
-
         public static bool debug = false;
 
         public static CCLayer gameplayLayer;
