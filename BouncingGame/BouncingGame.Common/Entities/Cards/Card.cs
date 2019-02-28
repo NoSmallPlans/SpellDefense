@@ -19,6 +19,18 @@ namespace SpellDefense.Common.Entities
 
         private CardState state;
 
+        public enum CardTimeOpts
+        {
+            Immediate
+            , Queued
+        };
+
+        private CardTimeOpts? cardTiming;
+
+        public CardTimeOpts? GetCardTiming(){
+            return this.cardTiming;
+        }
+
         public Card(String cardJson)
         {
             LogicInit(cardJson);

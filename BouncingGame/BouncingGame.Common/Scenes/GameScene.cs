@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using static SpellDefense.Common.GodClass;
@@ -12,6 +13,7 @@ namespace SpellDefense.Common.Scenes
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
+        TurnManager turnManager;
 
         private CCGameView gameView;
 
@@ -44,6 +46,12 @@ namespace SpellDefense.Common.Scenes
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
                 targetLines = new List<CCDrawNode>();
+
+                this.turnManager = new TurnManager();
+                turnManager.OnTurnTimeReached += CardManager.HandleTurnTimeReached;
+                turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
+                turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
+                ShowTurnTimer();
 
                 GodClass.gameplayLayer = gameplayLayer;
                 Schedule(Activity);
@@ -88,6 +96,7 @@ namespace SpellDefense.Common.Scenes
             {
                 if (hasGameEnded == false)
                 {
+                    turnManager.UpdateTurnCountDownLabel();
 
                     redTeam.Cleanup();
                     blueTeam.Cleanup();
@@ -105,9 +114,7 @@ namespace SpellDefense.Common.Scenes
                         this.ShowEndScreen(winningTeam);
                         this.hasGameEnded = true;
                     }
-
-                    redTeam.SpawnPhase(frameTimeInSeconds);
-                    blueTeam.SpawnPhase(frameTimeInSeconds);
+                    turnManager.Activity(frameTimeInSeconds);
                 }
             }
             catch(Exception ex)
@@ -163,6 +170,15 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
+        }
+
+        private void ShowTurnTimer()
+        {
+            var labelA = turnManager.GetTurnCountDownLabel();
+            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
+            labelA.Color = CCColor3B.White;
+            hudLayer.AddChild(labelA);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace SpellDefense.Common.Entities
         CCPoint blueSpawn;
         TeamColor teamColor;
 
+
         //Units that will spawn every spawn event
         //Firt list, index 0, represents permanent spawns
         //Index 1...count represents current and future temporary spawns
@@ -28,10 +29,6 @@ namespace SpellDefense.Common.Entities
 
         public CombatantSpawner(TeamColor teamColor)
         {
-            IsSpawning = true;
-            TimeInbetweenSpawns = 16;
-            // So that spawning starts immediately:
-            timeSinceLastSpawn = TimeInbetweenSpawns;
             this.teamColor = teamColor;
             InitSpawnLists();
         }
@@ -42,20 +39,6 @@ namespace SpellDefense.Common.Entities
             AddSpawn(3, 0, "soldier");
         }
 
-        /*
-        private Combatant GetCombatant(string combatantType)
-        {
-            switch(combatantType)
-            {
-                case "BasicRanged":
-                    return new BasicRanged(teamColor);
-                case "BasicMelee":
-                    return new BasicMelee(teamColor);
-                default:
-                    return new BasicMelee(teamColor);
-            }
-        }
-        */
         public void AddSpawn(int qty, int spawns, string combatantType)
         {
             //Check to see if list exists
@@ -95,72 +78,25 @@ namespace SpellDefense.Common.Entities
             redSpawn = new CCPoint(redX, yMid);
             blueSpawn = new CCPoint(blueX, yMid);
         }
-
-        float timeSinceLastSpawn;
-        public float TimeInbetweenSpawns
-        {
-            get;
-            set;
-        }
-
-        public string DebugInfo
-        {
-            get
-            {
-                string toReturn =
-                    "Combatant per second: " + (1 / TimeInbetweenSpawns);
-
-                return toReturn;
-            }
-        }
         
-
         public Action<Combatant> CombatantSpawned;
 
-        public bool IsSpawning
+        /*
+        public static void Activity(float frameTime)
         {
-            get;
-            set;
-        }
-
-
-
-        public void Activity(float frameTime)
-        {
-            if (IsSpawning)
+            if (isSpawning)
             {
                 SpawningActivity(frameTime);
             }
         }
+        */
 
-        private void SpawningActivity(float frameTime)
+        public void HandleTurnTimeReached()
         {
-            timeSinceLastSpawn += frameTime;
-
-            if (timeSinceLastSpawn > TimeInbetweenSpawns)
-            {
-                timeSinceLastSpawn = 0;
-
-                if(teamColor == TeamColor.RED)
-                    Spawn(redSpawn);
-                else
-                    Spawn(blueSpawn);
-            }
-        }
-
-        private void SpawnReductionTimeActivity(float frameTime)
-        {
-            // This logic should increase how frequently Combatant appear, but it should do so
-            // such that the # of Combatant/minute increases at a decreasing rate, otherwise the
-            // game becomes impossibly difficult very quickly.
-            var currentCombatantPerSecond = 1 / TimeInbetweenSpawns;
-
-            var amountToAdd = frameTime / GodClass.TimeForExtraCombatantPerSecond;
-
-            var newCombatantPerSecond = currentCombatantPerSecond + amountToAdd;
-
-            TimeInbetweenSpawns = 1 / newCombatantPerSecond;
-
+            if (teamColor == TeamColor.RED)
+                Spawn(redSpawn);
+            else
+                Spawn(blueSpawn);
         }
 
         private void Spawn(CCPoint spawnPoint)

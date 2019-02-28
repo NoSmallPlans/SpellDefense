@@ -138,9 +138,9 @@ namespace SpellDefense.Common.Entities
             GodClass.battlefield.AddChild(combatant);
         }
 
-        public void SpawnPhase(float frameTimeInSeconds)
+        public void HandleTurnTimeReached(object sender, EventArgs e)
         {
-            combatantSpawner.Activity(frameTimeInSeconds);
+            this.combatantSpawner.HandleTurnTimeReached();
         }
     }
 }

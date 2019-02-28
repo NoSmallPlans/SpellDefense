@@ -43,6 +43,7 @@
     <Compile Include="Entities\GamePiece.cs" />
     <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\Team.cs" />
+    <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />
     <Compile Include="Entities\CombatantSpawner.cs" />

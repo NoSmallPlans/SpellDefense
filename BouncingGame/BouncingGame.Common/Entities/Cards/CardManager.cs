@@ -28,7 +28,11 @@ namespace SpellDefense.Common.Entities.Cards
         double cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
-        
+        static List<Action> sharedQueue = new List<Action>();
+        static List<Action> redQueue = new List<Action>();
+        static List<Action> blueQueue = new List<Action>();
+        static int turnCount;
+
 
         public CardManager(TeamColor team)
         {
@@ -98,18 +102,23 @@ namespace SpellDefense.Common.Entities.Cards
         //Play Card
         //Remove card from CardHub
         //Draw New Card
-        public void PlayCard(Card card, CCPoint pos)
+        public void UseCard(Card card, CCPoint pos)
         {
             if(currentMana >= card.cardCost)
             {
                 UpdateMana(-card.cardCost);
-                card.Play(new int[] { (int)this.teamColor });
+                QueueCard(card, pos);
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
                 hand.Remove(card);
                 currentHandSize--;
                 DrawCard();
             }
+        }
+
+        public void PlayCard(Card card, CCPoint pos)
+        {
+            card.Play(new int[] { (int)this.teamColor });
         }
 
         private void CreateTouchListener()
@@ -177,11 +186,94 @@ namespace SpellDefense.Common.Entities.Cards
                 {
                     if (card.State == Card.CardState.Selected)
                     {
-                        PlayCard(card, arg1[0].LocationOnScreen);
+                        UseCard(card, arg1[0].LocationOnScreen);
                         break;
                     }
                 }
             }
+        }
+
+        private void QueueCard(Card card, CCPoint pos)
+        {
+            Card.CardTimeOpts? cardTiming = card.GetCardTiming();
+            if(cardTiming == null)
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+            else if (cardTiming == Card.CardTimeOpts.Immediate)
+            {
+                PlayCard(card, pos);
+            } else if(cardTiming == Card.CardTimeOpts.Queued)
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+            else
+            {
+                AddToQueue(() => PlayCard(card, pos));
+            }
+        }
+
+        public static void MergeQueues()
+        {
+            int i = 0;
+            while( i < blueQueue.Count && i < redQueue.Count)
+            {
+                //on even turns
+                if(turnCount % 2 == 0)
+                {
+                    sharedQueue.Add(blueQueue[i]);
+                    sharedQueue.Add(redQueue[i]);
+                } else
+                {
+                    sharedQueue.Add(redQueue[i]);
+                    sharedQueue.Add(blueQueue[i]);
+                }
+                i++;
+            }
+
+            if(blueQueue.Count > i)
+            {
+                while (i < blueQueue.Count)
+                {
+                    sharedQueue.Add(blueQueue[i]);
+                    i++;
+                }
+                
+            }
+
+            if (redQueue.Count > i)
+            {
+                while (i < redQueue.Count)
+                {
+                    sharedQueue.Add(redQueue[i]);
+                    i++;
+                }
+                
+            }
+            redQueue.Clear();
+            blueQueue.Clear();
+        }
+
+        private void AddToQueue(Action cardPlay)
+        {
+            if(this.teamColor == TeamColor.BLUE) blueQueue.Add(cardPlay);
+            if(this.teamColor == TeamColor.RED) redQueue.Add(cardPlay);
+        }
+
+        private static void PlayCardQueue()
+        {
+            foreach(Action cardPlay in sharedQueue)
+            {
+                cardPlay();
+            }
+            sharedQueue.Clear();
+        }
+
+        public static void HandleTurnTimeReached(object sender, EventArgs e)
+        {
+            MergeQueues();
+            PlayCardQueue();
+            turnCount++;
         }
 
         private void DeselectCards()
