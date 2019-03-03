@@ -168,7 +168,7 @@ namespace SpellDefense.Common.Entities
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
-            this.AddCombatant(combatant, enemyBase);
+            this.AddCombatant(combatant, enemyBase); 
             GodClass.battlefield.AddChild(combatant);
         }
 
