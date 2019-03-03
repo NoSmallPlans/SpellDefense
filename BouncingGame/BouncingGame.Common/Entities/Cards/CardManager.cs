@@ -17,10 +17,10 @@ namespace SpellDefense.Common.Entities.Cards
     {
         Deck deck;
         List<Card> hand;
-        int maxHandSize;
+        public int maxHandSize;
         int currentHandSize;
         TeamColor teamColor;
-        int maxMana;
+        public int maxMana;
         int currentMana;
         int cardSpacing;
         int cardStartingX;

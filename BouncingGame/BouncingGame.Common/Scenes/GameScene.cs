@@ -118,8 +118,6 @@ namespace SpellDefense.Common.Scenes
             gameplayLayer.AddChild(blueTeam.makeBase());
             redTeam.SetEnemyBase(blueTeam.GetBase());
             blueTeam.SetEnemyBase(redTeam.GetBase());
-            redTeam.CreateCombatantSpawner();
-            blueTeam.CreateCombatantSpawner();
             GodClass.red = redTeam;
             GodClass.blue = blueTeam;
         }
