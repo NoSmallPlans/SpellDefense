@@ -107,7 +107,7 @@ namespace SpellDefense.Common.Entities.Cards
                 if (GodClass.online)
                 {
                     //Send Message to server
-                    GodClass.clientRef.AddOutMessage(ConstructCardMessage(false, card.CardName.ToLower()));
+                    GodClass.clientRef.AddOutMessage(MsgType.PlayCard, ConstructCardMessage(false, card.CardName.ToLower()));
                 }
                 else
                 {

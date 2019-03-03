@@ -1,5 +1,4 @@
-﻿using Java.IO;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,42 +11,43 @@ namespace SpellDefense.Common
 {
     public class Client
     {
-        private NetClient client;
+        private NetClient netClient;
         public Queue<MsgStruct> incomingActionQueue;
-        public Queue<string> outActionQueue;
-        private string prevAction;
+        public Queue<MsgStruct> outActionQueue;
+        private MsgStruct prevAction;
         public TeamColor teamColor;
 
         public Client()
         {
             incomingActionQueue = new Queue<MsgStruct>();
-            outActionQueue = new Queue<string>();
+            outActionQueue = new Queue<MsgStruct>();
         }
 
         public void StartClient()
         {
             var config = new NetPeerConfiguration("spelldefense");
             config.AutoFlushSendQueue = true;
-            client = new NetClient(config);
-            client.Start();
-            client.FlushSendQueue();
+            netClient = new NetClient(config);
+            netClient.Start();
+            netClient.FlushSendQueue();
 
              //TODO make these configurable in UI
             string ip = "73.109.92.27";//"192.168.0.10";
             int port = 14242;
-            client.Connect(ip, port);
+            netClient.Connect(ip, port);
         }
 
-        public void SendMessage(string text)
+        public void SendMessage(MsgStruct msg)
         {
-            var outMessage = client.CreateMessage();
-            outMessage.Write(text);
-            client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
+            var outMessage = netClient.CreateMessage();
+            outMessage.Write((byte)msg.type);
+            outMessage.Write(msg.Message);
+            netClient.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void AddOutMessage(string msg)
+        public void AddOutMessage(MsgType msgType, string msg)
         {
-            outActionQueue.Enqueue(msg);
+            outActionQueue.Enqueue(new MsgStruct { type = msgType, Message = msg });
         }
 
         public bool ParseMessage(string msg)
@@ -92,7 +92,7 @@ namespace SpellDefense.Common
         {
             string reply = "";
             NetIncomingMessage im;
-            while ((im = client.ReadMessage()) != null)
+            while ((im = netClient.ReadMessage()) != null)
             {
                 // handle incoming message
                 switch (im.MessageType)
@@ -112,7 +112,7 @@ namespace SpellDefense.Common
                     default:
                         break;
                 }
-                client.Recycle(im);
+                netClient.Recycle(im);
             }
             return false;
         }
@@ -130,9 +130,15 @@ namespace SpellDefense.Common
             }
             else
             {
-                prevAction = (((int)MsgType.NoAction).ToString() + ",no");
+                string message = ((int)MsgType.NoAction).ToString() + ",no";
+                prevAction = new MsgStruct { type = MsgType.NoAction, Message = message };
             }
             SendMessage(prevAction);
+        }
+
+        public void Disconnect()
+        {
+            netClient.Disconnect("GoodBye");
         }
     }
 }

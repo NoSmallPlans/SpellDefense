@@ -204,14 +204,20 @@ namespace SpellDefense.Common.Scenes
             if (redTeam.GetBase().GetCurrentHealth() <= 0 ||
                 blueTeam.GetBase().GetCurrentHealth() <= 0)
             {
-                string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
-                this.ShowEndScreen(winningTeam);
-                //this.hasGameEnded = true;
+                GameOver();
             }
 
             redTeam.SpawnPhase(frameTimeInSeconds);
             blueTeam.SpawnPhase(frameTimeInSeconds);
 
+        }
+
+        private void GameOver()
+        {
+            string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
+            this.ShowEndScreen(winningTeam);
+            client.Disconnect();
+            //client.SendMessage(new MsgStruct { type = MsgType.GameOver, Message = "" });            
         }
 
         //Any actions received from the server are played 
@@ -267,11 +273,6 @@ namespace SpellDefense.Common.Scenes
             list.Remove(combatant);
         }
 
-        private void HandleCardDrawn(Card card)
-        {
-            cardHUD.AddChild(card);
-        }
-
         private void ShowEndScreen(string teamName)
         {
             var labelA = new CCLabel("Game Over", "Arial", 30, CCLabelFormat.SystemFont);
@@ -292,8 +293,8 @@ namespace SpellDefense.Common.Scenes
 
         private void StartOver()
         {
-            CCGameView tempGameView = GameController.GameView;
-            GameController.Initialize(tempGameView);
+            var newScene = new TitleScene(GameController.GameView);
+            GameController.GoToScene(newScene);
         }
 
         private void CreateTouchListener()
