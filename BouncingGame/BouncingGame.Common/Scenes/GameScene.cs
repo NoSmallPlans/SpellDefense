@@ -25,6 +25,8 @@ namespace SpellDefense.Common.Scenes
 
         private Client client;
         private CCGameView gameView;
+        TurnManager turnManager;
+        private List<MsgStruct> queuedCards;
 
         bool simReady = false;
         bool startGame = false;
@@ -60,7 +62,6 @@ namespace SpellDefense.Common.Scenes
         {
             try
             {
-                Debug.WriteLine("Game Scene Init");
                 gameState = GameState.Paused;
                 this.gameView = gameView;
                 this.InitLayers();
@@ -98,6 +99,11 @@ namespace SpellDefense.Common.Scenes
             GodClass.InitLibrary();
 
             GamesState = GameState.Playing;
+
+            turnManager = new TurnManager();
+            turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
+            turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
+            ShowTurnTimer();
         }
 
         private void InitClient()
@@ -162,7 +168,7 @@ namespace SpellDefense.Common.Scenes
                 InitGame();
                 SendActions();
             }
-            if (client.incomingActionQueue.Count >= 2)
+            if (client.incomingActionQueue.Count >= 2) //Hard coded to 2 player, fix?
             {
                 simReady = true;
             }
@@ -190,6 +196,8 @@ namespace SpellDefense.Common.Scenes
             //Constant frame time of 30FPS
             float frameTimeInSeconds = 1.0f / 30.0f;
 
+            turnManager.UpdateTurnCountDownLabel();
+
             redTeam.Cleanup();
             blueTeam.Cleanup();
 
@@ -205,8 +213,7 @@ namespace SpellDefense.Common.Scenes
                 GameOver();
             }
 
-            redTeam.SpawnPhase(frameTimeInSeconds);
-            blueTeam.SpawnPhase(frameTimeInSeconds);
+            turnManager.Activity(frameTimeInSeconds);
 
         }
 
@@ -305,6 +312,15 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
+        }
+
+        private void ShowTurnTimer()
+        {
+            var labelA = turnManager.GetTurnCountDownLabel();
+            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
+            labelA.Color = CCColor3B.White;
+            hudLayer.AddChild(labelA);
         }
     }
 }

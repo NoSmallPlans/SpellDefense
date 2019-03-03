@@ -32,7 +32,7 @@ namespace SpellDefense.Common
             netClient.FlushSendQueue();
 
              //TODO make these configurable in UI
-            string ip = "73.109.92.27";//"192.168.0.10";
+            string ip = "192.168.0.22";//"73.109.92.27";
             int port = 14242;
             netClient.Connect(ip, port);
         }
@@ -60,23 +60,13 @@ namespace SpellDefense.Common
                 switch (msgType)
                 {
                     case MsgType.NoAction:
-                        MsgStruct ms = new MsgStruct();
-                        ms.type = MsgType.NoAction;
-                        ms.Message = "no";
-                        incomingActionQueue.Enqueue(ms);
+                        QueueAction(msgType, "no");
                         break;
                     case MsgType.PlayCard:
-                        ms = new MsgStruct();
-                        ms.type = MsgType.PlayCard;
-                        ms.Message = args[1];
-                        incomingActionQueue.Enqueue(ms);
-                        System.Diagnostics.Debug.WriteLine("Queue Card: " + ms.Message);
+                        QueueAction(msgType, args[1]);
                         break;
                     case MsgType.QueueCard:
-                        ms = new MsgStruct();
-                        ms.type = MsgType.PlayCard;
-                        ms.Message = args[1];
-                        incomingActionQueue.Enqueue(ms);
+                        QueueAction(msgType, args[1]);
                         break;
                     case MsgType.GameStart:
                         teamColor = (TeamColor)int.Parse(args[1]);
@@ -86,6 +76,14 @@ namespace SpellDefense.Common
                 }
             }
             return false;
+        }
+
+        private void QueueAction(MsgType type, string message)
+        {
+            MsgStruct ms = new MsgStruct();
+            ms.type = type;
+            ms.Message = message;
+            incomingActionQueue.Enqueue(ms);
         }
 
         public bool ReceiveMessage()

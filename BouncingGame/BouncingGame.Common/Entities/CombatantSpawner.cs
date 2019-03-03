@@ -134,19 +134,12 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        private void SpawnReductionTimeActivity(float frameTime)
+        public void HandleTurnTimeReached()
         {
-            // This logic should increase how frequently Combatant appear, but it should do so
-            // such that the # of Combatant/minute increases at a decreasing rate, otherwise the
-            // game becomes impossibly difficult very quickly.
-            var currentCombatantPerSecond = 1 / TimeInbetweenSpawns;
-
-            var amountToAdd = frameTime / GodClass.TimeForExtraCombatantPerSecond;
-
-            var newCombatantPerSecond = currentCombatantPerSecond + amountToAdd;
-
-            TimeInbetweenSpawns = 1 / newCombatantPerSecond;
-
+            if (teamColor == TeamColor.RED)
+                Spawn(redSpawn);
+            else
+                Spawn(blueSpawn);
         }
 
         private void Spawn(CCPoint spawnPoint)

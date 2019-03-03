@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="GodClass.Classes.cs" />
     <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Base.cs" />

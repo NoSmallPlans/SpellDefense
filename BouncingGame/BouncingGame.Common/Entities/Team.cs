@@ -176,5 +176,10 @@ namespace SpellDefense.Common.Entities
         {
             combatantSpawner.Activity(frameTimeInSeconds);
         }
+
+        public void HandleTurnTimeReached(object sender, EventArgs e)
+        {
+            this.combatantSpawner.HandleTurnTimeReached();
+        }
     }
 }
