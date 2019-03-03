@@ -117,6 +117,7 @@ namespace SpellDefense.Common.Entities.Cards
                 card.RemoveFromParent();
                 card.State = Card.CardState.Rest;
                 hand.Remove(card);
+                GodClass.cardHistory.AddToHistory(card, teamColor);
                 currentHandSize--;
                 DrawCard();
             }
