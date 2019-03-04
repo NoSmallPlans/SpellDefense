@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace SpellDefense.Common
         public static CCLayer gameplayLayer;
         public static UIcontainer battlefield;
         public static UIcontainer cardHUD;
+        public static CardHistory cardHistory;
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 
         // if the game initially spawns one combatant per 5 seconds, then 
@@ -30,8 +32,8 @@ namespace SpellDefense.Common
 
         public enum TeamColor { RED, BLUE };
 
-        public const int desiredWidth = 1024;
-        public const int desiredHeight = 576;
+        public const int desiredWidth = 1334;
+        public const int desiredHeight = 750;
 
         //Eventually PlayHUD dimensions will be more adaptive
         //we're future proofing with this class

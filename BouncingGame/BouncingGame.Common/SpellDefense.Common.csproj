@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="GodClass.Classes.cs" />
+    <Compile Include="Entities\Cards\CardHistory.cs" />
     <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />

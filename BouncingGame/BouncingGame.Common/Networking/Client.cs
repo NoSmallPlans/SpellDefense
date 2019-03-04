@@ -32,7 +32,7 @@ namespace SpellDefense.Common
             netClient.FlushSendQueue();
 
              //TODO make these configurable in UI
-            string ip = "192.168.0.22";//"73.109.92.27";
+            string ip = "192.168.0.10";//"73.109.92.27";
             int port = 14242;
             netClient.Connect(ip, port);
         }

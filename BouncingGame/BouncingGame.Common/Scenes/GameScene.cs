@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -34,6 +35,7 @@ namespace SpellDefense.Common.Scenes
         Team blueTeam;
         UIcontainer battlefield;
         UIcontainer cardHUD;
+        CardHistory cardHistory;
         List<CCDrawNode> targetLines;
         GameState gameState;
 
@@ -81,6 +83,11 @@ namespace SpellDefense.Common.Scenes
             this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
                                  (int)GodClass.CardHUDdimensions.GetWidth(),
                                  this.gameplayLayer);
+            this.cardHistory = new CardHistory((int)(GodClass.BattlefieldDimensions.GetWidth()*0.4)
+                                    , (int)(BattlefieldDimensions.GetHeight() * 0.95)
+                                    , (int)(GodClass.BattlefieldDimensions.GetHeight())
+                                    , (int)GodClass.BattlefieldDimensions.GetWidth()
+                                    , this.gameplayLayer);
             this.battlefield = new UIcontainer(0,
                                             (int)GodClass.CardHUDdimensions.GetHeight(),
                                             (int)GodClass.BattlefieldDimensions.GetHeight(),
@@ -88,11 +95,13 @@ namespace SpellDefense.Common.Scenes
                                             this.gameplayLayer);
             GodClass.battlefield = battlefield;
             GodClass.cardHUD = this.cardHUD;
+            GodClass.cardHistory = this.cardHistory;
 
             this.InitTeams();
 
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
+                gameplayLayer.AddChild(cardHistory);
                 targetLines = new List<CCDrawNode>();
 
             GodClass.gameplayLayer = gameplayLayer;
