@@ -185,6 +185,7 @@ namespace SpellDefense.Common.Entities
 
         public void HandleTurnTimeReached(object sender, EventArgs e)
         {
+            cardManager.NewTurn();
             this.combatantSpawner.HandleTurnTimeReached();
         }
     }

@@ -46,14 +46,46 @@ namespace SpellDefense.Common.Entities.Cards
                 cardStartingX = 0;
             cardStartingY = -100;
             InitDeck();
-            InitHand();
+            //InitHand();
             CreateGraphics();
             CreateTouchListener();
+        }
 
-            Schedule(t =>
+        public void NewTurn()
+        {
+            EmptyHand();
+            FillHand();
+            CurrentMana = maxMana;
+        }
+
+        private void EmptyHand()
+        {
+            for(int i = currentHandSize-1; i >= 0; i --)
             {
-                IncrementMana();
-            }, 3);
+                RemoveCardFromHand(hand[i]);
+            }
+        }
+
+        private void FillHand()
+        {
+            for(int i = 0; i < maxHandSize; i++)
+            {
+                DrawCard();
+            }
+            UpdateHandPositions();
+        }
+
+        int CurrentMana
+        {
+            get
+            {
+                return this.currentMana; 
+            }
+            set
+            {
+                this.currentMana = value;
+                manaLabel.Text = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
+            }
         }
 
         public void DrawCard()
@@ -62,8 +94,6 @@ namespace SpellDefense.Common.Entities.Cards
             hand.Add(card);
             currentHandSize++;
             GodClass.cardHUD.AddChild(card);
-
-            UpdateHandPositions();
         }
 
         private void UpdateHandPositions()
@@ -98,12 +128,11 @@ namespace SpellDefense.Common.Entities.Cards
         //Check if mana cost is <= player current mana
         //Play Card
         //Remove card from CardHub
-        //Draw New Card
         public void PlayCard(Card card, CCPoint pos)
         {
-            if(currentMana >= card.cardCost)
+            if(CurrentMana >= card.cardCost)
             {
-                UpdateMana(-card.cardCost);
+                CurrentMana -= card.cardCost;
                 if (GodClass.online)
                 {
                     //Send Message to server
@@ -114,13 +143,17 @@ namespace SpellDefense.Common.Entities.Cards
                     //Play card locally
                     GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName.ToLower()));
                 }
-                card.RemoveFromParent();
-                card.State = Card.CardState.Rest;
-                hand.Remove(card);
+                RemoveCardFromHand(card);
                 GodClass.cardHistory.AddToHistory(card, teamColor);
-                currentHandSize--;
-                DrawCard();
             }
+        }
+
+        private void RemoveCardFromHand(Card card)
+        {
+            card.RemoveFromParent();
+            card.State = Card.CardState.Rest;
+            hand.Remove(card);
+            currentHandSize--;
         }
 
         private string ConstructCardMessage(bool self, string cardName)
@@ -211,21 +244,9 @@ namespace SpellDefense.Common.Entities.Cards
             }
         }
 
-        private void UpdateMana(int manaDelta)
-        {
-            currentMana += manaDelta;
-            manaLabel.Text = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
-        }
-
-        private void IncrementMana()
-        {
-            if (currentMana < maxMana)
-                UpdateMana(1);
-        }
-
         private void CreateGraphics()
         {
-            string manaString = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
+            string manaString = "Mana:" + CurrentMana.ToString() + "/" + maxMana.ToString();
             manaLabel = new CCLabel(manaString, "Arial", 24, CCLabelFormat.SystemFont);
             this.AddChild(manaLabel);
             manaLabel.Color = CCColor3B.White;

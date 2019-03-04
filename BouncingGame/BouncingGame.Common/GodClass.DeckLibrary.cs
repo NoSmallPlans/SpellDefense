@@ -18,19 +18,19 @@ namespace SpellDefense.Common
                     'cards': [
                         {
                             'name': 'spawn grunt',
-                            'count': '1'
+                            'count': '2'
                         },
                         {
                             'name': 'spawn soldier',
-                            'count': '1'
+                            'count': '2'
                         },
                         {
                             'name': 'spawn ranged',
-                            'count': '1'
+                            'count': '2'
                         },
                         {
                             'name': 'spawn sniper',
-                            'count': '1'
+                            'count': '2'
                         },
                     ]
                 }"
