@@ -39,7 +39,7 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(3, 0, "skeleton");
+            AddSpawn(1, 0, "skeleton");
         }
 
         public void AddSpawn(int qty, int spawns, string combatantType)

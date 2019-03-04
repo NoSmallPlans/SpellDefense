@@ -12,7 +12,7 @@ namespace SpellDefense.Common.Scenes
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
-
+        CCSprite battleBackground;
         private CCGameView gameView;
 
         Team redTeam;
@@ -40,7 +40,8 @@ namespace SpellDefense.Common.Scenes
                 GodClass.battlefield = battlefield;
                 GodClass.cardHUD = this.cardHUD;
                 this.InitTeams();
-
+                battleBackground = new CCSprite("Battleground1");
+                battlefield.AddChild(battleBackground);
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
                 targetLines = new List<CCDrawNode>();
