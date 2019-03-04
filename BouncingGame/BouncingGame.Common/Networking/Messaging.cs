@@ -14,7 +14,8 @@ namespace SpellDefense.Common.Networking
             Matched,
             GameStart,
             PlayCard,
-            QueueCard
+            QueueCard,
+            GameOver
         }
         public struct MsgStruct
         {

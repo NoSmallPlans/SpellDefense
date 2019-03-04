@@ -1,4 +1,5 @@
 ﻿using CocosSharp;
+using Newtonsoft.Json.Linq;
 using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace SpellDefense.Common.Entities
 
         private List<Combatant> combatants;
         private List<Projectile> projectiles;
+        int teamBaseMaxHealth;
         private Base teamBase;
         private Base enemyBase;
         CardManager cardManager;
@@ -42,10 +44,33 @@ namespace SpellDefense.Common.Entities
             {
                 cardManager = new CardManager(teamColor);
                 GodClass.cardHUD.AddChild(cardManager);
-            }            
+            }
+            CreateCombatantSpawner();
+            string className = teamColor == TeamColor.RED ? GodClass.playerOneClass : GodClass.playerTwoClass;
+            InitFromJson(GodClass.ClassConfigs[className]);
+            this.combatantSpawner.IsSpawning = true;
         }
 
         public Action<TeamColor> GameOver;
+
+        public void InitFromJson(String text)
+        {
+            JObject testJson = JObject.Parse(text);
+            if (this.cardManager != null)
+            {
+                this.cardManager.maxHandSize = (int)testJson["maxHandSize"];
+                this.cardManager.maxMana = (int)testJson["maxMana"];
+            }
+            this.teamBaseMaxHealth = (int)testJson["baseHealth"];
+            JArray startingUnits = (JArray)testJson["startingUnits"];
+
+            foreach (JObject unit in startingUnits)
+            {
+                string name = (string)unit["name"];
+                int count = (int)unit["count"];
+                this.combatantSpawner.AddSpawn(count, 0, name);
+            }
+        }
 
         public void SetEnemyBase(Base enemyBase)
         {
@@ -143,13 +168,18 @@ namespace SpellDefense.Common.Entities
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
-            this.AddCombatant(combatant, enemyBase);
+            this.AddCombatant(combatant, enemyBase); 
             GodClass.battlefield.AddChild(combatant);
         }
 
         public void SpawnPhase(float frameTimeInSeconds)
         {
             combatantSpawner.Activity(frameTimeInSeconds);
+        }
+
+        public void HandleTurnTimeReached(object sender, EventArgs e)
+        {
+            this.combatantSpawner.HandleTurnTimeReached();
         }
     }
 }

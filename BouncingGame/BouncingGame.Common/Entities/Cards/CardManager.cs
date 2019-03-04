@@ -17,10 +17,10 @@ namespace SpellDefense.Common.Entities.Cards
     {
         Deck deck;
         List<Card> hand;
-        int maxHandSize;
+        public int maxHandSize;
         int currentHandSize;
         TeamColor teamColor;
-        int maxMana;
+        public int maxMana;
         int currentMana;
         int cardSpacing;
         int cardStartingX;
@@ -107,7 +107,7 @@ namespace SpellDefense.Common.Entities.Cards
                 if (GodClass.online)
                 {
                     //Send Message to server
-                    GodClass.clientRef.AddOutMessage(ConstructCardMessage(false, card.CardName.ToLower()));
+                    GodClass.clientRef.AddOutMessage(MsgType.PlayCard, ConstructCardMessage(false, card.CardName.ToLower()));
                 }
                 else
                 {

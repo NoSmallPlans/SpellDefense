@@ -26,6 +26,8 @@ namespace SpellDefense.Common.Scenes
 
         private Client client;
         private CCGameView gameView;
+        TurnManager turnManager;
+        private List<MsgStruct> queuedCards;
 
         bool simReady = false;
         bool startGame = false;
@@ -62,7 +64,6 @@ namespace SpellDefense.Common.Scenes
         {
             try
             {
-                Debug.WriteLine("Game Scene Init");
                 gameState = GameState.Paused;
                 this.gameView = gameView;
                 this.InitLayers();
@@ -107,6 +108,11 @@ namespace SpellDefense.Common.Scenes
             GodClass.InitLibrary();
 
             GamesState = GameState.Playing;
+
+            turnManager = new TurnManager();
+            turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
+            turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
+            ShowTurnTimer();
         }
 
         private void InitClient()
@@ -127,8 +133,6 @@ namespace SpellDefense.Common.Scenes
             gameplayLayer.AddChild(blueTeam.makeBase());
             redTeam.SetEnemyBase(blueTeam.GetBase());
             blueTeam.SetEnemyBase(redTeam.GetBase());
-            redTeam.CreateCombatantSpawner();
-            blueTeam.CreateCombatantSpawner();
             GodClass.red = redTeam;
             GodClass.blue = blueTeam;
         }
@@ -173,7 +177,7 @@ namespace SpellDefense.Common.Scenes
                 InitGame();
                 SendActions();
             }
-            if (client.incomingActionQueue.Count >= 2)
+            if (client.incomingActionQueue.Count >= 2) //Hard coded to 2 player, fix?
             {
                 simReady = true;
             }
@@ -201,6 +205,8 @@ namespace SpellDefense.Common.Scenes
             //Constant frame time of 30FPS
             float frameTimeInSeconds = 1.0f / 30.0f;
 
+            turnManager.UpdateTurnCountDownLabel();
+
             redTeam.Cleanup();
             blueTeam.Cleanup();
 
@@ -213,14 +219,19 @@ namespace SpellDefense.Common.Scenes
             if (redTeam.GetBase().GetCurrentHealth() <= 0 ||
                 blueTeam.GetBase().GetCurrentHealth() <= 0)
             {
-                string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
-                this.ShowEndScreen(winningTeam);
-                //this.hasGameEnded = true;
+                GameOver();
             }
 
-            redTeam.SpawnPhase(frameTimeInSeconds);
-            blueTeam.SpawnPhase(frameTimeInSeconds);
+            turnManager.Activity(frameTimeInSeconds);
 
+        }
+
+        private void GameOver()
+        {
+            string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
+            this.ShowEndScreen(winningTeam);
+            client.Disconnect();
+            //client.SendMessage(new MsgStruct { type = MsgType.GameOver, Message = "" });            
         }
 
         //Any actions received from the server are played 
@@ -276,11 +287,6 @@ namespace SpellDefense.Common.Scenes
             list.Remove(combatant);
         }
 
-        private void HandleCardDrawn(Card card)
-        {
-            cardHUD.AddChild(card);
-        }
-
         private void ShowEndScreen(string teamName)
         {
             var labelA = new CCLabel("Game Over", "Arial", 30, CCLabelFormat.SystemFont);
@@ -301,8 +307,8 @@ namespace SpellDefense.Common.Scenes
 
         private void StartOver()
         {
-            CCGameView tempGameView = GameController.GameView;
-            GameController.Initialize(tempGameView);
+            var newScene = new TitleScene(GameController.GameView);
+            GameController.GoToScene(newScene);
         }
 
         private void CreateTouchListener()
@@ -315,6 +321,15 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
+        }
+
+        private void ShowTurnTimer()
+        {
+            var labelA = turnManager.GetTurnCountDownLabel();
+            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
+            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
+            labelA.Color = CCColor3B.White;
+            hudLayer.AddChild(labelA);
         }
     }
 }

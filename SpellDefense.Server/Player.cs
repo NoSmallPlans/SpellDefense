@@ -11,13 +11,12 @@ namespace SpellDefense.Server
     {
         public NetConnection conn;
         public bool messageRecieved;
-        public List<byte[]> messages;
+        public string message;
 
         public Player(NetConnection conn)
         {
             this.conn = conn;
             messageRecieved = false;
-            messages = new List<byte[]>();
         }
     }
 }

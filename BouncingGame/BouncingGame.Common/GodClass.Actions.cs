@@ -20,7 +20,6 @@ namespace SpellDefense.Common
 
         private static Dictionary<string, Func<JObject, CardAct>> functDict = new Dictionary<string, Func<JObject, CardAct>>()
         {
-
             {"addUnit", delegate(JObject json)
             {
                 int requiredInputs = 1;

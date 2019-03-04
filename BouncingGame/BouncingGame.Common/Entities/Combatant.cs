@@ -20,13 +20,14 @@ namespace SpellDefense.Common.Entities
         double timeUntilAttack;
         public int attackPwr { get; set; }
         public GamePiece defaultEnemy;
-        GamePiece attackTarget;
+        protected GamePiece attackTarget;
         public double moveSpeed { get; set; }
         protected double attackSpeed { get; set; }
         protected double armor { get; set; }
         public CCDrawNode targetLine;
         string spriteImage { get; set; }
         string colorName { get; set; }
+        string unitType { get; set; }
         CCColor4B drawColor;
 
         //How long are this combatant's arms? Glad you asked...
@@ -44,6 +45,8 @@ namespace SpellDefense.Common.Entities
             drawColor = ConvertStringToColor(colorName);
         }
 
+        protected abstract void PlayAttackAnimation();
+
         private void DrawTargetLine()
         {
             targetLine.Clear();
@@ -56,6 +59,7 @@ namespace SpellDefense.Common.Entities
             {
                 if (meleeUnit)
                 {
+                    PlayAttackAnimation();
                     enemy.TakeDamage(this.attackPwr);
                 } else {
                     CreateProjectile();
