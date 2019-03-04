@@ -17,6 +17,7 @@ namespace SpellDefense.Common
         public static bool debug = false;
         public static bool online = false;
         public static Client clientRef;
+        public static CCLayer hudLayer;
         public static CCLayer gameplayLayer;
         public static UIcontainer battlefield;
         public static UIcontainer cardHUD;

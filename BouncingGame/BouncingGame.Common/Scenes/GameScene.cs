@@ -26,8 +26,6 @@ namespace SpellDefense.Common.Scenes
 
         private Client client;
         private CCGameView gameView;
-        TurnManager turnManager;
-        private List<MsgStruct> queuedCards;
 
         bool simReady = false;
         bool startGame = false;
@@ -97,22 +95,18 @@ namespace SpellDefense.Common.Scenes
             GodClass.cardHUD = this.cardHUD;
             GodClass.cardHistory = this.cardHistory;
 
-            this.InitTeams();
-
-                gameplayLayer.AddChild(battlefield);
-                gameplayLayer.AddChild(cardHUD);
-                gameplayLayer.AddChild(cardHistory);
-                targetLines = new List<CCDrawNode>();
+            gameplayLayer.AddChild(battlefield);
+            gameplayLayer.AddChild(cardHUD);
+            gameplayLayer.AddChild(cardHistory);
+            targetLines = new List<CCDrawNode>();
 
             GodClass.gameplayLayer = gameplayLayer;
+            GodClass.hudLayer = hudLayer;
             GodClass.InitLibrary();
 
-            GamesState = GameState.Playing;
+            this.InitTeams();
 
-            turnManager = new TurnManager();
-            turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
-            turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
-            ShowTurnTimer();
+            GamesState = GameState.Playing;
         }
 
         private void InitClient()
@@ -157,10 +151,10 @@ namespace SpellDefense.Common.Scenes
             try
             {
                 if (GodClass.online) {
-                    OnlineGameLoop();
+                    OnlineGameLoop(frameTimeInSeconds);
                 }
                 else {
-                    OfflineGameLoop();
+                    OfflineGameLoop(frameTimeInSeconds);
                 }
             }
             catch(Exception ex)
@@ -169,7 +163,7 @@ namespace SpellDefense.Common.Scenes
             }
         }
 
-        private void OnlineGameLoop()
+        private void OnlineGameLoop(float frameTimeInSeconds)
         {
             startGame = client.ReceiveMessage();
             if (startGame)
@@ -184,28 +178,26 @@ namespace SpellDefense.Common.Scenes
             if (simReady)
             {
                 PlayActions();
-                SimulateGame();
+                SimulateGame(frameTimeInSeconds);
                 SendActions();
                 simReady = false;
             }
         }
 
-        private void OfflineGameLoop()
+        private void OfflineGameLoop(float frameTimeInSeconds)
         {            
             if (startGame) {
                 startGame = false;
                 InitGame();
             }
             PlayActions();
-            SimulateGame();
+            SimulateGame(frameTimeInSeconds);
         }
 
-        private void SimulateGame()
+        private void SimulateGame(float frameTimeInSeconds)
         {
             //Constant frame time of 30FPS
-            float frameTimeInSeconds = 1.0f / 30.0f;
-
-            turnManager.UpdateTurnCountDownLabel();
+            //float frameTimeInSeconds = 1.0f / 30.0f;
 
             redTeam.Cleanup();
             blueTeam.Cleanup();
@@ -216,13 +208,14 @@ namespace SpellDefense.Common.Scenes
             redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
             blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
 
+            redTeam.TurnTimerPhase(frameTimeInSeconds);
+            blueTeam.TurnTimerPhase(frameTimeInSeconds);
+
             if (redTeam.GetBase().GetCurrentHealth() <= 0 ||
                 blueTeam.GetBase().GetCurrentHealth() <= 0)
             {
                 GameOver();
             }
-
-            turnManager.Activity(frameTimeInSeconds);
 
         }
 
@@ -321,15 +314,6 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
-        }
-
-        private void ShowTurnTimer()
-        {
-            var labelA = turnManager.GetTurnCountDownLabel();
-            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
-            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
-            labelA.Color = CCColor3B.White;
-            hudLayer.AddChild(labelA);
         }
     }
 }

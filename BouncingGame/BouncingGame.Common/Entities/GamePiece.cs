@@ -31,7 +31,7 @@ namespace SpellDefense.Common.Entities
         public double maxHealth
         {
             get;
-            protected set;
+            set;
         }
 
         public State state

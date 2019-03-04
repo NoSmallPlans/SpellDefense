@@ -18,6 +18,7 @@ namespace SpellDefense.Common
                     'maxHandSize' : '5'
                     ,'maxMana': '5'
                     ,'baseHealth': '1000'
+                    ,'spawnTimer': '15'
                     ,'startingUnits': [
                         {
                             'name': 'soldier'
@@ -44,6 +45,7 @@ namespace SpellDefense.Common
                     'maxHandSize' : '5'
                     ,'maxMana': '5'
                     ,'baseHealth': '1000'
+                    ,'spawnTimer': '20'
                     ,'startingUnits': [
                         {
                             'name': 'soldier'

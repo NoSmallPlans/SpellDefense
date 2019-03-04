@@ -21,6 +21,7 @@ namespace SpellDefense.Common.Entities
         private Base enemyBase;
         CardManager cardManager;
         TeamColor teamColor;
+        TurnManager turnManager;
 
         public Base TeamBase()
         {
@@ -32,6 +33,9 @@ namespace SpellDefense.Common.Entities
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
+            turnManager = new TurnManager(teamColor);
+            turnManager.OnTurnTimeReached += HandleTurnTimeReached;
+            GodClass.hudLayer.AddChild(turnManager.GetTurnCountDownLabel());
             if (GodClass.online)
             {
                 if(teamColor == GodClass.clientRef.teamColor)
@@ -61,6 +65,7 @@ namespace SpellDefense.Common.Entities
                 this.cardManager.maxHandSize = (int)testJson["maxHandSize"];
                 this.cardManager.maxMana = (int)testJson["maxMana"];
             }
+            this.turnManager.timeInBetweenTurns = (int)testJson["spawnTimer"];
             this.teamBaseMaxHealth = (int)testJson["baseHealth"];
             JArray startingUnits = (JArray)testJson["startingUnits"];
 
@@ -80,6 +85,7 @@ namespace SpellDefense.Common.Entities
         public Base makeBase()
         {
             Base b = new Base(this.teamColor);
+            b.maxHealth = this.teamBaseMaxHealth;
             return this.teamBase = new Base(this.teamColor);
         }
 
@@ -172,9 +178,9 @@ namespace SpellDefense.Common.Entities
             GodClass.battlefield.AddChild(combatant);
         }
 
-        public void SpawnPhase(float frameTimeInSeconds)
+        public void TurnTimerPhase(float frameTimeInSeconds)
         {
-            combatantSpawner.Activity(frameTimeInSeconds);
+            turnManager.Activity(frameTimeInSeconds);
         }
 
         public void HandleTurnTimeReached(object sender, EventArgs e)

@@ -37,9 +37,6 @@ namespace SpellDefense.Server
             try
             {
                 _managerLogger = managerLogger;
-                //var config = new NetPeerConfiguration("spelldefense1") { Port = 14242 };
-                //server = new NetServer(config);
-
                 StartServer();
             }
             catch(Exception ex)
