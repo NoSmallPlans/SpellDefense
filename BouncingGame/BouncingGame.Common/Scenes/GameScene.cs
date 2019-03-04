@@ -221,8 +221,8 @@ namespace SpellDefense.Common.Scenes
         {
             string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
             this.ShowEndScreen(winningTeam);
-            client.Disconnect();
-            //client.SendMessage(new MsgStruct { type = MsgType.GameOver, Message = "" });            
+            if(GodClass.online)
+                client.Disconnect();          
         }
 
         //Any actions received from the server are played 

@@ -222,14 +222,17 @@ namespace SpellDefense.Common.Entities
             else {
                 armor = 0;
             }
-            JArray abilities = (JArray)testJson["abilities"];
-
-            foreach (JObject ability in abilities)
+            if (testJson.ContainsKey("abilities"))
             {
-                string abilityName = (string)ability["actionName"];
-                JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
-                CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
-                this.abilityList.Add(tempAction);
+                JArray abilities = (JArray)testJson["abilities"];
+
+                foreach (JObject ability in abilities)
+                {
+                    string abilityName = (string)ability["actionName"];
+                    JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
+                    CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
+                    this.abilityList.Add(tempAction);
+                }
             }
         }
 

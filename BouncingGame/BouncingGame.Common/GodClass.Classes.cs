@@ -16,13 +16,24 @@ namespace SpellDefense.Common
                 "barbarian",
                 @"{
                     'maxHandSize' : '5'
-                    ,'maxMana': '10'
-                    ,'spawnTimer': '15'
+                    ,'maxMana': '5'
                     ,'baseHealth': '1000'
                     ,'startingUnits': [
                         {
                             'name': 'soldier'
                             ,'count': '3'
+                        },
+                        {
+                            'name': 'grunt'
+                            ,'count': '0'
+                        },
+                        {
+                            'name': 'archer'
+                            ,'count': '3'
+                        },
+                        {
+                            'name': 'sniper'
+                            ,'count': '0'
                         }
                     ]
                 }"
@@ -30,15 +41,27 @@ namespace SpellDefense.Common
              {
                 "ninja",
                 @"{
-                    'maxHandSize' : '3'
+                    'maxHandSize' : '5'
                     ,'maxMana': '5'
-                    ,'spawnTimer': '15'
                     ,'baseHealth': '1000'
                     ,'startingUnits': [
                         {
+                            'name': 'soldier'
+                            ,'count': '3'
+                        },
+                        {
+                            'name': 'grunt'
+                            ,'count': '0'
+                        },
+                        {
                             'name': 'archer'
                             ,'count': '3'
+                        },
+                        {
+                            'name': 'sniper'
+                            ,'count': '0'
                         }
+
                     ]
                 }"
             }

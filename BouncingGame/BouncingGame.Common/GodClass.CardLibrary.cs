@@ -48,11 +48,11 @@ namespace SpellDefense.Common
                 }"
             },
             {
-                "add ranged",
+                "spawn ranged",
                 @"{
-                    'cardTitle' : 'Add Ranged'
-                    ,'cardText': 'Adds a ranged unit to all spawns'
-                    ,'cardCost': '1'
+                    'cardTitle' : 'Spawn Ranged'
+                    ,'cardText': 'Adds archer to the next spawn'
+                    ,'cardCost': '2'
                     ,'cardImage': 'BlueGuy.png'
                     ,'cardActions': [
                         {
@@ -60,7 +60,7 @@ namespace SpellDefense.Common
                             ,'compileTimeArgs': {
                                 'combatantType' : 'archer'
                                 ,'num' : '1'
-                                ,'spawns' : '0'
+                                ,'spawns' : '1'
                             }
                         }
                     ]
@@ -89,7 +89,7 @@ namespace SpellDefense.Common
                 "haste",
                 @"{
                     'cardTitle' : 'Haste'
-                    ,'cardText': 'Give all my units 700 speed'
+                    ,'cardText': 'Give all my units 50 speed'
                     ,'cardCost': '0'
                     ,'cardImage': 'GreenGuy.png'
                     ,'cardActions': [
@@ -97,7 +97,7 @@ namespace SpellDefense.Common
                             'actionName': 'statSetter'
                             ,'compileTimeArgs': {
                                 'statName' : 'moveSpeed'
-                                ,'statVal' : '700.0'
+                                ,'statVal' : '50.0'
                             }
                         }
                     ]
@@ -132,7 +132,45 @@ namespace SpellDefense.Common
                         }
                     ]
                 }"
-            }
+            },
+            {
+                "spawn grunt",
+                @"{
+                    'cardTitle' : 'Spawn Grunt'
+                    ,'cardText': 'Adds grunt to the next spawn'
+                    ,'cardCost': '3'
+                    ,'cardImage': 'GreenGuy.png'
+                    ,'cardActions': [
+                        {
+                            'actionName': 'addUnit'
+                            ,'compileTimeArgs': {
+                                'combatantType' : 'grunt'
+                                ,'num' : '1'
+                                ,'spawns' : '1'
+                            }
+                        }
+                    ]
+                }"
+            },
+            {
+                "spawn sniper",
+                @"{
+                    'cardTitle' : 'Spawn Sniper'
+                    ,'cardText': 'Adds grunt to the next spawn'
+                    ,'cardCost': '4'
+                    ,'cardImage': 'BlueGuy.png'
+                    ,'cardActions': [
+                        {
+                            'actionName': 'addUnit'
+                            ,'compileTimeArgs': {
+                                'combatantType' : 'sniper'
+                                ,'num' : '1'
+                                ,'spawns' : '1'
+                            }
+                        }
+                    ]
+                }"
+            },
         };
     }
 }

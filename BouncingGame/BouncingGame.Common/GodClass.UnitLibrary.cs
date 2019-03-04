@@ -22,39 +22,49 @@ namespace SpellDefense.Common
                     ,'attackRange': '1'
                     ,'aggroRange': '500'
                     ,'color': '0,255,255'
-                    ,'abilities': [
-                        {
-                            'actionName': 'statMultiplier'
-                            ,'compileTimeArgs': {
-                                'statName' : 'speed'
-                                ,'statMult' : '0.5'
-                            }
-                        }
-                    ]
                 }"
             },
              {
                 "archer",
                 @"{
                     'attackSpeed' : '5'
-                    ,'moveSpeed': '35'
+                    ,'moveSpeed': '25'
                     ,'attackPwr': '25'
                     ,'spriteImage': 'BlueGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '100'
                     ,'aggroRange': '500'
                     ,'color': '0,255,0'
-                    ,'abilities': [
-                        {
-                            'actionName': 'statMultiplier'
-                            ,'compileTimeArgs': {
-                                'statName' : 'speed'
-                                ,'statMult' : '0.5'
-                            }
-                        }
-                    ]
                 }"
-            }
+            },
+            {
+                "grunt",
+                @"{
+                    'attackSpeed' : '1'
+                    ,'moveSpeed': '25'
+                    ,'attackPwr': '40'
+                    ,'armor': '2'
+                    ,'spriteImage': 'GreenGuy.png'
+                    ,'maxHealth': '175'
+                    ,'attackRange': '1'
+                    ,'aggroRange': '500'
+                    ,'color': '255,255,0'
+                }"
+            },
+            {
+                "sniper",
+                @"{
+                    'attackSpeed' : '50'
+                    ,'moveSpeed': '8'
+                    ,'attackPwr': '100'
+                    ,'armor': '0'
+                    ,'spriteImage': 'BlueGuy.png'
+                    ,'maxHealth': '100'
+                    ,'attackRange': '600'
+                    ,'aggroRange': '500'
+                    ,'color': '0,0,255'
+                }"
+            },
         };
     }
 }
