@@ -14,7 +14,7 @@ namespace SpellDefense.Common
                 "soldier",
                 @"{
                     'attackSpeed' : '1'
-                    ,'moveSpeed': '25'
+                    ,'moveSpeed': '50'
                     ,'attackPwr': '25'
                     ,'armor': '0'
                     ,'spriteImage': 'GreenGuy.png'
@@ -28,7 +28,7 @@ namespace SpellDefense.Common
                 "archer",
                 @"{
                     'attackSpeed' : '5'
-                    ,'moveSpeed': '25'
+                    ,'moveSpeed': '50'
                     ,'attackPwr': '25'
                     ,'spriteImage': 'BlueGuy.png'
                     ,'maxHealth': '100'
@@ -41,7 +41,7 @@ namespace SpellDefense.Common
                 "grunt",
                 @"{
                     'attackSpeed' : '1'
-                    ,'moveSpeed': '25'
+                    ,'moveSpeed': '50'
                     ,'attackPwr': '40'
                     ,'armor': '2'
                     ,'spriteImage': 'GreenGuy.png'

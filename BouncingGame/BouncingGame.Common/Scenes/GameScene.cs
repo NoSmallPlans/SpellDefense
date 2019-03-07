@@ -190,15 +190,15 @@ namespace SpellDefense.Common.Scenes
                 startGame = false;
                 InitGame();
             }
-            PlayActions();
-            SimulateGame(frameTimeInSeconds);
+            if (gameState == GameState.Playing)
+            {
+                PlayActions();
+                SimulateGame(frameTimeInSeconds);
+            }
         }
 
         private void SimulateGame(float frameTimeInSeconds)
         {
-            //Constant frame time of 30FPS
-            //float frameTimeInSeconds = 1.0f / 30.0f;
-
             redTeam.Cleanup();
             blueTeam.Cleanup();
 
@@ -224,7 +224,8 @@ namespace SpellDefense.Common.Scenes
             string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
             this.ShowEndScreen(winningTeam);
             if(GodClass.online)
-                client.Disconnect();          
+                client.Disconnect();
+            gameState = GameState.Over;
         }
 
         //Any actions received from the server are played 

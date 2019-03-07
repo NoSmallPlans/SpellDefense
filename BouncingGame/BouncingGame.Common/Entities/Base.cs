@@ -35,16 +35,15 @@ namespace SpellDefense.Common.Entities
         {
             sprite = new CCSprite("SmallCastleGreen");
             sprite.Scale = 0.3f;
-            sprite.AnchorPoint = CCPoint.AnchorLowerLeft;
             float spriteWidth = sprite.ScaledContentSize.Width;
             if (teamColor == TeamColor.RED)
             {
                 sprite.FlipX = true;
-                this.Position = new CCPoint(0, GodClass.BattlefieldDimensions.GetHeight() / 4);
+                this.Position = new CCPoint(spriteWidth/2, GodClass.BattlefieldDimensions.GetHeight() / 4 + sprite.ScaledContentSize.Height/2);
             }
             else
             {
-                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth, GodClass.BattlefieldDimensions.GetHeight() / 4);
+                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth/2, GodClass.BattlefieldDimensions.GetHeight() / 4 + sprite.ScaledContentSize.Height / 2);
             }
             this.AddChild(sprite);
         }
@@ -73,12 +72,12 @@ namespace SpellDefense.Common.Entities
             float borderCushion = 0.05f * GodClass.BattlefieldDimensions.GetWidth();
             if (teamColor == TeamColor.RED)
             {
-                var greenHealth = new CCRect(borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                var greenHealth = new CCRect(0, drawSizeHeight / 2 + barHeight, currentBarWidth, barHeight);
                 drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
             } else
             {
-                var greenHealth = new CCRect((-1*drawSizeWidth)+borderCushion, drawSizeHeight+barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
-                drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+                var greenHealth = new CCRect(-drawSizeWidth, drawSizeHeight / 2 + barHeight * 0.5f + barHeight, currentBarWidth, barHeight);
+                drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);                
             }
             
         }

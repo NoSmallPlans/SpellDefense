@@ -8,7 +8,7 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
-        public static string playerOneDeck = "deck1";
+        public static string playerOneDeck = "deck2";
         public static string playerTwoDeck = "deck1";
         public static Dictionary<string, string> Decks = new Dictionary<string, string>()
         {
