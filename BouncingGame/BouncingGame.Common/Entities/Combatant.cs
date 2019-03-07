@@ -159,13 +159,7 @@ namespace SpellDefense.Common.Entities
 
         private void EngageTarget()
         {
-            //If attack range of 1, check for collision between targets
-            if (attackRange <= 1 && CheckCollision(this, attackTarget))
-            {
-                AttackEnemy(attackTarget);
-                state = State.attacking;
-            }
-            else if (distanceTo(this, attackTarget) <= attackRange)
+            if (distanceTo(this, attackTarget) - this.radius - attackTarget.radius <= attackRange)
             {
                 AttackEnemy(attackTarget);
                 state = State.attacking;

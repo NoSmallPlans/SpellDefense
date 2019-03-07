@@ -53,6 +53,7 @@ namespace SpellDefense.Common.Entities
             CreateCastleSprite();
             DrawHealthBar();
             this.ContentSize = sprite.ScaledContentSize;
+            this.radius = this.ContentSize.Width / 2;
         }
 
         public override void TakeDamage(int dmg)

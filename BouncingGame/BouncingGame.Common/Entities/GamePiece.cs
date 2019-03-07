@@ -21,14 +21,20 @@ namespace SpellDefense.Common.Entities
         }
 
         protected CCDrawNode drawNode = new CCDrawNode();
-        CCDrawNode debugGrahic;
 
         public double currentHealth
         {
             get;
             protected set;
         }
+
         public double maxHealth
+        {
+            get;
+            set;
+        }
+
+        public float radius
         {
             get;
             set;
@@ -91,7 +97,5 @@ namespace SpellDefense.Common.Entities
             get { return GetType().GetRuntimeProperty(propertyName).GetValue(this, null); }
             set { GetType().GetRuntimeProperty(propertyName).SetValue(this, value, null); }
         }
-
-        //public abstract void Activity(float frameTimeInSeconds);
     }
 }

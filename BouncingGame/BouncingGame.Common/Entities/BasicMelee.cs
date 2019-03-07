@@ -15,6 +15,7 @@ namespace SpellDefense.Common.Entities
         public BasicMelee(TeamColor teamColor, string unitStats) : base(teamColor, unitStats)
         {
             this.drawSize = 20;
+            this.radius = drawSize / 2;
             this.currentHealth = this.maxHealth;
             this.meleeUnit = true;
             InitDraw();
