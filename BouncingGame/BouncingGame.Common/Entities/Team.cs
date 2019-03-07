@@ -33,9 +33,7 @@ namespace SpellDefense.Common.Entities
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
-            turnManager = new TurnManager(teamColor);
-            turnManager.OnTurnTimeReached += HandleTurnTimeReached;
-            GodClass.hudLayer.AddChild(turnManager.GetTurnCountDownLabel());
+
             if (GodClass.online)
             {
                 if(teamColor == GodClass.clientRef.teamColor)
@@ -55,6 +53,13 @@ namespace SpellDefense.Common.Entities
             this.combatantSpawner.IsSpawning = true;
         }
 
+        private void InitTurnManager(int timeBetweenTurns)
+        {
+            turnManager = new TurnManager(teamColor, timeBetweenTurns);
+            turnManager.OnTurnTimeReached += HandleTurnTimeReached;
+            GodClass.hudLayer.AddChild(turnManager.GetTurnCountDownLabel());
+        }
+
         public Action<TeamColor> GameOver;
 
         public void InitFromJson(String text)
@@ -65,7 +70,7 @@ namespace SpellDefense.Common.Entities
                 this.cardManager.maxHandSize = (int)testJson["maxHandSize"];
                 this.cardManager.maxMana = (int)testJson["maxMana"];
             }
-            this.turnManager.timeInBetweenTurns = (int)testJson["spawnTimer"];
+            InitTurnManager((int)testJson["spawnTimer"]);
             this.teamBaseMaxHealth = (int)testJson["baseHealth"];
             JArray startingUnits = (JArray)testJson["startingUnits"];
 

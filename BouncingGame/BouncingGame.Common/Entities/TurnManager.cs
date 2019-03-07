@@ -12,13 +12,13 @@ namespace SpellDefense.Common.Entities
     {
         private CCLabel TurnCountDownLabel;
         public EventHandler OnTurnTimeReached;
-        public float timeInBetweenTurns;
+        float timeInBetweenTurns;
         float timeUntilNextTurn;
         float timeSinceLastTurn;
 
-        public TurnManager(TeamColor teamColor)
+        public TurnManager(TeamColor teamColor,int timeBetweenTurns)
         {
-            timeInBetweenTurns = 16;
+            this.timeInBetweenTurns = timeBetweenTurns;
             timeUntilNextTurn = timeInBetweenTurns;
             timeSinceLastTurn = timeInBetweenTurns;
             TurnCountDownLabel = new CCLabel(timeUntilNextTurn.ToString(), "Arial", 30, CCLabelFormat.SystemFont);
