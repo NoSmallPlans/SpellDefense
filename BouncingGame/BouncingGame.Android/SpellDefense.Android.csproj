@@ -140,4 +140,13 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Images\Battleground1.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\Battleground2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\Battleground3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\Battleground4.png" />
+  </ItemGroup>
 </Project>

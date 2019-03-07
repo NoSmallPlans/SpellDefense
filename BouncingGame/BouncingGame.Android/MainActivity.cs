@@ -26,10 +26,10 @@ namespace SpellDefense.Android
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
-
+            
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
-
+            ActionBar.Hide();
 			// Get our game view from the layout resource,
 			// and attach the view created event to it
 			CCGameView gameView = (CCGameView)FindViewById (Resource.Id.GameView);

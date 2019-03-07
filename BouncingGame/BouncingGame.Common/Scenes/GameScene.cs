@@ -40,8 +40,10 @@ namespace SpellDefense.Common.Scenes
                 GodClass.battlefield = battlefield;
                 GodClass.cardHUD = this.cardHUD;
                 this.InitTeams();
-                battleBackground = new CCSprite("Battleground1");
-                battlefield.AddChild(battleBackground);
+                battleBackground = new CCSprite("Battleground4");
+                battleBackground.AnchorPoint = new CCPoint(0, 0);
+                battleBackground.Scale = 0.6666f;
+                backgroundLayer.AddChild(battleBackground);
                 gameplayLayer.AddChild(battlefield);
                 gameplayLayer.AddChild(cardHUD);
                 targetLines = new List<CCDrawNode>();

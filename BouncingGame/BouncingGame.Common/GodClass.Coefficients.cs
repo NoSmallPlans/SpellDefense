@@ -29,8 +29,8 @@ namespace SpellDefense.Common
 
         public enum TeamColor { RED, BLUE };
 
-        public const int desiredWidth = 1024;
-        public const int desiredHeight = 768;
+        public const int desiredWidth = 1280;
+        public const int desiredHeight = 720;
 
         //Eventually PlayHUD dimensions will be more adaptive
         //we're future proofing with this class

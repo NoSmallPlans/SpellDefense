@@ -260,7 +260,7 @@ namespace SpellDefense.Common.Entities
             deathAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
             combatSprite.AddAction(deathAction);
 
-            combatSprite.Scale = 1.5f;
+            combatSprite.Scale = 2f;
             this.ContentSize = combatSprite.ScaledContentSize;
             if(teamColor == TeamColor.BLUE)
             {
