@@ -247,7 +247,7 @@ namespace SpellDefense.Common.Entities
         private void InitSpriteFromJSON(string name)
         {
             CCSpriteSheet spriteSheet = new CCSpriteSheet(name + ".plist", name + ".png");
-            var animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("walk"));
+            var animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("move"));
             walkAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
             combatSprite = new CCSprite(animFrames[0]);
             combatSprite.AddAction(walkAction);
@@ -262,7 +262,7 @@ namespace SpellDefense.Common.Entities
 
             combatSprite.Scale = 2f;
             this.ContentSize = combatSprite.ScaledContentSize;
-            if(teamColor == TeamColor.BLUE)
+            if(teamColor == TeamColor.RED)
             {
                 combatSprite.FlipX = true;
             }

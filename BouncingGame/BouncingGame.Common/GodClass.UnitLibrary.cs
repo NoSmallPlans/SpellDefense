@@ -23,6 +23,18 @@ namespace SpellDefense.Common
                 }"
             },
              {
+                "earthwisp",
+                @"{
+                    'attackSpeed' : '1'
+                    ,'moveSpeed': '25'
+                    ,'attackPwr': '25'
+                    ,'maxHealth': '100'
+                    ,'attackRange': '200'
+                    ,'aggroRange': '100'
+                    ,'sprite': 'earthwisp'
+                }"
+            },
+             {
                 "soldier",
                 @"{
                     'attackSpeed' : '1'
