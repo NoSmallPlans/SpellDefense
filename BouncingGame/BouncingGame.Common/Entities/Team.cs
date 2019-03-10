@@ -190,7 +190,8 @@ namespace SpellDefense.Common.Entities
 
         public void HandleTurnTimeReached(object sender, EventArgs e)
         {
-            cardManager.NewTurn();
+            if(cardManager != null)
+                cardManager.NewTurn();
             this.combatantSpawner.HandleTurnTimeReached();
         }
     }

@@ -9,8 +9,8 @@ namespace SpellDefense.Server
     {
         private NetServer server;
         private List<NetPeer> clients;
-        private List<Game> games;
-        Dictionary<NetConnection, Game> gameConns;
+        //private List<Game> games;
+        Dictionary<NetConnection, NetConnection> playerConns;
         private readonly ManagerLogger _managerLogger;
 
         public void StartServer()
@@ -28,8 +28,8 @@ namespace SpellDefense.Server
                 _managerLogger.AddLogMessage(new Util.LogMessage { Id = "0", Message = "Server not started..." });
             }
             clients = new List<NetPeer>();
-            gameConns = new Dictionary<NetConnection, Game>();
-            games = new List<Game>();
+            playerConns = new Dictionary<NetConnection, NetConnection>();
+            //games = new List<Game>();
         }
 
         public Server(ManagerLogger managerLogger)
@@ -60,12 +60,12 @@ namespace SpellDefense.Server
             //Check to see if there is an available opponent
             foreach (NetConnection nc in server.Connections)
             {
-                if (!gameConns.ContainsKey(nc))
+                if (!playerConns.ContainsKey(nc))
                 {
-                    Game game = new Game(new List<NetConnection> { nc, playerConn }, server);
-                    games.Add(game);
-                    gameConns.Add(nc, game);
-                    gameConns.Add(playerConn, game);
+                    //Game game = new Game(new List<NetConnection> { nc, playerConn }, server);
+                    //games.Add(game);
+                    playerConns.Add(nc, playerConn);
+                    playerConns.Add(playerConn, nc);
 
                     //host player set to red team
                     nom.Write((int)MsgType.GameStart + "," + 0);
@@ -95,28 +95,27 @@ namespace SpellDefense.Server
         {
             NetOutgoingMessage nom = server.CreateMessage();
             nom.Write((int)MsgType.GameOver);
-            if (gameConns.ContainsKey(playerConn))
+            if (playerConns.ContainsKey(playerConn))
             {
-                Game g = gameConns[playerConn];
-                server.SendMessage(nom, g.playerConns, NetDeliveryMethod.ReliableOrdered, 0);
+                NetConnection other = playerConns[playerConn];
+                //Game g = playerConns[playerConn];
+                server.SendMessage(nom, new List<NetConnection>{playerConn, other}, NetDeliveryMethod.ReliableOrdered, 0);
                 //Clean up game connections
-                foreach (NetConnection nt in g.playerConns)
-                {
-                    gameConns.Remove(nt);
-                }
-                //Clean up games list
-                games.Remove(g);
+                playerConns.Remove(other);
+                playerConns.Remove(playerConn);
             }
         }
 
         private void SendAction(NetIncomingMessage message)
         {
             var data = message.ReadString();
-            if (!data.Contains("no"))
-                _managerLogger.AddLogMessage(new Util.LogMessage { Id = "0", Message = data });
-            if (gameConns.ContainsKey(message.SenderConnection))
+            //if (!data.Contains("no"))
+                //_managerLogger.AddLogMessage(new Util.LogMessage { Id = message.SenderEndPoint.Address.ToString(), Message = data });
+            if (playerConns.ContainsKey(message.SenderConnection))
             {
-                gameConns[message.SenderConnection].AddMessage(message, data);
+                NetOutgoingMessage nom = server.CreateMessage();
+                nom.Write(data);
+                server.SendMessage(nom, new List<NetConnection> { playerConns[message.SenderConnection], message.SenderConnection }, NetDeliveryMethod.ReliableOrdered, 0);
             }
         }
 
