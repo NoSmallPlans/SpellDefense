@@ -9,7 +9,7 @@ namespace SpellDefense.Common
     public static partial class GodClass
     {
         public static string playerOneClass = "barbarian";
-        public static string playerTwoClass = "ninja";
+        public static string playerTwoClass = "barbarian";
         public static Dictionary<string, string> ClassConfigs = new Dictionary<string, string>()
         {
              {
@@ -18,11 +18,11 @@ namespace SpellDefense.Common
                     'maxHandSize' : '5'
                     ,'maxMana': '5'
                     ,'baseHealth': '1000'
-                    ,'spawnTimer': '15'
+                    ,'spawnTimer': '10'
                     ,'startingUnits': [
                         {
                             'name': 'soldier'
-                            ,'count': '3'
+                            ,'count': '1'
                         },
                         {
                             'name': 'grunt'
@@ -30,7 +30,7 @@ namespace SpellDefense.Common
                         },
                         {
                             'name': 'archer'
-                            ,'count': '3'
+                            ,'count': '1'
                         },
                         {
                             'name': 'sniper'

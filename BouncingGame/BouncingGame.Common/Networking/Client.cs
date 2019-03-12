@@ -17,6 +17,8 @@ namespace SpellDefense.Common
         private MsgStruct prevAction;
         public TeamColor teamColor;
 
+        string noMessage = ((int)MsgType.NoAction).ToString() + ",no";
+
         public Client()
         {
             incomingActionQueue = new Queue<MsgStruct>();
@@ -32,7 +34,7 @@ namespace SpellDefense.Common
             netClient.FlushSendQueue();
 
              //TODO make these configurable in UI
-            string ip = "192.168.0.10";//"73.109.92.27";
+            string ip = "192.168.0.21";//"73.109.92.27";
             int port = 14242;
             netClient.Connect(ip, port);
         }
@@ -128,8 +130,7 @@ namespace SpellDefense.Common
             }
             else
             {
-                string message = ((int)MsgType.NoAction).ToString() + ",no";
-                prevAction = new MsgStruct { type = MsgType.NoAction, Message = message };
+                prevAction = new MsgStruct { type = MsgType.NoAction, Message = noMessage };
             }
             SendMessage(prevAction);
         }
