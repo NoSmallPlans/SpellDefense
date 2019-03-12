@@ -70,6 +70,7 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Images\skeleton.plist" />
     <AndroidAsset Include="Assets\Content\Images\earthwisp.plist" />
+    <AndroidAsset Include="Assets\Content\Images\minotaur.plist" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
@@ -152,5 +153,8 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Images\earthwisp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\minotaur.png" />
   </ItemGroup>
 </Project>

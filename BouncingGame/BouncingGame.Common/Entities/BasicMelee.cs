@@ -13,11 +13,7 @@ namespace SpellDefense.Common.Entities
         public BasicMelee(TeamColor teamColor, string unitStats) : base(teamColor, unitStats)
         {
             this.drawSize = 20;
-            this.moveSpeed = 40;
-            this.currentHealth = 100;
-            this.maxHealth = 100;
-            this.attackPwr = 20;
-            this.attackSpeed = 2;
+            this.currentHealth = this.maxHealth;
             this.meleeUnit = true;
             InitDraw();
         }

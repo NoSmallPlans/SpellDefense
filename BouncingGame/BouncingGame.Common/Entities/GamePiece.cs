@@ -17,6 +17,7 @@ namespace SpellDefense.Common.Entities
             waiting,
             walking,
             attacking,
+            dying,
             dead
         }
 
@@ -74,8 +75,11 @@ namespace SpellDefense.Common.Entities
         public void UpdateHealth(int amt)
         {
             this.currentHealth += amt;
-            if (this.currentHealth < 0)
+            if (this.currentHealth <= 0)
+            {
                 this.currentHealth = 0;
+                this.state = ActionState.dead;
+            }
             UpdateHealthBar();
         }
 

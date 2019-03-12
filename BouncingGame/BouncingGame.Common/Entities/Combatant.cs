@@ -27,7 +27,7 @@ namespace SpellDefense.Common.Entities
         string fillColorName { get; set; }
         CCColor4B drawColor;
         CCSprite combatSprite;
-        CCAction walkAction, attackAction, deathAction, hitAction;
+        CCAction walkAction, attackAction, deathAction, hurtAction, idleAction;
 
         //How long are this combatant's arms? Glad you asked...
         protected double attackRange { get; set; }
@@ -41,14 +41,15 @@ namespace SpellDefense.Common.Entities
                 switch (newState)
                 {
                     case ActionState.attacking:
-                        combatSprite.RunAction(attackAction);
+                        combatSprite.RunActions((CCFiniteTimeAction)attackAction, idleAction);
                         break;
                     case ActionState.waiting:
+                        combatSprite.RunAction(idleAction);
                         break;
                     case ActionState.walking:
                         combatSprite.RunAction(walkAction);
                         break;
-                    case ActionState.dead:
+                    case ActionState.dying:
                         combatSprite.RunAction(deathAction);
                         break;
                 }
@@ -75,15 +76,17 @@ namespace SpellDefense.Common.Entities
         {
             if (enemy != null && this.timeUntilAttack <= 0)
             {
+                combatSprite.RunAction(attackAction);
                 if (meleeUnit)
                 {
                     enemy.UpdateHealth(-this.attackPwr);
-                } else {
+                }
+                else
+                {
                     CreateProjectile();
                 }
 
-                
-                if(enemy.currentHealth <= 0)
+                if (enemy.currentHealth <= 0)
                 {
                     this.State = ActionState.walking;
                     this.attackTarget = null;
@@ -247,17 +250,26 @@ namespace SpellDefense.Common.Entities
         private void InitSpriteFromJSON(string name)
         {
             CCSpriteSheet spriteSheet = new CCSpriteSheet(name + ".plist", name + ".png");
-            var animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("move"));
-            walkAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+
+            var animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("idle"));
+            idleAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 1.3f)));
             combatSprite = new CCSprite(animFrames[0]);
+            combatSprite.AddAction(idleAction);
+
+            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("move"));
+            walkAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.3f)));
             combatSprite.AddAction(walkAction);
-            
+
+            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("hurt"));
+            hurtAction = new CCRepeat(new CCAnimate(new CCAnimation(animFrames, 0.1f)), 1);
+            combatSprite.AddAction(hurtAction);
+
             animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("attack"));
-            attackAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            attackAction = new CCRepeat(new CCAnimate(new CCAnimation(animFrames, 0.1f)), 1);
             combatSprite.AddAction(attackAction);
 
-            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("death"));
-            deathAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("die"));
+            deathAction = new CCRepeat(new CCAnimate(new CCAnimation(animFrames, 0.1f)), 1);
             combatSprite.AddAction(deathAction);
 
             combatSprite.Scale = 2f;

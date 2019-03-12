@@ -39,7 +39,7 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(2, 0, "earthwisp");
+            AddSpawn(1, 0, "minotaur");
         }
 
         public void AddSpawn(int qty, int spawns, string combatantType)

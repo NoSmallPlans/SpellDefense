@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Actions\CombatantStateChangeAction.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
     <Compile Include="Entities\BasicRanged.cs" />
@@ -51,8 +52,8 @@
     <Compile Include="GodClass.CardLibrary.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
-	<Compile Include="GodClass.UnitLibrary.cs" /> 
-	<Compile Include="GodClass.DeckLibrary.cs" />
+    <Compile Include="GodClass.UnitLibrary.cs" />
+    <Compile Include="GodClass.DeckLibrary.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
   </ItemGroup>
