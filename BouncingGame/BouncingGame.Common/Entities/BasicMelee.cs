@@ -32,7 +32,7 @@ namespace SpellDefense.Common.Entities
         {
             Projectile myProjectile;
             if (projectileSpriteName != null)
-                myProjectile = new Projectile(this.AttackTarget, this.attackPwr, projectileSpriteName, projectileSpeed);
+                myProjectile = new Projectile(this.AttackTarget, this.attackPwr, projectileSpriteName, projectileSpeed, this.combatSprite.FlipX);
             else
                 myProjectile = new Projectile(this.AttackTarget, this.attackPwr, this.teamColor, projectileSpeed);
             this.Parent.AddChild(myProjectile);

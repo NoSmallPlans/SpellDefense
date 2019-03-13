@@ -19,10 +19,11 @@ namespace SpellDefense.Common.Entities
             if (amt >= 0)
                 label.Color = CCColor3B.Green;
             else
-                label.Color = CCColor3B.Red;
+                label.Color = CCColor3B.White;
+            label.Position = new CCPoint(0, 20);
             this.AddChild(label);
 
-            this.RunActionsAsync(new CCFadeOut(1.0f), new CCMoveTo(1.0f, new CCPoint(this.Position.X, this.Position.Y + 40)));
+            this.RunAction(new CCMoveTo(1.3f, new CCPoint(0, 60)));
             this.RunActions(new CCDelayTime(0.5f), new CCRemoveSelf(true));
         }
     }

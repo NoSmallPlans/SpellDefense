@@ -31,13 +31,13 @@ namespace SpellDefense.Common.Entities
             CreateGraphic();
         }
 
-        public Projectile(GamePiece target, int dmg, string spriteName, float speed)
+        public Projectile(GamePiece target, int dmg, string spriteName, float speed, bool flipX)
         {
             this.dmg = dmg;
             this.target = target;
             this.drawSize = 10;
             this.moveSpeed = speed;
-            AddSprite(spriteName);
+            AddSprite(spriteName, flipX);
         }
 
         public void update(float frameTimePerSecond)
@@ -72,7 +72,7 @@ namespace SpellDefense.Common.Entities
             this.Position += new CCPoint(dx, dy);
         }
 
-        private void AddSprite(string spriteName)
+        private void AddSprite(string spriteName, bool flipX)
         {
             spriteSheet = new CCSpriteSheet(spriteName + ".plist", spriteName + ".png");
 
@@ -80,6 +80,7 @@ namespace SpellDefense.Common.Entities
             moveAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
             projSprite = new CCSprite(animFrames[0]);
             projSprite.AddAction(moveAction);
+            projSprite.FlipX = flipX;
             this.AddChild(projSprite);
 
             projSprite.RunAction(moveAction);

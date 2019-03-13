@@ -27,7 +27,7 @@ namespace SpellDefense.Common.Entities
         public CCDrawNode targetLine;
         string fillColorName { get; set; }
         CCColor4B drawColor;
-        CCSprite combatSprite;
+        protected CCSprite combatSprite;
         protected string projectileSpriteName;
         protected float projectileSpeed;
         CCAction walkAction, attackAction, deathAction, hurtAction, idleAction;
