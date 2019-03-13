@@ -17,7 +17,6 @@ namespace SpellDefense.Common.Entities
             waiting,
             walking,
             attacking,
-            dying,
             dead
         }
 
@@ -75,10 +74,10 @@ namespace SpellDefense.Common.Entities
         public void UpdateHealth(int amt)
         {
             this.currentHealth += amt;
+            this.AddChild(new RisingText(amt));
             if (this.currentHealth <= 0)
             {
                 this.currentHealth = 0;
-                this.state = ActionState.dead;
             }
             UpdateHealthBar();
         }
@@ -86,14 +85,6 @@ namespace SpellDefense.Common.Entities
         public CCRect GetBoundingBox()
         {
             return new CCRect(this.Position.X, this.Position.Y, this.drawNode.BoundingBox.Size.Width, this.drawNode.BoundingBox.Size.Height);
-        }
-
-        public void Cleanup()
-        {
-            if (this.currentHealth <= 0)
-            {
-                this.state = ActionState.dead;
-            }
         }
 
         public abstract void Collided(Combatant enemy);
@@ -106,7 +97,5 @@ namespace SpellDefense.Common.Entities
             get { return GetType().GetRuntimeProperty(propertyName).GetValue(this, null); }
             set { GetType().GetRuntimeProperty(propertyName).SetValue(this, value, null); }
         }
-
-        //public abstract void Activity(float frameTimeInSeconds);
     }
 }

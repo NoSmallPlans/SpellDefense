@@ -11,22 +11,34 @@ namespace SpellDefense.Common.Entities
 {
     public class Projectile : CCNode
     {
-        public Projectile(GamePiece target, int dmg, TeamColor teamColor)
+        CCSprite projSprite;
+        protected CCDrawNode drawNode;
+        protected GamePiece target;
+        protected float moveSpeed;
+        public int dmg;
+        protected float drawSize;
+        TeamColor teamColor;
+        CCAction moveAction;
+        CCSpriteSheet spriteSheet;
+
+        public Projectile(GamePiece target, int dmg, TeamColor teamColor, float speed)
         {
             this.dmg = dmg;
             this.target = target;
             this.drawSize = 10;
             this.teamColor = teamColor;            
-            this.moveSpeed = 60;
+            this.moveSpeed = speed;
             CreateGraphic();
         }
 
-        protected CCDrawNode drawNode;
-        protected GamePiece target;
-        protected int moveSpeed;
-        public int dmg;
-        protected int drawSize;
-        TeamColor teamColor;
+        public Projectile(GamePiece target, int dmg, string spriteName, float speed)
+        {
+            this.dmg = dmg;
+            this.target = target;
+            this.drawSize = 10;
+            this.moveSpeed = speed;
+            AddSprite(spriteName);
+        }
 
         public void update(float frameTimePerSecond)
         {
@@ -38,14 +50,9 @@ namespace SpellDefense.Common.Entities
             }
         }
 
-        public CCRect GetBoundingBox()
-        {
-            return new CCRect(this.Position.X, this.Position.Y, this.drawNode.BoundingBox.Size.Width, this.drawNode.BoundingBox.Size.Height);
-        }
-
         public Boolean checkCollision(GamePiece target)
         {
-            return this.GetBoundingBox().IntersectsRect(target.GetBoundingBox());
+            return (CCPoint.Distance(this.Position, target.Position) < this.drawSize);
         }
 
         public void dealDmg(GamePiece target, int dmg)
@@ -63,6 +70,22 @@ namespace SpellDefense.Common.Entities
             float dy = (float)(diffY / length * moveSpeed * frameTimeInSeconds);
 
             this.Position += new CCPoint(dx, dy);
+        }
+
+        private void AddSprite(string spriteName)
+        {
+            spriteSheet = new CCSpriteSheet(spriteName + ".plist", spriteName + ".png");
+
+            var animFrames = spriteSheet.Frames;
+            moveAction = new CCRepeatForever(new CCAnimate(new CCAnimation(animFrames, 0.1f)));
+            projSprite = new CCSprite(animFrames[0]);
+            projSprite.AddAction(moveAction);
+            this.AddChild(projSprite);
+
+            projSprite.RunAction(moveAction);
+
+            this.ContentSize = projSprite.ContentSize;
+            this.drawSize = this.ContentSize.Width;
         }
 
         public void CreateGraphic()

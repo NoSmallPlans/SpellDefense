@@ -33,7 +33,6 @@
     <Compile Include="Actions\CombatantStateChangeAction.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
-    <Compile Include="Entities\BasicRanged.cs" />
     <Compile Include="Entities\Cards\Card.cs" />
     <Compile Include="Entities\Cards\Card.Logic.cs" />
     <Compile Include="Entities\Cards\Card.RenderTexture.cs" />
@@ -43,6 +42,7 @@
     <Compile Include="Entities\Cards\Deck.cs" />
     <Compile Include="Entities\GamePiece.cs" />
     <Compile Include="Entities\Projectile.cs" />
+    <Compile Include="Entities\RisingText.cs" />
     <Compile Include="Entities\Team.cs" />
     <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />

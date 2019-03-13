@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CocosSharp;
 using Newtonsoft.Json.Linq;
+using SpellDefense.Common.Actions;
 using static SpellDefense.Common.GodClass;
 
 namespace SpellDefense.Common.Entities
@@ -16,7 +17,7 @@ namespace SpellDefense.Common.Entities
         //Special function pointer, for ranged units
         public Action<Projectile> AddProjectile;
         public float drawSize;
-        protected Boolean meleeUnit;
+        protected Boolean shootsProjectile;
         double timeUntilAttack;
         public int attackPwr { get; set; }
         public GamePiece defaultEnemy;
@@ -27,6 +28,8 @@ namespace SpellDefense.Common.Entities
         string fillColorName { get; set; }
         CCColor4B drawColor;
         CCSprite combatSprite;
+        protected string projectileSpriteName;
+        protected float projectileSpeed;
         CCAction walkAction, attackAction, deathAction, hurtAction, idleAction;
 
         //How long are this combatant's arms? Glad you asked...
@@ -41,7 +44,7 @@ namespace SpellDefense.Common.Entities
                 switch (newState)
                 {
                     case ActionState.attacking:
-                        combatSprite.RunActions((CCFiniteTimeAction)attackAction, idleAction);
+                        combatSprite.RunActions((CCFiniteTimeAction)attackAction, (CCFiniteTimeAction)idleAction);
                         break;
                     case ActionState.waiting:
                         combatSprite.RunAction(idleAction);
@@ -49,8 +52,9 @@ namespace SpellDefense.Common.Entities
                     case ActionState.walking:
                         combatSprite.RunAction(walkAction);
                         break;
-                    case ActionState.dying:
-                        combatSprite.RunAction(deathAction);
+                    case ActionState.dead:
+                        combatSprite.RunActionsAsync((CCFiniteTimeAction)deathAction, new CCFadeOut(1.5f));
+                        this.RunActions(new CCDelayTime(1.5f), new CCRemoveSelf(true));
                         break;
                 }
             }
@@ -59,8 +63,7 @@ namespace SpellDefense.Common.Entities
         public Combatant(TeamColor teamColor, string unitStats) : base(teamColor)
         {
             State = ActionState.walking;
-            aggroRange = 64;
-            attackRange = 16;
+            timeUntilAttack = 0;
             targetLine = new CCDrawNode();
 
             InitFromJSON(unitStats);            
@@ -77,7 +80,7 @@ namespace SpellDefense.Common.Entities
             if (enemy != null && this.timeUntilAttack <= 0)
             {
                 combatSprite.RunAction(attackAction);
-                if (meleeUnit)
+                if (!shootsProjectile)
                 {
                     enemy.UpdateHealth(-this.attackPwr);
                 }
@@ -171,13 +174,7 @@ namespace SpellDefense.Common.Entities
 
         private void EngageTarget()
         {
-            //If attack range of 1, check for collision between targets
-            if (attackRange <= 1 && CheckCollision(this, attackTarget))
-            {
-                AttackEnemy(attackTarget);
-                State = ActionState.attacking;
-            }
-            else if (distanceTo(this, attackTarget) <= attackRange)
+            if (distanceTo(this, attackTarget) <= attackRange)
             {
                 AttackEnemy(attackTarget);
                 State = ActionState.attacking;
@@ -226,6 +223,18 @@ namespace SpellDefense.Common.Entities
             maxHealth = (int)testJson["maxHealth"];
             attackRange = (int)testJson["attackRange"];
             aggroRange = (int)testJson["aggroRange"];
+            if (testJson.ContainsKey("shootsProjectile"))
+            {
+                shootsProjectile = (string)testJson["shootsProjectile"] == "true" ? true : false;
+            }
+            else
+                shootsProjectile = false;
+            if (testJson.ContainsKey("projSprite")){
+                projectileSpriteName = (string)testJson["projSprite"];
+            }
+            if (testJson.ContainsKey("projSpeed")){
+                projectileSpeed = (float)testJson["projSpeed"];
+            }
             if (testJson.ContainsKey("fillColor")) {
                 fillColorName = (string)testJson["fillColor"];
                 drawColor = ConvertStringToColor(fillColorName);
@@ -269,7 +278,7 @@ namespace SpellDefense.Common.Entities
             combatSprite.AddAction(attackAction);
 
             animFrames = spriteSheet.Frames.FindAll(item => item.TextureFilename.ToLower().Contains("die"));
-            deathAction = new CCRepeat(new CCAnimate(new CCAnimation(animFrames, 0.1f)), 1);
+            deathAction = new CCRepeat(new CCAnimate(new CCAnimation(animFrames, 0.2f)), 1);
             combatSprite.AddAction(deathAction);
 
             combatSprite.Scale = 2f;

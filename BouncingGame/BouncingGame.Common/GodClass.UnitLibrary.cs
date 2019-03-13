@@ -29,17 +29,35 @@ namespace SpellDefense.Common
                     ,'moveSpeed': '100'
                     ,'attackPwr': '25'
                     ,'maxHealth': '100'
-                    ,'attackRange': '200'
+                    ,'attackRange': '600'
                     ,'aggroRange': '100'
+                    ,'shootsProjectile': 'true'
+                    ,'projSprite': 'earthProjectile'
+                    ,'projSpeed': '150'
                     ,'sprite': 'earthwisp'
+                }"
+            },
+             {
+                "firewisp",
+                @"{
+                    'attackSpeed' : '1'
+                    ,'moveSpeed': '100'
+                    ,'attackPwr': '25'
+                    ,'maxHealth': '100'
+                    ,'attackRange': '600'
+                    ,'aggroRange': '100'
+                    ,'shootsProjectile': 'true'
+                    ,'projSprite': 'fireProjectile'
+                    ,'projSpeed': '150'
+                    ,'sprite': 'firewisp'
                 }"
             },
              {
                 "minotaur",
                 @"{
-                    'attackSpeed' : '5'
-                    ,'moveSpeed': '100'
-                    ,'attackPwr': '25'
+                    'attackSpeed' : '4'
+                    ,'moveSpeed': '120'
+                    ,'attackPwr': '50'
                     ,'maxHealth': '100'
                     ,'attackRange': '200'
                     ,'aggroRange': '100'

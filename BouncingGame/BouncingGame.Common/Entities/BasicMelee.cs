@@ -10,11 +10,13 @@ namespace SpellDefense.Common.Entities
 {
     class BasicMelee : Combatant
     {
+        public List<Projectile> projectiles;
         public BasicMelee(TeamColor teamColor, string unitStats) : base(teamColor, unitStats)
         {
             this.drawSize = 20;
             this.currentHealth = this.maxHealth;
-            this.meleeUnit = true;
+            //this.meleeUnit = true;
+            this.projectiles = new List<Projectile>();
             InitDraw();
         }
 
@@ -28,7 +30,14 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateProjectile()
         {
-            throw new NotImplementedException();
+            Projectile myProjectile;
+            if (projectileSpriteName != null)
+                myProjectile = new Projectile(this.AttackTarget, this.attackPwr, projectileSpriteName, projectileSpeed);
+            else
+                myProjectile = new Projectile(this.AttackTarget, this.attackPwr, this.teamColor, projectileSpeed);
+            this.Parent.AddChild(myProjectile);
+            myProjectile.Position = this.Position;
+            AddProjectile(myProjectile);
         }
 
 
