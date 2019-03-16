@@ -9,7 +9,7 @@ namespace SpellDefense.Common.Entities
 {
     class CardHUD : UIcontainer
     {
-        public CardHUD(int yAnchorPt, int xAnchorPt, int height, int width, CCLayer targetLayer) : base (yAnchorPt, xAnchorPt, height, width, targetLayer)
+        public CardHUD(int xAnchorPt, int yAnchorPt, int height, int width, CCLayer targetLayer) : base (xAnchorPt, yAnchorPt, height, width, targetLayer)
         {
             this.drawBackground();
         }

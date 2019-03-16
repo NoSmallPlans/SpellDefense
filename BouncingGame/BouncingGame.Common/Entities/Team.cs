@@ -1,4 +1,5 @@
 ﻿using CocosSharp;
+using Newtonsoft.Json.Linq;
 using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,12 @@ namespace SpellDefense.Common.Entities
 
         private List<Combatant> combatants;
         private List<Projectile> projectiles;
+        int teamBaseMaxHealth;
         private Base teamBase;
         private Base enemyBase;
         CardManager cardManager;
         TeamColor teamColor;
+        TurnManager turnManager;
 
         public Base TeamBase()
         {
@@ -30,8 +33,53 @@ namespace SpellDefense.Common.Entities
             this.teamColor = teamColor;
             combatants = new List<Combatant>();
             projectiles = new List<Projectile>();
-            cardManager = new CardManager(teamColor);
-            GodClass.cardHUD.AddChild(cardManager);
+
+            if (GodClass.online)
+            {
+                if(teamColor == GodClass.clientRef.teamColor)
+                {
+                    cardManager = new CardManager(teamColor);
+                    GodClass.cardHUD.AddChild(cardManager);
+                }
+            }
+            else
+            {
+                cardManager = new CardManager(teamColor);
+                GodClass.cardHUD.AddChild(cardManager);
+            }
+            CreateCombatantSpawner();
+            string className = teamColor == TeamColor.RED ? GodClass.playerOneClass : GodClass.playerTwoClass;
+            InitFromJson(GodClass.ClassConfigs[className]);
+            this.combatantSpawner.IsSpawning = true;
+        }
+
+        private void InitTurnManager(int timeBetweenTurns)
+        {
+            turnManager = new TurnManager(teamColor, timeBetweenTurns);
+            turnManager.OnTurnTimeReached += HandleTurnTimeReached;
+            GodClass.hudLayer.AddChild(turnManager.GetTurnCountDownLabel());
+        }
+
+        public Action<TeamColor> GameOver;
+
+        public void InitFromJson(String text)
+        {
+            JObject testJson = JObject.Parse(text);
+            if (this.cardManager != null)
+            {
+                this.cardManager.maxHandSize = (int)testJson["maxHandSize"];
+                this.cardManager.maxMana = (int)testJson["maxMana"];
+            }
+            InitTurnManager((int)testJson["spawnTimer"]);
+            this.teamBaseMaxHealth = (int)testJson["baseHealth"];
+            JArray startingUnits = (JArray)testJson["startingUnits"];
+
+            foreach (JObject unit in startingUnits)
+            {
+                string name = (string)unit["name"];
+                int count = (int)unit["count"];
+                this.combatantSpawner.AddSpawn(count, 0, name);
+            }
         }
 
         public void SetEnemyBase(Base enemyBase)
@@ -41,12 +89,9 @@ namespace SpellDefense.Common.Entities
 
         public Base makeBase()
         {
+            Base b = new Base(this.teamColor);
+            b.maxHealth = this.teamBaseMaxHealth;
             return this.teamBase = new Base(this.teamColor);
-        }
-
-        public void AddBase(Base myBase)
-        {
-            this.teamBase = myBase;
         }
 
         public Base GetBase()
@@ -134,12 +179,19 @@ namespace SpellDefense.Common.Entities
 
         private void HandleCombatantSpawned(Combatant combatant)
         {
-            this.AddCombatant(combatant, enemyBase);
+            this.AddCombatant(combatant, enemyBase); 
             GodClass.battlefield.AddChild(combatant);
+        }
+
+        public void TurnTimerPhase(float frameTimeInSeconds)
+        {
+            turnManager.Activity(frameTimeInSeconds);
         }
 
         public void HandleTurnTimeReached(object sender, EventArgs e)
         {
+            if(cardManager != null)
+                cardManager.NewTurn();
             this.combatantSpawner.HandleTurnTimeReached();
         }
     }

@@ -15,7 +15,6 @@ namespace SpellDefense.Common.Entities
         CCPoint blueSpawn;
         TeamColor teamColor;
 
-
         //Units that will spawn every spawn event
         //Firt list, index 0, represents permanent spawns
         //Index 1...count represents current and future temporary spawns
@@ -29,6 +28,10 @@ namespace SpellDefense.Common.Entities
 
         public CombatantSpawner(TeamColor teamColor)
         {
+            IsSpawning = false;
+            TimeInbetweenSpawns = 16;
+            // So that spawning starts immediately:
+            timeSinceLastSpawn = TimeInbetweenSpawns;
             this.teamColor = teamColor;
             InitSpawnLists();
         }
@@ -36,7 +39,6 @@ namespace SpellDefense.Common.Entities
         private void InitSpawnLists()
         {
             spawnLists = new List<List<Squad>>();
-            AddSpawn(3, 0, "soldier");
         }
 
         public void AddSpawn(int qty, int spawns, string combatantType)
@@ -45,7 +47,7 @@ namespace SpellDefense.Common.Entities
             //Check to see if combatant type exists
             //Add to list
             Squad squad;
-            for(int i = 0; i <= spawns; i++)
+            for(int i = spawns > 0 ? 1 : 0; i <= spawns; i++)
             {
                 if(spawnLists.Count <= i)
                 {
@@ -78,18 +80,58 @@ namespace SpellDefense.Common.Entities
             redSpawn = new CCPoint(redX, yMid);
             blueSpawn = new CCPoint(blueX, yMid);
         }
+
+        float timeSinceLastSpawn;
+        public float TimeInbetweenSpawns
+        {
+            get;
+            set;
+        }
+
+        public string DebugInfo
+        {
+            get
+            {
+                string toReturn =
+                    "Combatant per second: " + (1 / TimeInbetweenSpawns);
+
+                return toReturn;
+            }
+        }
         
+
         public Action<Combatant> CombatantSpawned;
 
-        /*
-        public static void Activity(float frameTime)
+        public bool IsSpawning
         {
-            if (isSpawning)
+            get;
+            set;
+        }
+
+
+
+        public void Activity(float frameTime)
+        {
+            if (IsSpawning)
             {
                 SpawningActivity(frameTime);
             }
         }
-        */
+
+        private void SpawningActivity(float frameTime)
+        {
+            timeSinceLastSpawn += frameTime;
+
+            if (timeSinceLastSpawn > TimeInbetweenSpawns)
+            {
+                timeSinceLastSpawn = 0;
+
+                if(teamColor == TeamColor.RED)
+                    Spawn(redSpawn);
+                else
+                    Spawn(blueSpawn);
+            }
+        }
 
         public void HandleTurnTimeReached()
         {

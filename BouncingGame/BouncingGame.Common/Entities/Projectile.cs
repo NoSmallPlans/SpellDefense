@@ -28,9 +28,9 @@ namespace SpellDefense.Common.Entities
         protected int drawSize;
         TeamColor teamColor;
 
-        public void update(float frameTimePerSecond)
+        public void update(float frameTimeInSeconds)
         {
-            move(frameTimePerSecond);
+            move(frameTimeInSeconds);
             if(checkCollision(this.target))
             {
                 this.dealDmg(this.target, this.dmg);

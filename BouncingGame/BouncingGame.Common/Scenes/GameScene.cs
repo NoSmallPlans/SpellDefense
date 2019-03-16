@@ -3,65 +3,121 @@ using SpellDefense.Common.Entities;
 using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static SpellDefense.Common.GodClass;
+using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common.Scenes
 {
     public class GameScene : CCScene
     {
+#region Variables
+        public enum GameState
+        {
+            Playing,
+            Paused,
+            Over
+        }
+
         CCLayer backgroundLayer;
         CCLayer gameplayLayer;
         CCLayer foregroundLayer;
         CCLayer hudLayer;
-        TurnManager turnManager;
 
+        private Client client;
         private CCGameView gameView;
 
+        bool simReady = false;
+        bool startGame = false;
         Team redTeam;
         Team blueTeam;
         UIcontainer battlefield;
         UIcontainer cardHUD;
+        CardHistory cardHistory;
         List<CCDrawNode> targetLines;
+        GameState gameState;
 
-        private bool hasGameEnded;
-
+        public GameState GamesState
+        {
+            get
+            {
+                return gameState;
+            }
+            set
+            {
+                gameState = value;
+                switch(value)
+                {
+                    case GameState.Playing:
+                        break;
+                    case GameState.Paused:
+                        break;
+                    case GameState.Over:                        
+                        break;
+                }
+            }
+        }
+#endregion
         public GameScene(CCGameView gameView) : base(gameView)
         {
             try
             {
+                gameState = GameState.Paused;
                 this.gameView = gameView;
                 this.InitLayers();
-                this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
-                                                 (int)GodClass.CardHUDdimensions.GetWidth(),
-                                                 this.gameplayLayer);
-                this.battlefield = new UIcontainer(0,
-                                                (int)GodClass.CardHUDdimensions.GetHeight(),
-                                                (int)GodClass.BattlefieldDimensions.GetHeight(),
-                                                (int)GodClass.BattlefieldDimensions.GetWidth(),
-                                                this.gameplayLayer);
-                GodClass.battlefield = battlefield;
-                GodClass.cardHUD = this.cardHUD;
-                this.InitTeams();
-
-                gameplayLayer.AddChild(battlefield);
-                gameplayLayer.AddChild(cardHUD);
-                targetLines = new List<CCDrawNode>();
-
-                this.turnManager = new TurnManager();
-                turnManager.OnTurnTimeReached += CardManager.HandleTurnTimeReached;
-                turnManager.OnTurnTimeReached += redTeam.HandleTurnTimeReached;
-                turnManager.OnTurnTimeReached += blueTeam.HandleTurnTimeReached;
-                ShowTurnTimer();
-
-                GodClass.gameplayLayer = gameplayLayer;
+                InitClient();
+                if (!GodClass.online)
+                    startGame = true;
                 Schedule(Activity);
             }
             catch(Exception ex)
             {
-                string msg = ex.Message;
+                Debug.WriteLine("Error: " + ex.Message);
             }
         }
 
+        private void InitGame()
+        {
+            this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
+                                 (int)GodClass.CardHUDdimensions.GetWidth(),
+                                 this.gameplayLayer);
+            this.cardHistory = new CardHistory((int)(GodClass.BattlefieldDimensions.GetWidth()*0.4)
+                                    , (int)(BattlefieldDimensions.GetHeight() * 0.95)
+                                    , (int)(GodClass.BattlefieldDimensions.GetHeight())
+                                    , (int)GodClass.BattlefieldDimensions.GetWidth()
+                                    , this.gameplayLayer);
+            this.battlefield = new UIcontainer(0,
+                                            (int)GodClass.CardHUDdimensions.GetHeight(),
+                                            (int)GodClass.BattlefieldDimensions.GetHeight(),
+                                            (int)GodClass.BattlefieldDimensions.GetWidth(),
+                                            this.gameplayLayer);
+            GodClass.battlefield = battlefield;
+            GodClass.cardHUD = this.cardHUD;
+            GodClass.cardHistory = this.cardHistory;
+
+            gameplayLayer.AddChild(battlefield);
+            gameplayLayer.AddChild(cardHUD);
+            gameplayLayer.AddChild(cardHistory);
+            targetLines = new List<CCDrawNode>();
+
+            GodClass.gameplayLayer = gameplayLayer;
+            GodClass.hudLayer = hudLayer;
+            GodClass.InitLibrary();
+
+            this.InitTeams();
+
+            GamesState = GameState.Playing;
+        }
+
+        private void InitClient()
+        {
+            client = new Client();
+            GodClass.clientRef = client;
+            if(GodClass.online)
+            {
+                client.StartClient();
+            }
+        }
 
         private void InitTeams()
         {
@@ -71,8 +127,6 @@ namespace SpellDefense.Common.Scenes
             gameplayLayer.AddChild(blueTeam.makeBase());
             redTeam.SetEnemyBase(blueTeam.GetBase());
             blueTeam.SetEnemyBase(redTeam.GetBase());
-            redTeam.CreateCombatantSpawner();
-            blueTeam.CreateCombatantSpawner();
             GodClass.red = redTeam;
             GodClass.blue = blueTeam;
         }
@@ -90,50 +144,141 @@ namespace SpellDefense.Common.Scenes
             this.AddLayer(this.hudLayer);
         }
 
+        //Avoiding using any floats with lockstep multiplayer
+        //Therefore float frameTimeInSeconds is being ignored
         private void Activity(float frameTimeInSeconds)
         {
             try
             {
-                if (hasGameEnded == false)
-                {
-                    turnManager.UpdateTurnCountDownLabel();
-
-                    redTeam.Cleanup();
-                    blueTeam.Cleanup();
-
-                    redTeam.MovePhase(frameTimeInSeconds);
-                    blueTeam.MovePhase(frameTimeInSeconds);
-
-                    redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
-                    blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
-
-                    if(redTeam.GetBase().GetCurrentHealth() <= 0 || 
-                       blueTeam.GetBase().GetCurrentHealth() <= 0)
-                    {
-                        string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
-                        this.ShowEndScreen(winningTeam);
-                        this.hasGameEnded = true;
-                    }
-                    turnManager.Activity(frameTimeInSeconds);
+                if (GodClass.online) {
+                    OnlineGameLoop(frameTimeInSeconds);
+                }
+                else {
+                    OfflineGameLoop(frameTimeInSeconds);
                 }
             }
             catch(Exception ex)
             {
-                string msg = ex.Message;
+                Debug.WriteLine("Error: " + ex.Message);
             }
         }
 
+        private void OnlineGameLoop(float frameTimeInSeconds)
+        {
+            startGame = client.ReceiveMessage();
+            if (startGame)
+            {
+                InitGame();
+                SendActions();
+            }
+            if (client.incomingActionQueue.Count >= 2) //Hard coded to 2 player, fix?
+            {
+                simReady = true;
+            }
+            if (simReady)
+            {
+                PlayActions();
+                SimulateGame(frameTimeInSeconds);
+                SendActions();
+                simReady = false;
+            }
+        }
 
+        private void OfflineGameLoop(float frameTimeInSeconds)
+        {            
+            if (startGame) {
+                startGame = false;
+                InitGame();
+            }
+            if (gameState == GameState.Playing)
+            {
+                PlayActions();
+                SimulateGame(frameTimeInSeconds);
+            }
+        }
+
+        private void SimulateGame(float frameTimeInSeconds)
+        {
+            redTeam.Cleanup();
+            blueTeam.Cleanup();
+
+            redTeam.MovePhase(frameTimeInSeconds);
+            blueTeam.MovePhase(frameTimeInSeconds);
+
+            redTeam.AttackPhase(frameTimeInSeconds, blueTeam.GetCombatants(), blueTeam.GetBase());
+            blueTeam.AttackPhase(frameTimeInSeconds, redTeam.GetCombatants(), redTeam.GetBase());
+
+            redTeam.TurnTimerPhase(frameTimeInSeconds);
+            blueTeam.TurnTimerPhase(frameTimeInSeconds);
+
+            if (redTeam.GetBase().GetCurrentHealth() <= 0 ||
+                blueTeam.GetBase().GetCurrentHealth() <= 0)
+            {
+                GameOver();
+            }
+
+        }
+
+        private void GameOver()
+        {
+            string winningTeam = redTeam.GetBase().GetCurrentHealth() <= 0 ? winningTeam = "Blue" : winningTeam = "Red";
+            this.ShowEndScreen(winningTeam);
+            if(GodClass.online)
+                client.Disconnect();
+            gameState = GameState.Over;
+        }
+
+        //Any actions received from the server are played 
+        private void PlayActions()
+        {
+            int actionCount = client.incomingActionQueue.Count;
+            if (actionCount > 0)
+            {
+                for (int i = 0; i < actionCount; i++)
+                {
+                    ExecuteAction(client.incomingActionQueue.Dequeue());
+                }
+            }
+        }
+        
+        //Send any queued actions from player to the server
+        private void SendActions(bool sendPrev=false)
+        {
+            if (sendPrev)
+            {
+                client.SendPrevActionToServer();
+            }
+            else
+            {
+                client.SendActionToServer();
+            }
+        }
+
+        private void ExecuteAction(MsgStruct msg)
+        {
+            int teamColor;
+            //Parse actions
+            switch(msg.type)
+            {
+                case MsgType.PlayCard:
+                    Debug.WriteLine("Play Card: " + msg.Message);
+                    string[] args = msg.Message.Split(';');                    
+                    if (args.Length > 1)
+                    {
+                        string cardName = args[0];
+                        int.TryParse(args[1], out teamColor);
+                        GodClass.PlayCard(cardName, new int[] { teamColor });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
 
         private void Destroy(Combatant combatant, List<Combatant> list)
         {
             combatant.RemoveFromParent();
             list.Remove(combatant);
-        }
-
-        private void HandleCardDrawn(Card card)
-        {
-            cardHUD.AddChild(card);
         }
 
         private void ShowEndScreen(string teamName)
@@ -156,8 +301,8 @@ namespace SpellDefense.Common.Scenes
 
         private void StartOver()
         {
-            CCGameView tempGameView = GameController.GameView;
-            GameController.Initialize(tempGameView);
+            var newScene = new TitleScene(GameController.GameView);
+            GameController.GoToScene(newScene);
         }
 
         private void CreateTouchListener()
@@ -170,15 +315,6 @@ namespace SpellDefense.Common.Scenes
         private void HandleTouchesBegan(List<CCTouch> arg1, CCEvent arg2)
         {
             this.StartOver();
-        }
-
-        private void ShowTurnTimer()
-        {
-            var labelA = turnManager.GetTurnCountDownLabel();
-            labelA.PositionX = gameplayLayer.ContentSize.Width * 0.5f;
-            labelA.PositionY = gameplayLayer.ContentSize.Height * 0.725f;
-            labelA.Color = CCColor3B.White;
-            hudLayer.AddChild(labelA);
         }
     }
 }

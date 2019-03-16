@@ -159,13 +159,7 @@ namespace SpellDefense.Common.Entities
 
         private void EngageTarget()
         {
-            //If attack range of 1, check for collision between targets
-            if (attackRange <= 1 && CheckCollision(this, attackTarget))
-            {
-                AttackEnemy(attackTarget);
-                state = State.attacking;
-            }
-            else if (distanceTo(this, attackTarget) <= attackRange)
+            if (distanceTo(this, attackTarget) - this.radius - attackTarget.radius <= attackRange)
             {
                 AttackEnemy(attackTarget);
                 state = State.attacking;
@@ -222,14 +216,17 @@ namespace SpellDefense.Common.Entities
             else {
                 armor = 0;
             }
-            JArray abilities = (JArray)testJson["abilities"];
-
-            foreach (JObject ability in abilities)
+            if (testJson.ContainsKey("abilities"))
             {
-                string abilityName = (string)ability["actionName"];
-                JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
-                CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
-                this.abilityList.Add(tempAction);
+                JArray abilities = (JArray)testJson["abilities"];
+
+                foreach (JObject ability in abilities)
+                {
+                    string abilityName = (string)ability["actionName"];
+                    JObject compileTimeArgs = (JObject)ability["compileTimeArgs"];
+                    CardAct tempAction = GodClass.GetAction(abilityName, compileTimeArgs);
+                    this.abilityList.Add(tempAction);
+                }
             }
         }
 

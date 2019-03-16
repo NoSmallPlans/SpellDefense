@@ -13,16 +13,27 @@ namespace SpellDefense.Common.Entities
         private CCLabel TurnCountDownLabel;
         public EventHandler OnTurnTimeReached;
         float timeInBetweenTurns;
-        //static bool isSpawning = true;
         float timeUntilNextTurn;
         float timeSinceLastTurn;
 
-        public TurnManager()
+        public TurnManager(TeamColor teamColor,int timeBetweenTurns)
         {
-            timeInBetweenTurns = 16;
+            this.timeInBetweenTurns = timeBetweenTurns;
             timeUntilNextTurn = timeInBetweenTurns;
             timeSinceLastTurn = timeInBetweenTurns;
             TurnCountDownLabel = new CCLabel(timeUntilNextTurn.ToString(), "Arial", 30, CCLabelFormat.SystemFont);
+            if (teamColor == TeamColor.RED)
+            {
+                TurnCountDownLabel.PositionX = gameplayLayer.ContentSize.Width * 0.15f;
+                TurnCountDownLabel.PositionY = gameplayLayer.ContentSize.Height * 0.85f;
+            }
+            else
+            {
+                TurnCountDownLabel.PositionX = gameplayLayer.ContentSize.Width * 0.85f;
+                TurnCountDownLabel.PositionY = gameplayLayer.ContentSize.Height * 0.85f;
+            }
+            TurnCountDownLabel.Color = CCColor3B.White;
+            GodClass.hudLayer.AddChild(TurnCountDownLabel);
         }
 
         public CCLabel GetTurnCountDownLabel()
@@ -30,16 +41,11 @@ namespace SpellDefense.Common.Entities
             return TurnCountDownLabel;
         }
 
-        public void UpdateTurnCountDownLabel()
-        {
-            TurnCountDownLabel.Text = ((int)timeUntilNextTurn).ToString();
-        }
-
         public void Activity(float frameTime)
         {
             timeSinceLastTurn += frameTime;
             timeUntilNextTurn = timeInBetweenTurns - timeSinceLastTurn;
-
+            TurnCountDownLabel.Text = ((int)timeUntilNextTurn).ToString();
             if (timeSinceLastTurn > timeInBetweenTurns)
             {
                 timeSinceLastTurn = 0;

@@ -19,7 +19,6 @@ namespace SpellDefense.Common.Entities
         CCLabel cardNameDisplay;
         CCLabel costDisplay;
         CCLabel descriptionDisplay;
-
         CCRenderTexture renderTexture;
 
         public string CardName
@@ -168,6 +167,11 @@ namespace SpellDefense.Common.Entities
             cardSprite.PositionX = background.ContentSize.Center.X;
             cardSprite.PositionY = 135;
             ReactTocardSpriteTextureSet();
+        }
+
+        public CCSprite GetCardIcon()
+        {
+            return this.cardSprite;
         }
 
         private void ReactTocardSpriteTextureSet()

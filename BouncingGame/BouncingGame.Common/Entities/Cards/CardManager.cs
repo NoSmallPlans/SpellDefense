@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static SpellDefense.Common.Entities.Team;
 using static SpellDefense.Common.GodClass;
+using static SpellDefense.Common.Networking.Messaging;
 
 namespace SpellDefense.Common.Entities.Cards
 {
@@ -16,23 +17,19 @@ namespace SpellDefense.Common.Entities.Cards
     {
         Deck deck;
         List<Card> hand;
-        int maxHandSize;
+        public int maxHandSize;
         int currentHandSize;
         TeamColor teamColor;
-        int maxMana;
+        public int maxMana;
         int currentMana;
         int cardSpacing;
         int cardStartingX;
         int cardStartingY;
         DateTime timeCardTouched;
-        double cardZoomTime = 0.5f;
+        float cardZoomTime = 0.5f;
         CCLabel manaLabel;
         CCEventListenerTouchAllAtOnce touchListener;
-        static List<Action> sharedQueue = new List<Action>();
-        static List<Action> redQueue = new List<Action>();
-        static List<Action> blueQueue = new List<Action>();
-        static int turnCount;
-
+        
 
         public CardManager(TeamColor team)
         {
@@ -49,14 +46,46 @@ namespace SpellDefense.Common.Entities.Cards
                 cardStartingX = 0;
             cardStartingY = -100;
             InitDeck();
-            InitHand();
+            //InitHand();
             CreateGraphics();
             CreateTouchListener();
+        }
 
-            Schedule(t =>
+        public void NewTurn()
+        {
+            EmptyHand();
+            FillHand();
+            CurrentMana = maxMana;
+        }
+
+        private void EmptyHand()
+        {
+            for(int i = currentHandSize-1; i >= 0; i --)
             {
-                IncrementMana();
-            }, 3);
+                RemoveCardFromHand(hand[i]);
+            }
+        }
+
+        private void FillHand()
+        {
+            for(int i = 0; i < maxHandSize; i++)
+            {
+                DrawCard();
+            }
+            UpdateHandPositions();
+        }
+
+        int CurrentMana
+        {
+            get
+            {
+                return this.currentMana; 
+            }
+            set
+            {
+                this.currentMana = value;
+                manaLabel.Text = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
+            }
         }
 
         public void DrawCard()
@@ -65,8 +94,6 @@ namespace SpellDefense.Common.Entities.Cards
             hand.Add(card);
             currentHandSize++;
             GodClass.cardHUD.AddChild(card);
-
-            UpdateHandPositions();
         }
 
         private void UpdateHandPositions()
@@ -101,24 +128,40 @@ namespace SpellDefense.Common.Entities.Cards
         //Check if mana cost is <= player current mana
         //Play Card
         //Remove card from CardHub
-        //Draw New Card
-        public void UseCard(Card card, CCPoint pos)
+        public void PlayCard(Card card, CCPoint pos)
         {
-            if(currentMana >= card.cardCost)
+            if(CurrentMana >= card.cardCost)
             {
-                UpdateMana(-card.cardCost);
-                QueueCard(card, pos);
-                card.RemoveFromParent();
-                card.State = Card.CardState.Rest;
-                hand.Remove(card);
-                currentHandSize--;
-                DrawCard();
+                CurrentMana -= card.cardCost;
+                if (GodClass.online)
+                {
+                    //Send Message to server
+                    GodClass.clientRef.AddOutMessage(MsgType.PlayCard, ConstructCardMessage(false, card.CardName.ToLower()));
+                }
+                else
+                {
+                    //Play card locally
+                    GodClass.clientRef.ParseMessage(ConstructCardMessage(true, card.CardName.ToLower()));
+                }
+                RemoveCardFromHand(card);
+                GodClass.cardHistory.AddToHistory(card, teamColor);
             }
         }
 
-        public void PlayCard(Card card, CCPoint pos)
+        private void RemoveCardFromHand(Card card)
         {
-            card.Play(new int[] { (int)this.teamColor });
+            card.RemoveFromParent();
+            card.State = Card.CardState.Rest;
+            hand.Remove(card);
+            currentHandSize--;
+        }
+
+        private string ConstructCardMessage(bool self, string cardName)
+        {
+            string message = cardName + ";" + ((int)teamColor).ToString();
+            string msgType;
+            msgType = ((int)MsgType.PlayCard).ToString();
+            return msgType + "," + message;
         }
 
         private void CreateTouchListener()
@@ -186,94 +229,11 @@ namespace SpellDefense.Common.Entities.Cards
                 {
                     if (card.State == Card.CardState.Selected)
                     {
-                        UseCard(card, arg1[0].LocationOnScreen);
+                        PlayCard(card, arg1[0].LocationOnScreen);
                         break;
                     }
                 }
             }
-        }
-
-        private void QueueCard(Card card, CCPoint pos)
-        {
-            Card.CardTimeOpts? cardTiming = card.GetCardTiming();
-            if(cardTiming == null)
-            {
-                AddToQueue(() => PlayCard(card, pos));
-            }
-            else if (cardTiming == Card.CardTimeOpts.Immediate)
-            {
-                PlayCard(card, pos);
-            } else if(cardTiming == Card.CardTimeOpts.Queued)
-            {
-                AddToQueue(() => PlayCard(card, pos));
-            }
-            else
-            {
-                AddToQueue(() => PlayCard(card, pos));
-            }
-        }
-
-        public static void MergeQueues()
-        {
-            int i = 0;
-            while( i < blueQueue.Count && i < redQueue.Count)
-            {
-                //on even turns
-                if(turnCount % 2 == 0)
-                {
-                    sharedQueue.Add(blueQueue[i]);
-                    sharedQueue.Add(redQueue[i]);
-                } else
-                {
-                    sharedQueue.Add(redQueue[i]);
-                    sharedQueue.Add(blueQueue[i]);
-                }
-                i++;
-            }
-
-            if(blueQueue.Count > i)
-            {
-                while (i < blueQueue.Count)
-                {
-                    sharedQueue.Add(blueQueue[i]);
-                    i++;
-                }
-                
-            }
-
-            if (redQueue.Count > i)
-            {
-                while (i < redQueue.Count)
-                {
-                    sharedQueue.Add(redQueue[i]);
-                    i++;
-                }
-                
-            }
-            redQueue.Clear();
-            blueQueue.Clear();
-        }
-
-        private void AddToQueue(Action cardPlay)
-        {
-            if(this.teamColor == TeamColor.BLUE) blueQueue.Add(cardPlay);
-            if(this.teamColor == TeamColor.RED) redQueue.Add(cardPlay);
-        }
-
-        private static void PlayCardQueue()
-        {
-            foreach(Action cardPlay in sharedQueue)
-            {
-                cardPlay();
-            }
-            sharedQueue.Clear();
-        }
-
-        public static void HandleTurnTimeReached(object sender, EventArgs e)
-        {
-            MergeQueues();
-            PlayCardQueue();
-            turnCount++;
         }
 
         private void DeselectCards()
@@ -284,26 +244,14 @@ namespace SpellDefense.Common.Entities.Cards
             }
         }
 
-        private void UpdateMana(int manaDelta)
-        {
-            currentMana += manaDelta;
-            manaLabel.Text = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
-        }
-
-        private void IncrementMana()
-        {
-            if (currentMana < maxMana)
-                UpdateMana(1);
-        }
-
         private void CreateGraphics()
         {
-            string manaString = "Mana:" + currentMana.ToString() + "/" + maxMana.ToString();
-            manaLabel = new CCLabel(manaString, "Arial", 20, CCLabelFormat.SystemFont);
+            string manaString = "Mana:" + CurrentMana.ToString() + "/" + maxMana.ToString();
+            manaLabel = new CCLabel(manaString, "Arial", 24, CCLabelFormat.SystemFont);
             this.AddChild(manaLabel);
             manaLabel.Color = CCColor3B.White;
-            manaLabel.PositionY = 100;
-            manaLabel.PositionX = cardStartingX + 40;
+            manaLabel.PositionY = 130;
+            manaLabel.PositionX = cardStartingX + 50;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpellDefense.Common.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,24 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
+        public static Dictionary<string, Card> library;
+
+        public static void InitLibrary()
+        {
+            Card c;
+            library = new Dictionary<string, Card>();
+            foreach (string key in CardLibrary.Keys)
+            {
+                c = new Card(CardLibrary[key]);
+                library.Add(key, c);
+            }
+        }
+
+        public static void PlayCard(string name, int[] args)
+        {
+            library[name].Play(args);
+        }
+
         public static Dictionary<string, string>  CardLibrary = new Dictionary<string, string>()
         {
             {
@@ -29,11 +48,11 @@ namespace SpellDefense.Common
                 }"
             },
             {
-                "addranged",
+                "spawn ranged",
                 @"{
-                    'cardTitle' : 'Add Ranged'
-                    ,'cardText': 'Adds a ranged unit to all spawns'
-                    ,'cardCost': '1'
+                    'cardTitle' : 'Spawn Ranged'
+                    ,'cardText': 'Adds archer to the next spawn'
+                    ,'cardCost': '2'
                     ,'cardImage': 'BlueGuy.png'
                     ,'cardActions': [
                         {
@@ -41,14 +60,14 @@ namespace SpellDefense.Common
                             ,'compileTimeArgs': {
                                 'combatantType' : 'archer'
                                 ,'num' : '1'
-                                ,'spawns' : '0'
+                                ,'spawns' : '1'
                             }
                         }
                     ]
                 }"
             },
             {
-                "addsoldier",
+                "spawn soldier",
                 @"{
                     'cardTitle' : 'Spawn Soldier'
                     ,'cardText': 'Adds soldier to the next spawn'
@@ -70,7 +89,7 @@ namespace SpellDefense.Common
                 "haste",
                 @"{
                     'cardTitle' : 'Haste'
-                    ,'cardText': 'Give all my units 700 speed'
+                    ,'cardText': 'Give all my units 50 speed'
                     ,'cardCost': '0'
                     ,'cardImage': 'GreenGuy.png'
                     ,'cardTiming': 'Immediate'
@@ -79,7 +98,7 @@ namespace SpellDefense.Common
                             'actionName': 'statSetter'
                             ,'compileTimeArgs': {
                                 'statName' : 'moveSpeed'
-                                ,'statVal' : '700.0'
+                                ,'statVal' : '50.0'
                             }
                         }
                     ]
@@ -104,17 +123,55 @@ namespace SpellDefense.Common
                 "fireball",
                 @"{
                     'cardTitle' : 'Fireball'
-                    ,'cardText': 'Deal 10 damage to all bad guys' 
+                    ,'cardText': 'Deal 50 damage to all bad guys' 
                     ,'cardCost': '2'
                     ,'cardImage': 'fireball.png'
                     ,'cardActions': [
                         {
                             'actionName': 'DmgAllUnits'
-                            ,'compileTimeArgs': {'dmg' : '10'}
+                            ,'compileTimeArgs': {'dmg' : '50'}
                         }
                     ]
                 }"
-            }
+            },
+            {
+                "spawn grunt",
+                @"{
+                    'cardTitle' : 'Spawn Grunt'
+                    ,'cardText': 'Adds grunt to the next spawn'
+                    ,'cardCost': '3'
+                    ,'cardImage': 'GreenGuy.png'
+                    ,'cardActions': [
+                        {
+                            'actionName': 'addUnit'
+                            ,'compileTimeArgs': {
+                                'combatantType' : 'grunt'
+                                ,'num' : '1'
+                                ,'spawns' : '1'
+                            }
+                        }
+                    ]
+                }"
+            },
+            {
+                "spawn sniper",
+                @"{
+                    'cardTitle' : 'Spawn Sniper'
+                    ,'cardText': 'Adds grunt to the next spawn'
+                    ,'cardCost': '4'
+                    ,'cardImage': 'BlueGuy.png'
+                    ,'cardActions': [
+                        {
+                            'actionName': 'addUnit'
+                            ,'compileTimeArgs': {
+                                'combatantType' : 'sniper'
+                                ,'num' : '1'
+                                ,'spawns' : '1'
+                            }
+                        }
+                    ]
+                }"
+            },
         };
     }
 }

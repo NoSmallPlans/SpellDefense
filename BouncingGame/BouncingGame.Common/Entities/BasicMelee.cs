@@ -15,11 +15,8 @@ namespace SpellDefense.Common.Entities
         public BasicMelee(TeamColor teamColor, string unitStats) : base(teamColor, unitStats)
         {
             this.drawSize = 20;
-            this.moveSpeed = 40;
-            this.currentHealth = 100;
-            this.maxHealth = 100;
-            this.attackPwr = 20;
-            this.attackSpeed = 2;
+            this.radius = drawSize / 2;
+            this.currentHealth = this.maxHealth;
             this.meleeUnit = true;
             InitDraw();
         }
@@ -37,7 +34,7 @@ namespace SpellDefense.Common.Entities
             float x = this.PositionWorldspace.X - this.attackTarget.PositionWorldspace.X;
             float y = this.PositionWorldspace.Y - this.attackTarget.PositionWorldspace.Y;
             attackDrawNode = new CCDrawNode();
-            attackDrawNode.DrawLine(CCPoint.Zero, new CCPoint(x*-1,y*-1), CCColor4B.Red, CCLineCap.Butt);
+            attackDrawNode.DrawLine(CCPoint.Zero, new CCPoint(x * -1, y * -1), CCColor4B.Red, CCLineCap.Butt);
             this.AddChild(attackDrawNode);
             attackDrawNode.RunActions(new CCFadeOut(0.5f), new CCRemoveSelf(true));
         }

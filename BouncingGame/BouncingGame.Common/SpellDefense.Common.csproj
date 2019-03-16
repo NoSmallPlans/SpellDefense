@@ -30,6 +30,10 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\TurnManager.cs" />
+    <Compile Include="GodClass.Classes.cs" />
+    <Compile Include="Entities\Cards\CardHistory.cs" />
+    <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
     <Compile Include="Entities\BasicRanged.cs" />
@@ -43,20 +47,20 @@
     <Compile Include="Entities\GamePiece.cs" />
     <Compile Include="Entities\Projectile.cs" />
     <Compile Include="Entities\Team.cs" />
-    <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="Entities\UIcontainer.cs" />
     <Compile Include="Entities\Combatant.cs" />
     <Compile Include="Entities\CombatantSpawner.cs" />
     <Compile Include="Entities\Cards\CardHUD.cs" />
     <Compile Include="GodClass.Actions.cs" />
     <Compile Include="GodClass.CardLibrary.cs" />
-    <Compile Include="GodClass.Classes.cs" />
     <Compile Include="GodClass.Coefficients.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="GodClass.UnitLibrary.cs" />
     <Compile Include="GodClass.DeckLibrary.cs" />
+    <Compile Include="Networking\Messaging.cs" />
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
+    <Compile Include="UI\Button.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
@@ -65,6 +69,12 @@
     </Reference>
     <Reference Include="CocosSharp">
       <HintPath>..\..\packages\CocosSharp.1.7.1.0\lib\portable-net45+win+wpa81+wp81\CocosSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lidgren.Network.Portable.1.0.1\lib\portable-net45+sl50+win+wpa81+wp80\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Android">
+      <HintPath>D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v4.4\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>..\..\packages\CocosSharp.1.7.1.0\lib\portable-net45+win+wpa81+wp81\MonoGame.Framework.dll</HintPath>

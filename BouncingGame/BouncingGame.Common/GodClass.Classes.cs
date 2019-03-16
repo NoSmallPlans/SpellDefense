@@ -8,19 +8,33 @@ namespace SpellDefense.Common
 {
     public static partial class GodClass
     {
+        public static string playerOneClass = "barbarian";
+        public static string playerTwoClass = "barbarian";
         public static Dictionary<string, string> ClassConfigs = new Dictionary<string, string>()
         {
              {
                 "barbarian",
                 @"{
-                    'maxHandsize' : '3'
+                    'maxHandSize' : '5'
                     ,'maxMana': '5'
-                    ,'spawnTimer': '15'
                     ,'baseHealth': '1000'
+                    ,'spawnTimer': '10'
                     ,'startingUnits': [
                         {
-                            'name': 'warrior'
-                            ,'count': '3'
+                            'name': 'soldier'
+                            ,'count': '1'
+                        },
+                        {
+                            'name': 'grunt'
+                            ,'count': '0'
+                        },
+                        {
+                            'name': 'archer'
+                            ,'count': '1'
+                        },
+                        {
+                            'name': 'sniper'
+                            ,'count': '0'
                         }
                     ]
                 }"
@@ -28,15 +42,28 @@ namespace SpellDefense.Common
              {
                 "ninja",
                 @"{
-                    'maxHandsize' : '3'
+                    'maxHandSize' : '5'
                     ,'maxMana': '5'
-                    ,'spawnTimer': '15'
                     ,'baseHealth': '1000'
+                    ,'spawnTimer': '20'
                     ,'startingUnits': [
                         {
-                            'name': 'ninja'
+                            'name': 'soldier'
                             ,'count': '3'
+                        },
+                        {
+                            'name': 'grunt'
+                            ,'count': '0'
+                        },
+                        {
+                            'name': 'archer'
+                            ,'count': '3'
+                        },
+                        {
+                            'name': 'sniper'
+                            ,'count': '0'
                         }
+
                     ]
                 }"
             }
