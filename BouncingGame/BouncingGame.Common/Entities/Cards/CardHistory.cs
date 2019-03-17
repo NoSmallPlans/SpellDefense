@@ -31,22 +31,26 @@ namespace SpellDefense.Common.Entities.Cards
 
         public void AddToHistory(Card card, GodClass.TeamColor teamColor)
         {
-            CCSprite cardIcon = card.GetCardIcon();
+            CCSprite cardIcon = card.CloneCardIcon();
             CCColor4B teamBorderColor = teamColor == GodClass.TeamColor.BLUE ? CCColor4B.Blue : CCColor4B.Red;
 
             CCDrawNode drawNode = new CCDrawNode();
-            drawNode.DrawRect(new CCRect(0, 0, 15, 15),
+            drawNode.DrawRect(new CCRect(0, 0, 17, 17),
                 fillColor: CCColor4B.Transparent,
                 borderWidth: 0.5f,
                 borderColor: teamBorderColor);
             drawNode.ZOrder = this.ZOrder - 1;
             cardIcon.AddChild(drawNode);
-
-            cardIcon.PositionX = xAnchor  + CardBuffer();
-            cardIcon.PositionY = yAnchor;
+            cardIcon.AnchorPoint = new CCPoint(0,0);
             this.AddChild(cardIcon);
             this.cardIconsPlayed.Add(cardIcon);
             this.MaintainMaxHistorySize();
+            cardIcon.PositionY = yAnchor;
+            for (int i = 0; i < cardIconsPlayed.Count; i++)
+            {
+                cardIconsPlayed[i].PositionX = xAnchor + CardBuffer(i);
+            }
+            
 
         }
 
@@ -74,9 +78,9 @@ namespace SpellDefense.Common.Entities.Cards
             this.targetLayer.AddChild(drawNode);
         }
 
-        private int CardBuffer()
+        private int CardBuffer(int i)
         {
-            int offsetCount = cardIconsPlayed.Count - 1; //subtract one, bc no need to offset for first card
+            int offsetCount = i - 1; //subtract one, bc no need to offset for first card
             return (CARD_BUFFER + CARD_WIDTH) * offsetCount;
         }
 
@@ -86,12 +90,7 @@ namespace SpellDefense.Common.Entities.Cards
             if(this.cardIconsPlayed.Count > HISTORY_LIMIT)
             {
                 this.cardIconsPlayed[0].RemoveFromParent();
-                this.cardIconsPlayed.RemoveAt(0);
-
-                foreach(CCSprite c in cardIconsPlayed)
-                {
-                    c.PositionX -= (CARD_BUFFER + CARD_WIDTH);
-                }
+                this.cardIconsPlayed.RemoveAt(0);   
             }
         }
     }

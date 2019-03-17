@@ -169,19 +169,26 @@ namespace SpellDefense.Common.Entities
             ReactTocardSpriteTextureSet();
         }
 
-        public CCSprite GetCardIcon()
+        public CCSprite CloneCardIcon()
         {
-            return this.cardSprite;
+            CCSprite tempSprite = new CCSprite(this.cardSprite.ContentSize, this.cardSprite.SpriteFrame);
+            SetSpriteTextures(tempSprite);
+            return tempSprite;
         }
 
         private void ReactTocardSpriteTextureSet()
         {
-            cardSprite.IsAntialiased = false;
+            SetSpriteTextures(cardSprite);
+        }
+
+        private void SetSpriteTextures(CCSprite theSprite)
+        {
+            theSprite.IsAntialiased = false;
             // The TextureRectInPixels gets automatically set when the CCSprite is first
             // created, but the value does not adjust automatically when the texture is changed:
-            cardSprite.TextureRectInPixels = new CCRect(0, 0,
-                cardSprite.Texture.PixelsWide, cardSprite.Texture.PixelsHigh);
-            cardSprite.Scale = 5;
+            theSprite.TextureRectInPixels = new CCRect(0, 0,
+                theSprite.Texture.PixelsWide, theSprite.Texture.PixelsHigh);
+            theSprite.Scale = 5;
         }
 
         private void CreatecardNameDisplay()
