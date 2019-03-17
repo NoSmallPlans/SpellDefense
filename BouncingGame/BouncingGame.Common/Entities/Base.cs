@@ -66,11 +66,11 @@ namespace SpellDefense.Common.Entities
 
         protected void DrawHealthBar()
         {
-            float drawSizeWidth = GodClass.BattlefieldDimensions.GetWidth() / 4;
+            float drawSizeWidth = sprite.ScaledContentSize.Width*2;
             float drawSizeHeight = sprite.ScaledContentSize.Height;
             float barHeight = drawSizeHeight * .05f;
             float currentBarWidth = (float)(drawSizeWidth * (this.currentHealth / this.maxHealth));
-            float borderCushion = 0.05f * GodClass.BattlefieldDimensions.GetWidth();
+            float borderCushion = 0.25f * drawSizeWidth;
             if (teamColor == TeamColor.RED)
             {
                 var greenHealth = new CCRect(0, drawSizeHeight / 2 + barHeight, currentBarWidth, barHeight);
