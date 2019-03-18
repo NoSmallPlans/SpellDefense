@@ -29,6 +29,7 @@ namespace SpellDefense.Android
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
+            ActionBar.Hide();
 
 			// Get our game view from the layout resource,
 			// and attach the view created event to it

@@ -78,10 +78,11 @@ namespace SpellDefense.Common.Scenes
             }
         }
 
-        private void InitScrollButtons()
+        private void InitScrollMap()
         {
-            scrollMap = new Minimap(battlefield, 1000, 75);
-            scrollMap.Position = new CCPoint(100, 600);
+            float miniMapWidth = 1000;
+            scrollMap = new Minimap(battlefield, miniMapWidth, 50);
+            scrollMap.Position = new CCPoint((GodClass.desiredWidth - miniMapWidth) / 2, 700);
             hudLayer.AddChild(scrollMap);
         }
 
@@ -115,7 +116,7 @@ namespace SpellDefense.Common.Scenes
 
             this.InitTeams();
 
-            InitScrollButtons();
+            InitScrollMap();
 
             GamesState = GameState.Playing;
         }

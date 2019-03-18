@@ -14,11 +14,14 @@ namespace SpellDefense.Common.UI
         CCRect curLocRect;
         CCNode layerToScroll;
         CCEventListenerTouchAllAtOnce touchListener;
+        float redBarHeight, redBarWidth;
 
         public Minimap(CCNode scrollLayer, float width, float height)
         {
             layerToScroll = scrollLayer;
             CreateDrawNode(width, height);
+            redBarHeight = height;
+            redBarWidth = 40;
             CreateTouchListener();
         }
 
@@ -35,7 +38,7 @@ namespace SpellDefense.Common.UI
         {
             drawNode.Clear();
             drawNode.DrawRect(backgroundRect, fillColor: CCColor4B.Yellow);
-            curLocRect = new CCRect(loc.X, 0, 40, 75);
+            curLocRect = new CCRect(loc.X, 0, redBarWidth, redBarHeight);
             drawNode.DrawRect(curLocRect, fillColor: CCColor4B.Red);
         }
 
