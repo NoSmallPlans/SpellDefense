@@ -1,6 +1,7 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
 using SpellDefense.Common.Entities.Cards;
+using SpellDefense.Common.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,6 +37,7 @@ namespace SpellDefense.Common.Scenes
         CardHistory cardHistory;
         List<CCDrawNode> targetLines;
         GameState gameState;
+        Minimap scrollMap;
 
         public GameState GamesState
         {
@@ -76,6 +78,13 @@ namespace SpellDefense.Common.Scenes
             }
         }
 
+        private void InitScrollButtons()
+        {
+            scrollMap = new Minimap(battlefield, 1000, 75);
+            scrollMap.Position = new CCPoint(100, 600);
+            hudLayer.AddChild(scrollMap);
+        }
+
         private void InitGame()
         {
             this.cardHUD = new CardHUD(0, 0, (int)GodClass.CardHUDdimensions.GetHeight(),
@@ -106,6 +115,8 @@ namespace SpellDefense.Common.Scenes
 
             this.InitTeams();
 
+            InitScrollButtons();
+
             GamesState = GameState.Playing;
         }
 
@@ -123,8 +134,8 @@ namespace SpellDefense.Common.Scenes
         {
             this.redTeam = new Team(TeamColor.RED);
             this.blueTeam = new Team(TeamColor.BLUE);
-            gameplayLayer.AddChild(redTeam.makeBase());
-            gameplayLayer.AddChild(blueTeam.makeBase());
+            battlefield.AddChild(redTeam.makeBase());
+            battlefield.AddChild(blueTeam.makeBase());
             redTeam.SetEnemyBase(blueTeam.GetBase());
             blueTeam.SetEnemyBase(redTeam.GetBase());
             GodClass.red = redTeam;

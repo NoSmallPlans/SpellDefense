@@ -61,6 +61,7 @@
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
     <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\Minimap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
