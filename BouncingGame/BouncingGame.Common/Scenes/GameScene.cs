@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
+using SpellDefense.Common.UI;
 using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace SpellDefense.Common.Scenes
         CardHistory cardHistory;
         GridManager gridManager;
         List<CCDrawNode> targetLines;
+        CCScrollView scrollView;
         GameState gameState;
 
         public GameState GamesState
@@ -123,11 +125,13 @@ namespace SpellDefense.Common.Scenes
         }
 
         private void InitGridManager()
-        {
+        {           
             gridManager = new GridManager(GodClass.gridWidth, GodClass.gridHeight, "grass_default.png");
             gridManager.PositionY += GodClass.gridHeight / 2 * 76;
-            battlefield.AddChild(gridManager);
+            //battlefield.AddChild(gridManager);
             GodClass.gridManager = gridManager;
+            scrollView = new CCScrollView(new CCSize(GodClass.BattlefieldDimensions.GetWidth(), GodClass.BattlefieldDimensions.GetHeight()), gridManager);
+            battlefield.AddChild(scrollView);
         }
 
         private void InitTeams()

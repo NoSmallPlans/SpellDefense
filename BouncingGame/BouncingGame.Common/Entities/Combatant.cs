@@ -192,10 +192,18 @@ namespace SpellDefense.Common.Entities
         protected void DrawHealthBar()
         {
             float barHeight = this.drawSize * .2f;
-            float currentBarWidth = (float)(this.drawSize * (this.currentHealth / this.maxHealth));
+            float healthPercent = (float)(this.currentHealth / this.maxHealth);
+            float currentBarWidth = this.drawSize * healthPercent;
 
+            var blackBack = new CCRect(-this.drawSize / 2, this.drawSize / 2 + barHeight, this.drawSize, barHeight);
             var greenHealth = new CCRect(-this.drawSize/2, this.drawSize/2 + barHeight, currentBarWidth, barHeight);
-            drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+            drawNode.DrawRect(blackBack, fillColor: CCColor4B.Black);
+            if(healthPercent > 0.65f)
+                drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Green);
+            else if(healthPercent > 0.3f)
+                drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Yellow);
+            else
+                drawNode.DrawRect(greenHealth, fillColor: CCColor4B.Red);
         }
 
         public void InitFromJSON(String text)
