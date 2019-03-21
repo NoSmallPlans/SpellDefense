@@ -18,6 +18,7 @@ namespace SpellDefense.Common.Entities
             currentHealth = maxHealth;
             drawNode = new CCDrawNode();
             this.AddChild(drawNode);
+            CreateCastleSprite();
             CreateGraphic();
         }
 
@@ -33,24 +34,23 @@ namespace SpellDefense.Common.Entities
 
         private void CreateCastleSprite()
         {
-            sprite = new CCSprite("SmallCastleGreen");
-            sprite.Scale = 0.3f;
+            sprite = new CCSprite("command_center.png");
+            //sprite.Scale = 0.3f;
             float spriteWidth = sprite.ScaledContentSize.Width;
             if (teamColor == TeamColor.RED)
             {
-                sprite.FlipX = true;
-                this.Position = new CCPoint(spriteWidth/2, GodClass.BattlefieldDimensions.GetHeight() / 4 + sprite.ScaledContentSize.Height/2);
+                sprite.FlipX = false;
+                GodClass.gridManager.PlaceItem(this, new CCPoint(0, 5));
             }
             else
             {
-                this.Position = new CCPoint(GodClass.BattlefieldDimensions.GetWidth() - spriteWidth/2, GodClass.BattlefieldDimensions.GetHeight() / 4 + sprite.ScaledContentSize.Height / 2);
+                GodClass.gridManager.PlaceItem(this, new CCPoint(9, 5));
             }
             this.AddChild(sprite);
         }
 
         public override void CreateGraphic()
         {
-            CreateCastleSprite();
             DrawHealthBar();
             this.ContentSize = sprite.ScaledContentSize;
             this.radius = this.ContentSize.Width / 2;

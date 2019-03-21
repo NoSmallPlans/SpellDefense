@@ -29,7 +29,6 @@ namespace SpellDefense.Common.Entities
         string colorName { get; set; }
         string unitType { get; set; }
         CCColor4B drawColor;
-
         //How long are this combatant's arms? Glad you asked...
         protected double attackRange { get; set; }
         protected double aggroRange { get; set; }

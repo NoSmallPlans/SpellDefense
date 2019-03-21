@@ -133,4 +133,16 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\Images\SmallCastleGreen.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\grass_default.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\command_center.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\Rock_1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidAsset Include="Assets\Content\Images\skeleton_0-0.png" />
+  </ItemGroup>
 </Project>

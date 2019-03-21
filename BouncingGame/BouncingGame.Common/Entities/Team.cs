@@ -91,7 +91,8 @@ namespace SpellDefense.Common.Entities
         {
             Base b = new Base(this.teamColor);
             b.maxHealth = this.teamBaseMaxHealth;
-            return this.teamBase = new Base(this.teamColor);
+            this.teamBase = b;
+            return this.teamBase;
         }
 
         public Base GetBase()
@@ -180,7 +181,7 @@ namespace SpellDefense.Common.Entities
         private void HandleCombatantSpawned(Combatant combatant)
         {
             this.AddCombatant(combatant, enemyBase); 
-            GodClass.battlefield.AddChild(combatant);
+            //GodClass.battlefield.AddChild(combatant);
         }
 
         public void TurnTimerPhase(float frameTimeInSeconds)

@@ -19,6 +19,7 @@ namespace SpellDefense.Common
         public static UIcontainer battlefield;
         public static UIcontainer cardHUD;
         public static CardHistory cardHistory;
+        public static GridManager gridManager;
         // This variable controls how many seconds must pass
         // before another combatant-per-second is added. For example, 
         // if the game initially spawns one combatant per 5 seconds, then 
@@ -32,6 +33,9 @@ namespace SpellDefense.Common
 
         public const int desiredWidth = 1334;
         public const int desiredHeight = 750;
+
+        public const int gridWidth = 10;
+        public const int gridHeight = 10;
 
         //Eventually PlayHUD dimensions will be more adaptive
         //we're future proofing with this class
