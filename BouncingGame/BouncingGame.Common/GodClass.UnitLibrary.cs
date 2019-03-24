@@ -11,17 +11,17 @@ namespace SpellDefense.Common
         public static Dictionary<string, string> UnitLibrary = new Dictionary<string, string>()
         {
              {
-                "soldier",
+                "rock",
                 @"{
                     'attackSpeed' : '1'
                     ,'moveSpeed': '50'
                     ,'attackPwr': '25'
                     ,'armor': '0'
-                    ,'spriteImage': 'GreenGuy.png'
+                    ,'sprite': 'Rock_1.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '1'
                     ,'aggroRange': '500'
-                    ,'color': '0,255,255'
+                    ,'fillColor': '0,255,255'
                 }"
             },
              {
@@ -30,11 +30,45 @@ namespace SpellDefense.Common
                     'attackSpeed' : '5'
                     ,'moveSpeed': '50'
                     ,'attackPwr': '25'
-                    ,'spriteImage': 'BlueGuy.png'
+                    ,'sprite': 'BlueGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '100'
                     ,'aggroRange': '500'
-                    ,'color': '0,255,0'
+                    ,'fillColor': '0,255,0'
+                }"
+            },
+            {
+                "minotaur",
+                @"{
+                    'attackSpeed' : '4'
+                    ,'moveSpeed': '120'
+                    ,'attackPwr': '50'
+                    ,'maxHealth': '100'
+                    ,'attackRange': '200'
+                    ,'aggroRange': '100'
+                    ,'sprite': 'minotaur'
+                    ,'animations': [
+                        {
+                            'name' : 'move'
+                            ,'delay' : '0.1'
+                            ,'repeat' : 'true'
+                        }
+                        ,{
+                            'name' : 'attack'
+                            ,'delay' : '0.1'
+                            ,'repeat' : 'false'
+                        }
+                        ,{
+                            'name' : 'idle'
+                            ,'delay' : '0.1'
+                            ,'repeat' : 'true'
+                        }
+                        ,{
+                            'name' : 'die'
+                            ,'delay' : '0.1'
+                            ,'repeat' : 'false'
+                        }
+                    ]
                 }"
             },
             {
@@ -44,11 +78,11 @@ namespace SpellDefense.Common
                     ,'moveSpeed': '50'
                     ,'attackPwr': '40'
                     ,'armor': '2'
-                    ,'spriteImage': 'GreenGuy.png'
+                    ,'sprite': 'GreenGuy.png'
                     ,'maxHealth': '175'
                     ,'attackRange': '1'
                     ,'aggroRange': '500'
-                    ,'color': '255,255,0'
+                    ,'fillColor': '255,255,0'
                 }"
             },
             {
@@ -58,11 +92,11 @@ namespace SpellDefense.Common
                     ,'moveSpeed': '8'
                     ,'attackPwr': '100'
                     ,'armor': '0'
-                    ,'spriteImage': 'BlueGuy.png'
+                    ,'sprite': 'BlueGuy.png'
                     ,'maxHealth': '100'
                     ,'attackRange': '600'
                     ,'aggroRange': '500'
-                    ,'color': '0,0,255'
+                    ,'fillColor': '0,0,255'
                 }"
             },
         };

@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnimationManager.cs" />
     <Compile Include="Entities\GridTile.cs" />
     <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="GodClass.Classes.cs" />

@@ -21,6 +21,8 @@ namespace SpellDefense.Common.Entities
         public int attackPwr { get; set; }
         public GamePiece defaultEnemy;
         protected GamePiece attackTarget;
+        private CCPoint nextMove;
+        public string direction;
         public double moveSpeed { get; set; }
         protected double attackSpeed { get; set; }
         protected double armor { get; set; }
@@ -28,20 +30,45 @@ namespace SpellDefense.Common.Entities
         string spriteImage { get; set; }
         string colorName { get; set; }
         string unitType { get; set; }
+        string fillColorName { get; set; }
         CCColor4B drawColor;
+        AnimationManager animManager;
+
         //How long are this combatant's arms? Glad you asked...
         protected double attackRange { get; set; }
         protected double aggroRange { get; set; }
-        
+
+        protected override void ActionStateChanged(ActionState newState)
+        {
+            if (animManager != null && State != newState)
+            {
+                animManager.StopActions();
+                switch (newState)
+                {
+                    case ActionState.attacking:
+                        animManager.PlayAnims(new string[] { "attack", "idle" });
+                        break;
+                    case ActionState.waiting:
+                        animManager.Play("idle");
+                        break;
+                    case ActionState.walking:
+                        animManager.Play("move");
+                        break;
+                    case ActionState.dead:
+                        animManager.Play("die");
+                        this.RunActions(new CCDelayTime(1.5f), new CCRemoveSelf(true));
+                        break;
+                }
+            }
+        }
+
         public Combatant(TeamColor teamColor, string unitStats) : base(teamColor)
         {
-            state = State.walking;
-            aggroRange = 64;
-            attackRange = 16;
+            State = ActionState.walking;
+            timeUntilAttack = 0;
             targetLine = new CCDrawNode();
 
             InitFromJSON(unitStats);
-            drawColor = ConvertStringToColor(colorName);
         }
 
         protected abstract void PlayAttackAnimation();
@@ -67,7 +94,7 @@ namespace SpellDefense.Common.Entities
                 
                 if(enemy.currentHealth <= 0)
                 {
-                    this.state = State.walking;
+                    this.State = ActionState.walking;
                     this.attackTarget = null;
                 }
                 this.timeUntilAttack = this.attackSpeed;
@@ -89,7 +116,7 @@ namespace SpellDefense.Common.Entities
             if (this.attackTarget == null && enemy != null)
             {
                 this.attackTarget = enemy;
-                this.state = State.attacking;
+                this.State = ActionState.attacking;
             }
         }
 
@@ -102,9 +129,49 @@ namespace SpellDefense.Common.Entities
             set
             {
                 attackTarget = value;
+                UpdateNextMove();
             }
         }
         
+        private void UpdateNextMove()
+        {
+            nextMove = GodClass.gridManager.FindNextMove(this.gridPos, attackTarget.gridPos);
+            //set the direction the player is facing, used for animations
+            direction = SetDirection(nextMove);
+            //Convert to from tile pos to screen pos
+            nextMove = GodClass.gridManager.GetScreenPosFromTilePos(nextMove);
+        }
+
+        private string SetDirection(CCPoint dest)
+        {
+            if(dest.X > gridPos.X)
+            {
+                if (dest.Y > gridPos.Y)
+                    return "ne";
+                else if (dest.Y < gridPos.Y)
+                    return "se";
+                else if (dest.Y == gridPos.Y)
+                    return "e";
+            }
+            else if(dest.X < gridPos.X)
+            {
+                if (dest.Y > gridPos.Y)
+                    return "nw";
+                else if (dest.Y < gridPos.Y)
+                    return "sw";
+                else if (dest.Y == gridPos.Y)
+                    return "w";
+            }
+            else if(dest.X == gridPos.X)
+            {
+                if (dest.Y > gridPos.Y)
+                    return "n";
+                else
+                    return "s";
+            }
+            return "n";
+        }
+
         public GamePiece FindTarget(List<Combatant> enemyList, GamePiece defaultEnemy)
         {
             float distToEnemy;
@@ -138,7 +205,7 @@ namespace SpellDefense.Common.Entities
 
             if(this.attackTarget != null)
             {
-                if (state != State.attacking)
+                if (State != ActionState.attacking)
                 {
                     attackTarget = FindTarget(enemies, defaultEnemy);
                 }
@@ -161,11 +228,11 @@ namespace SpellDefense.Common.Entities
             if (distanceTo(this, attackTarget) - this.radius - attackTarget.radius <= attackRange)
             {
                 AttackEnemy(attackTarget);
-                state = State.attacking;
+                State = ActionState.attacking;
             }
             else
             {
-                state = State.walking;
+                State = ActionState.walking;
             }
         }
         
@@ -176,16 +243,21 @@ namespace SpellDefense.Common.Entities
 
         public void MovePhase(float frameTimeInSeconds)
         {
-            if (this.state == State.walking)
+            if (this.State == ActionState.walking)
             {
-                double diffX = attackTarget.Position.X - Position.X;
-                double diffY = attackTarget.Position.Y - Position.Y;
+                double diffX = nextMove.X - Position.X;
+                double diffY = nextMove.Y - Position.Y;
                 double length = Math.Sqrt(diffX * diffX + diffY * diffY); //Pythagorean law
                 float dx = (float)(diffX / length * moveSpeed * frameTimeInSeconds); //higher speed is faster
                 float dy = (float)(diffY / length * moveSpeed * frameTimeInSeconds);
 
                 this.Position += new CCPoint(dx, dy);
-
+                UpdateNextMove();
+                if (CCPoint.Distance(this.Position, nextMove) < 5)
+                {
+                    this.gridPos = GodClass.gridManager.GetTileFromScreenTouch(nextMove);
+                    UpdateNextMove();
+                }
             }
         }
 
@@ -223,6 +295,27 @@ namespace SpellDefense.Common.Entities
             else {
                 armor = 0;
             }
+            /*
+            if (testJson.ContainsKey("fillColor"))
+            {
+                fillColorName = (string)testJson["fillColor"];
+                drawColor = ConvertStringToColor(fillColorName);
+            }
+            */
+            if (testJson.ContainsKey("sprite"))
+            {
+                string spriteName = (string)testJson["sprite"];
+                if (testJson.ContainsKey("animations"))
+                {
+                    animManager = new AnimationManager(spriteName, testJson);
+                }
+                else
+                {
+                    animManager = new AnimationManager(spriteName);
+                }
+                this.AddChild(animManager);
+                animManager.Play("move");
+            }
             if (testJson.ContainsKey("abilities"))
             {
                 JArray abilities = (JArray)testJson["abilities"];
@@ -236,7 +329,7 @@ namespace SpellDefense.Common.Entities
                 }
             }
         }
-
+        
         private CCColor4B ConvertStringToColor(string color)
         {
             string[] rgb = color.Split(',');
@@ -248,7 +341,8 @@ namespace SpellDefense.Common.Entities
 
         public override void CreateGraphic()
         {
-            ContentSize = new CCSize(this.drawSize, this.drawSize);
+            //ContentSize = new CCSize(this.drawSize, this.drawSize);
+            /*
             if (this.teamColor == TeamColor.RED)
             {
                 drawNode.DrawRect(
@@ -264,8 +358,9 @@ namespace SpellDefense.Common.Entities
                 CCV3F_C4B[] ptArray = { pt1, pt2, pt3 };
                 drawNode.DrawTriangleList(ptArray);
             }
+            */
             DrawHealthBar();
         }
-
+        
     }
 }

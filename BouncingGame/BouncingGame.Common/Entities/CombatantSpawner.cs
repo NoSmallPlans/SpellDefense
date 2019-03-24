@@ -77,7 +77,7 @@ namespace SpellDefense.Common.Entities
             float blueX = 9;
             float yMid = 5;
 
-            redSpawn = new CCPoint(redX, 0);
+            redSpawn = new CCPoint(redX, 1);
             blueSpawn = new CCPoint(blueX, yMid);
         }
 
@@ -154,10 +154,10 @@ namespace SpellDefense.Common.Entities
                         c.Position = spawnPoint;
                         if(teamColor == TeamColor.RED)
                         {
-                            GodClass.gridManager.PlaceItem(c, redSpawn);
+                            GodClass.gridManager.PlaceGamePiece(c, redSpawn);
                         } else
                         {
-                            GodClass.gridManager.PlaceItem(c, blueSpawn);
+                            GodClass.gridManager.PlaceGamePiece(c, blueSpawn);
                         }
                         CombatantSpawned(c);
                     }

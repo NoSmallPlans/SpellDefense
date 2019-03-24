@@ -40,11 +40,11 @@ namespace SpellDefense.Common.Entities
             if (teamColor == TeamColor.RED)
             {
                 sprite.FlipX = false;
-                GodClass.gridManager.PlaceItem(this, new CCPoint(0, 5));
+                GodClass.gridManager.PlaceGamePiece(this, new CCPoint(0, 5));
             }
             else
             {
-                GodClass.gridManager.PlaceItem(this, new CCPoint(9, 5));
+                GodClass.gridManager.PlaceGamePiece(this, new CCPoint(9, 5));
             }
             this.AddChild(sprite);
         }
