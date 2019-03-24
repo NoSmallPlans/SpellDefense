@@ -21,16 +21,16 @@ namespace SpellDefense.Common
                     ,'spawnTimer': '10'
                     ,'startingUnits': [
                         {
-                            'name': 'soldier'
-                            ,'count': '1'
-                        },
-                        {
-                            'name': 'grunt'
+                            'name': 'minotaur'
                             ,'count': '0'
                         },
                         {
-                            'name': 'archer'
+                            'name': 'rock'
                             ,'count': '1'
+                        },
+                        {
+                            'name': 'archer'
+                            ,'count': '0'
                         },
                         {
                             'name': 'sniper'

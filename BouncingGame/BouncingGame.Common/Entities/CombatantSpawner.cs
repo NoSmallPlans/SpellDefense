@@ -73,11 +73,11 @@ namespace SpellDefense.Common.Entities
             //TOOD remove +-10 magic numbers
             //TODO rename parent to something besides daddy... Thats weird
             UIcontainer daddy = GodClass.battlefield;
-            float redX = daddy.minX + 10;
-            float blueX = daddy.width - 10;
-            float yMid = daddy.height / 2;
+            float redX = 0;
+            float blueX = 9;
+            float yMid = 5;
 
-            redSpawn = new CCPoint(redX, yMid);
+            redSpawn = new CCPoint(redX, 1);
             blueSpawn = new CCPoint(blueX, yMid);
         }
 
@@ -143,13 +143,6 @@ namespace SpellDefense.Common.Entities
 
         private void Spawn(CCPoint spawnPoint)
         {
-            int rows = 3;
-            int curRow = 1;
-            int curCol = 1;
-            //TODO remove hard coding on spacing, change it to sprite width/height
-            float heightSpacing = 40.0f;
-            float widthSpacing = 40.0f;
-
             for (int i = 0; i < (spawnLists.Count > 1 ? 2 : 1); i++)
             {
                 foreach (Squad squad in spawnLists[i])
@@ -161,18 +154,10 @@ namespace SpellDefense.Common.Entities
                         c.Position = spawnPoint;
                         if(teamColor == TeamColor.RED)
                         {
-                            c.PositionX += curCol * widthSpacing;
+                            GodClass.gridManager.PlaceGamePiece(c, redSpawn);
                         } else
                         {
-                            c.PositionX -= curCol * widthSpacing;
-                        }
-                        c.PositionY += curRow * heightSpacing;
-
-                        curRow++;
-                        if (curRow > rows)
-                        {
-                            curRow = 1;
-                            curCol++;
+                            GodClass.gridManager.PlaceGamePiece(c, blueSpawn);
                         }
                         CombatantSpawned(c);
                     }

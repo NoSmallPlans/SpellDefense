@@ -30,9 +30,12 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnimationManager.cs" />
+    <Compile Include="Entities\GridTile.cs" />
     <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="GodClass.Classes.cs" />
     <Compile Include="Entities\Cards\CardHistory.cs" />
+    <Compile Include="GridManager.cs" />
     <Compile Include="Networking\Client.cs" />
     <Compile Include="Entities\Base.cs" />
     <Compile Include="Entities\BasicMelee.cs" />
@@ -61,6 +64,7 @@
     <Compile Include="Scenes\GameScene.cs" />
     <Compile Include="Scenes\TitleScene.cs" />
     <Compile Include="UI\Button.cs" />
+    <Compile Include="UI\ScrollView.cs" />
     <Compile Include="UI\Minimap.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

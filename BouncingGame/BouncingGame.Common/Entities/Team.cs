@@ -91,7 +91,8 @@ namespace SpellDefense.Common.Entities
         {
             Base b = new Base(this.teamColor);
             b.maxHealth = this.teamBaseMaxHealth;
-            return this.teamBase = new Base(this.teamColor);
+            this.teamBase = b;
+            return this.teamBase;
         }
 
         public Base GetBase()
@@ -116,8 +117,7 @@ namespace SpellDefense.Common.Entities
         {
             for (int i = combatants.Count - 1; i >= 0; i--)
             {
-                combatants[i].Cleanup();
-                if (combatants[i].state == Combatant.State.dead)
+                if (combatants[i].currentHealth <= 0)
                 {
                     DestroyCombatant(combatants[i], combatants);
                 }
@@ -160,7 +160,7 @@ namespace SpellDefense.Common.Entities
 
         private void DestroyCombatant(Combatant combatant, List<Combatant> list)
         {
-            combatant.RemoveFromParent();
+            combatant.State = GamePiece.ActionState.dead;
             list.Remove(combatant);
         }
 
@@ -180,7 +180,7 @@ namespace SpellDefense.Common.Entities
         private void HandleCombatantSpawned(Combatant combatant)
         {
             this.AddCombatant(combatant, enemyBase); 
-            GodClass.battlefield.AddChild(combatant);
+            //GodClass.battlefield.AddChild(combatant);
         }
 
         public void TurnTimerPhase(float frameTimeInSeconds)

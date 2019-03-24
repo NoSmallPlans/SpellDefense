@@ -1,7 +1,7 @@
 ﻿using CocosSharp;
 using SpellDefense.Common.Entities;
-using SpellDefense.Common.Entities.Cards;
 using SpellDefense.Common.UI;
+using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,7 +35,9 @@ namespace SpellDefense.Common.Scenes
         UIcontainer battlefield;
         UIcontainer cardHUD;
         CardHistory cardHistory;
+        GridManager gridManager;
         List<CCDrawNode> targetLines;
+        CCScrollView scrollView;
         GameState gameState;
         Minimap scrollMap;
 
@@ -114,6 +116,8 @@ namespace SpellDefense.Common.Scenes
             GodClass.hudLayer = hudLayer;
             GodClass.InitLibrary();
 
+            InitGridManager();
+
             this.InitTeams();
 
             InitScrollMap();
@@ -131,12 +135,24 @@ namespace SpellDefense.Common.Scenes
             }
         }
 
+        private void InitGridManager()
+        {           
+            gridManager = new GridManager(GodClass.gridWidth, GodClass.gridHeight, "grass_default.png");
+            gridManager.PositionY += GodClass.gridHeight / 2 * 76;
+            //battlefield.AddChild(gridManager);
+            GodClass.gridManager = gridManager;
+            scrollView = new CCScrollView(new CCSize(GodClass.BattlefieldDimensions.GetWidth(), GodClass.BattlefieldDimensions.GetHeight()), gridManager);
+            battlefield.AddChild(scrollView);
+        }
+
         private void InitTeams()
         {
             this.redTeam = new Team(TeamColor.RED);
             this.blueTeam = new Team(TeamColor.BLUE);
-            battlefield.AddChild(redTeam.makeBase());
-            battlefield.AddChild(blueTeam.makeBase());
+            //gameplayLayer.AddChild(redTeam.makeBase());
+            //gameplayLayer.AddChild(blueTeam.makeBase());
+            redTeam.makeBase();
+            blueTeam.makeBase();
             redTeam.SetEnemyBase(blueTeam.GetBase());
             blueTeam.SetEnemyBase(redTeam.GetBase());
             GodClass.red = redTeam;
