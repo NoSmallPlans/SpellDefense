@@ -120,7 +120,7 @@ namespace SpellDefense.Common.Scenes
 
             this.InitTeams();
 
-            InitScrollMap();
+            //InitScrollMap();
 
             GamesState = GameState.Playing;
         }
