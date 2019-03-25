@@ -31,7 +31,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AnimationManager.cs" />
+    <Compile Include="Entities\Buildings\Building.cs" />
+    <Compile Include="Entities\Buildings\BuildingMgr.cs" />
+    <Compile Include="GodClass.Buildings.cs" />
     <Compile Include="Entities\GridTile.cs" />
+    <Compile Include="Entities\Squad.cs" />
     <Compile Include="Entities\TurnManager.cs" />
     <Compile Include="GodClass.Classes.cs" />
     <Compile Include="Entities\Cards\CardHistory.cs" />

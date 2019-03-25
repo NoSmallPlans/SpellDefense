@@ -76,7 +76,7 @@ namespace SpellDefense.Common
 
             public static float GetWidth()
             {
-                return desiredWidth * 5;
+                return desiredWidth;
             }
 
             public static float GetMinY()

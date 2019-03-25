@@ -1,5 +1,6 @@
 ﻿using CocosSharp;
 using Newtonsoft.Json.Linq;
+using SpellDefense.Common.Entities.Buildings;
 using SpellDefense.Common.Entities.Cards;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace SpellDefense.Common.Entities
         CardManager cardManager;
         TeamColor teamColor;
         TurnManager turnManager;
+        BuildingMgr buildingManager;
 
         public Base TeamBase()
         {
@@ -50,6 +52,7 @@ namespace SpellDefense.Common.Entities
             CreateCombatantSpawner();
             string className = teamColor == TeamColor.RED ? GodClass.playerOneClass : GodClass.playerTwoClass;
             InitFromJson(GodClass.ClassConfigs[className]);
+            InitBuildingManager();
             this.combatantSpawner.IsSpawning = true;
         }
 
@@ -58,6 +61,11 @@ namespace SpellDefense.Common.Entities
             turnManager = new TurnManager(teamColor, timeBetweenTurns);
             turnManager.OnTurnTimeReached += HandleTurnTimeReached;
             GodClass.hudLayer.AddChild(turnManager.GetTurnCountDownLabel());
+        }
+
+        private void InitBuildingManager()
+        {
+            this.buildingManager = new BuildingMgr();
         }
 
         public Action<TeamColor> GameOver;
@@ -192,6 +200,7 @@ namespace SpellDefense.Common.Entities
         {
             if(cardManager != null)
                 cardManager.NewTurn();
+            //this.combatantSpawner.AddSpawns(this.buildingMgr.GetSpawns());
             this.combatantSpawner.HandleTurnTimeReached();
         }
     }

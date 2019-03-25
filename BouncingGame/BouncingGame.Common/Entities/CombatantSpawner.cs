@@ -20,11 +20,13 @@ namespace SpellDefense.Common.Entities
         //Index 1...count represents current and future temporary spawns
         List<List<Squad>> spawnLists;  
 
+        /*
         class Squad
         {
             public int qty;
             public string combatantType;
         }
+        */
 
         public CombatantSpawner(TeamColor teamColor)
         {
